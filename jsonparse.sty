@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `author-maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-07} {0.2.6} 
+\ProvidesExplPackage {jsonparse} {2024-04-07} {0.2.7} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -80,7 +80,7 @@
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { e }
 \cs_generate_variant:Nn \str_if_eq_p:nn { en , ee }
 \cs_generate_variant:Nn \str_item_ignore_spaces:nn { en }
-\cs_generate_variant:Nn \str_range:nnn { nne , nee , een }
+\cs_generate_variant:Nn \str_range:nnn { nne , nen , nee , een }
 \cs_generate_variant:Nn \str_replace_once:Nnn { Nen }
 \cs_generate_variant:Nn \str_remove_once:Nn { Ne }
 \cs_generate_variant:Nn \str_set:Nn { Ne }
@@ -98,10 +98,14 @@
 \str_new:N \l__jsonparse_key_str
 \str_new:N \l__jsonparse_val_str
 \str_new:N \l__jsonparse_remainder_str
+\str_new:N \l__jsonparse_object_prefix_str
+\str_new:N \l__jsonparse_array_prefix_str
 
 \int_new:N \l__jsonparse_array_item_int
 
 \prop_new:N \g__jsonparse_entries_prop
+
+\bool_new:N \l__prop_map_first_bool
 
 \seq_new:N \g__jsonparse_debug_record_seq
 	
@@ -377,8 +381,42 @@
   \prop_item:Nn #1 { #2 }
 }
 
-\str_new:N \l__jsonparse_object_prefix_str
-\str_new:N \l__jsonparse_array_prefix_str
+\NewExpandableDocumentCommand { \JSONParseGetArrayValues } { m m O{} m } {
+  \str_set:Ne \l__jsonparse_array_prefix_str { #2 \l_jsonparse_array_sep_left_str }
+  \bool_set_true:N \l__prop_map_first_bool
+  \prop_map_inline:Nn #1 {
+    \str_if_eq:eeT { 
+      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_array_prefix_str } 
+    } { \l__jsonparse_array_prefix_str } {
+      \str_if_eq:enT { 
+        \str_range:nen {##1} { \int_eval:n { -1 * \str_count:n {#3} } } { -1 } 
+      } {#3} {
+        \bool_if:NTF \l__prop_map_first_bool { 
+          \bool_set_false:N \l__prop_map_first_bool
+        } {        
+          #4 
+        }
+        ##2
+      }
+    } 
+  }
+}
+
+\NewExpandableDocumentCommand { \JSONParseUseArrayValues } { m m O{} m } {
+  \str_set:Ne \l__jsonparse_array_prefix_str { #2 \l_jsonparse_array_sep_left_str }
+  \prop_map_inline:Nn #1 {
+    \str_if_eq:eeT { 
+      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_array_prefix_str } 
+    } { \l__jsonparse_array_prefix_str } {
+      \str_if_eq:enT { 
+        \str_range:nen {##1} { \int_eval:n { -1 * \str_count:n {#3} } } { -1 } 
+      } {#3} {
+        \use:c {#4} { \JSONParseGetValue{\JSONdata}{##1} }
+      }
+    } 
+  }
+}
+
 \NewExpandableDocumentCommand { \JSONParseObject } { m m m } {
   \prop_new:N #1
   \str_set:Ne \l__jsonparse_object_prefix_str { #3 \l_jsonparse_child_sep_str }

@@ -1,4 +1,4 @@
-![Version 0.2.6](https://img.shields.io/badge/version-0.2.6-blue)
+![Version 0.2.7](https://img.shields.io/badge/version-0.2.7-blue)
 
 # The `jsonparse` package
 

@@ -1,4 +1,4 @@
-![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-blue)
+![Version 0.2.0](https://img.shields.io/badge/version-0.2.0-blue)
 
 # The `jsonparse` package
 
@@ -41,6 +41,6 @@ Let's assume a file with the name `example.json` is stored in the working direct
 }
 ```
 
-We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseGetValue{\myJSONdata}{phone_numbers[1].number}` would then result in the output `212 555-1234`. 
+We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseGetValue{\myJSONdata}{phone_numbers[0].number}` would then result in the output `212 555-1234` (indices are zero-based per default). 
 
 This package including all files is subject to the LPPL 1.3c license.

@@ -1,0 +1,9 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.listing
+*.log
+*.out
+*.synctex.gz
+
+testfiles/*

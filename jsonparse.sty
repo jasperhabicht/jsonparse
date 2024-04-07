@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `author-maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-07} {0.2.5} 
+\ProvidesExplPackage {jsonparse} {2024-04-07} {0.2.6} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -27,8 +27,6 @@
 }
 
 \msg_new:nnn { jsonparse } { debug-info } {
-  \msg_warning_text:n { jsonparse } \iow_newline:
-  JSON ~ structure ~ found: \iow_newline:
   #1
 }
 	
@@ -108,15 +106,16 @@
 \seq_new:N \g__jsonparse_debug_record_seq
 	
 \cs_new:Npn \__jsonparse_parse_data:Nn #1#2 {
+  \bool_if:NT \l__jsonparse_debug_mode_bool {
+    \msg_log:nne { jsonparse } { debug-info } {
+      \iow_newline: 
+      Parsing ~ JSON ~ ... 
+    } 
+  }
   \prop_gclear:N \g__jsonparse_entries_prop
   \seq_clear:N \g__jsonparse_debug_record_seq
   \__jsonparse_parse:n {#2}
   \prop_set_eq:NN #1 \g__jsonparse_entries_prop 
-  \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
-      \seq_use:Ne \g__jsonparse_debug_record_seq { \iow_newline: }
-    } 
-  }
 }
 
 \cs_new:Npn \__jsonparse_remove_leading_spaces:N #1 {
@@ -163,7 +162,9 @@
   \str_remove_once:Ne \l__jsonparse_remainder_str { \c_left_brace_str }
   % object begin
   \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \seq_gput_right:Ne \g__jsonparse_debug_record_seq { (objb) } 
+    \msg_log:nne { jsonparse } { debug-info } {
+      (objb) 
+    } 
   }
   \str_if_empty:NF \l__jsonparse_key_str {
     \str_set:Ne \l__jsonparse_prefix_str { \l__jsonparse_key_str \l_jsonparse_child_sep_str }
@@ -177,7 +178,9 @@
   \str_remove_once:Ne \l__jsonparse_remainder_str { \c_right_brace_str }
   % object end
   \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \seq_gput_right:Ne \g__jsonparse_debug_record_seq { (obje) } 
+    \msg_log:nne { jsonparse } { debug-info } {
+      (obje) 
+    } 
   }
   \__jsonparse_parse_remainder:
 }
@@ -188,7 +191,9 @@
   \str_set:Ne \l__jsonparse_remainder_str {#1}
   % array begin
   \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \seq_gput_right:Ne \g__jsonparse_debug_record_seq { (arrb) } 
+    \msg_log:nne { jsonparse } { debug-info } {
+      (arrb) 
+    }   
   }
   \int_zero:N \l__jsonparse_array_item_int
   \bool_if:NT \l_jsonparse_array_index_zero_based_bool {
@@ -203,7 +208,9 @@
   \str_set:Ne \l__jsonparse_remainder_str {#1}
   % array end
   \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \seq_gput_right:Ne \g__jsonparse_debug_record_seq { (arre) } 
+    \msg_log:nne { jsonparse } { debug-info } {
+      (arre) 
+    } 
   }
   \__jsonparse_parse_remainder:
 }
@@ -231,9 +238,9 @@
       { \l__jsonparse_key_str } { \l__jsonparse_val_str }
     % string
     \bool_if:NT \l__jsonparse_debug_mode_bool {
-      \seq_gput_right:Ne \g__jsonparse_debug_record_seq { 
-        (key) ~ \str_use:N \l__jsonparse_key_str : ~
-        (str) ~ \str_use:N \l__jsonparse_val_str
+      \msg_log:nne { jsonparse } { debug-info } {
+        (key) ~ \str_use:N \l__jsonparse_key_str : \iow_newline:
+        \iow_char:N \  \iow_char:N \  (str) ~ \str_use:N \l__jsonparse_val_str 
       } 
     }  
   }
@@ -264,9 +271,9 @@
         { \l__jsonparse_key_str } { \l__jsonparse_val_str }
       % true
       \bool_if:NT \l__jsonparse_debug_mode_bool {
-        \seq_gput_right:Ne \g__jsonparse_debug_record_seq { 
-          (key) ~ \str_use:N \l__jsonparse_key_str : ~ 
-          (tru) ~ \str_use:N \l__jsonparse_val_str
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_key_str : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (tru) ~ \str_use:N \l__jsonparse_val_str
         } 
       }  
     }
@@ -278,9 +285,9 @@
         { \l__jsonparse_key_str } { \l__jsonparse_val_str }
       % false
       \bool_if:NT \l__jsonparse_debug_mode_bool {
-        \seq_gput_right:Ne \g__jsonparse_debug_record_seq { 
-          (key) ~ \str_use:N \l__jsonparse_key_str : ~ 
-          (fal) ~ \str_use:N \l__jsonparse_val_str
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_key_str : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (fal) ~ \str_use:N \l__jsonparse_val_str
         } 
       }
     }
@@ -292,9 +299,9 @@
         { \l__jsonparse_key_str } { \l__jsonparse_val_str }
       % null
       \bool_if:NT \l__jsonparse_debug_mode_bool {
-        \seq_gput_right:Ne \g__jsonparse_debug_record_seq { 
-          (key) ~ \str_use:N \l__jsonparse_key_str : ~ 
-          (nul) ~ \str_use:N \l__jsonparse_val_str
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_key_str : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (nul) ~ \str_use:N \l__jsonparse_val_str
         } 
       }
     }
@@ -309,9 +316,9 @@
         { \l__jsonparse_key_str } { \l__jsonparse_val_str }
       % number
       \bool_if:NT \l__jsonparse_debug_mode_bool {
-        \seq_gput_right:Ne \g__jsonparse_debug_record_seq { 
-          (key) ~ \str_use:N \l__jsonparse_key_str : ~ 
-          (num) ~ \str_use:N \l__jsonparse_val_str
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_key_str : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (num) ~ \str_use:N \l__jsonparse_val_str
         } 
       }
     }
@@ -333,7 +340,11 @@
     \str_remove_once:Nn \l__jsonparse_remainder_str { , }
   }
   \str_if_empty:NTF \l__jsonparse_remainder_str {
-    % done
+    \bool_if:NT \l__jsonparse_debug_mode_bool {
+      \msg_log:nne { jsonparse } { debug-info } {
+        JSON ~ parsing ~ done. \iow_newline: 
+      } 
+    }
   } {
     \exp_args:Ne \__jsonparse_parse:n { \l__jsonparse_remainder_str }
   }

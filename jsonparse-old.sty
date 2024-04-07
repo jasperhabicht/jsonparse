@@ -1,10 +1,30 @@
-\ProvidesExplPackage {jsonparse} {2024-04-05} {0.1.0} 
+% File: jsonparse-old.sty 
+% Copyright 2024 Jasper Habicht (mail@jasperhabicht.de).
+% 
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+% 
+% This file is part of the `jsonparse'  package (The Work in LPPL)
+% and all files in that bundle must be distributed together.
+% 
+% This work has the LPPL maintenance status `author-maintained'.
+% 
+\ProvidesExplPackage {jsonparse-old} {2024-04-05} {0.1.0} 
     {JSON Parse}
+
+\msg_new:nnn { jsonparse } { file-outdated } {
+    \msg_warning_text:n { jsonparse } \iow_newline:
+    This ~ version ~ is ~ outdated ~ and ~ only ~ kept ~ for ~ reference. \iow_newline:
+    Please ~ use ~ `jsonparse.sty` ~ instead.
+}
 
 \msg_new:nnn { jsonparse } { parsing-error } {
     \msg_warning_text:n { jsonparse } \iow_newline:
     JSON ~ could ~ not ~ be ~ parsed.
 }
+
+\msg_warning:nn { jsonparse } { file-outdated }
 
 \str_new:N \l_jsonparse_child_sep_str
 \str_set:Nn \l_jsonparse_child_sep_str { . }

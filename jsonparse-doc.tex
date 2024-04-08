@@ -1,0 +1,366 @@
+% File: jsonparse-doc.tex 
+% Copyright 2024 Jasper Habicht (mail@jasperhabicht.de).
+% 
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License version 1.3c,
+% available at http://www.latex-project.org/lppl/.
+% 
+% This file is part of the `jsonparse'  package (The Work in LPPL)
+% and all files in that bundle must be distributed together.
+% 
+% This work has the LPPL maintenance status `author-maintained'.
+% 
+\documentclass[a4paper]{article}
+\def\jsonparsefileversion{0.3.0}
+\def\jsonparsefiledate{8 April 2024}
+
+\usepackage[T1]{fontenc}
+\usepackage{Alegreya}
+\usepackage{AlegreyaSans}
+\usepackage{FiraMono}
+
+\usepackage{geometry, longtable, booktabs, tcolorbox, hyperref}
+\geometry{margin=25mm, left=45mm}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[R]{\thepage}
+
+\linespread{1.1}\selectfont
+\addtolength{\skip\footins}{1em plus 5pt}
+\makeatletter
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+\renewcommand{\@makefntext}[1]{%
+    \noindent\hbox to 0.75em{\normalfont\@thefnmark\hss}~#1%
+}
+\makeatother
+
+\tcbuselibrary{listings}
+\lstdefinestyle{jsonparsedocmacro}{
+    basicstyle=\small\ttfamily,
+    literate=*{<}{{{\color{black!50}\guilsinglleft}}}1 
+        {>}{{{\color{black!50}\guilsinglright}}}1,
+    keywords={},
+    moredelim=[is][\bfseries]{|}{|},
+    moredelim=[is][\color{black!50}]{!}{!},
+}
+\lstdefinestyle{jsonparsedoccodeexample}{
+    basicstyle=\small\ttfamily,
+    keywords={},
+}
+
+\hypersetup{colorlinks}
+
+\ExplSyntaxOn
+\int_new:N \l_jsonparse_doc_change_int
+\NewDocumentCommand{\changes}{ m m m }{
+    \int_incr:N \l_jsonparse_doc_change_int
+    \prop_new:c { l_jsonparse_doc_change_ 
+        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop }
+    \prop_put:cnn { l_jsonparse_doc_change_ 
+        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { version } {#1}
+    \prop_put:cnn { l_jsonparse_doc_change_ 
+        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { date } {#2}
+    \prop_put:cnn { l_jsonparse_doc_change_ 
+        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { changes } {#3}
+}
+\NewDocumentCommand{\printchanges}{ }{
+    \section{Changes}
+    \begin{description}
+    \int_step_inline:nn { \l_jsonparse_doc_change_int } {
+        \item[ 
+            \prop_item:cn { l_jsonparse_doc_change_ 
+            \int_to_roman:n { ##1 } _prop } { version } ] 
+            ( \prop_item:cn { l_jsonparse_doc_change_ 
+            \int_to_roman:n { ##1 } _prop } { date } ) \\
+            \prop_item:cn { l_jsonparse_doc_change_ 
+            \int_to_roman:n { ##1 } _prop } { changes }
+    }
+    \end{description}
+}
+
+\tl_new:N \l_jsonparse_doc_doctitle_tl
+\NewExpandableDocumentCommand{\makedoctitle}{ o m o m m o m }{
+    \hypersetup{
+        pdfauthor={#5},
+        pdftitle={\IfValueTF{#1}{#1}{#2}},
+        pdfsubject={\IfValueTF{#3}{#3}{#4}}
+    }
+    \tl_set:Nn \l_jsonparse_doc_doctitle_tl {
+        \group_begin:
+            \tcbset{
+                title ~ style ~ hook/.style={
+                    boxrule=2pt,
+                    fontupper=\huge\ttfamily
+                }
+            }
+            \setlength{\parindent}{0pt}\sffamily
+            \Huge{\bfseries #2}\par\bigskip
+            \Large #4\par\bigskip
+            \large #5
+            \IfValueT{#6}{
+                \,\footnote{#6}\par\bigskip
+            }
+            #7\par\bigskip
+            \rule{\textwidth}{.08em}
+        \group_end:
+    }
+}
+
+\NewExpandableDocumentCommand{\printdoctitle}{ }{
+    \tl_use:N \l_jsonparse_doc_doctitle_tl
+}
+\ExplSyntaxOff
+
+\tcbset{
+    size=small,
+    arc=2.5pt,
+    outer arc=2.5pt,
+    colframe=black!10,
+    colback=black!10,
+    title style hook/.style={}
+}
+
+\NewTCBListing{macrodef}{ }{ 
+    listing only,
+    listing style={jsonparsedocmacro},
+    grow to left by=2cm,
+    boxrule=0pt,
+    after={\par\smallskip\noindent}
+}
+
+\NewTCBListing{codeexample}{ }{
+    listing only,
+    listing style={jsonparsedoccodeexample},
+    after={\par\smallskip\noindent}
+}
+
+\NewTCBListing{codeexamplecolumns}{ }{
+    text side listing,
+    lefthand width=4.5cm,
+    listing style={jsonparsedoccodeexample},
+    after={\par\smallskip\noindent}
+}
+
+\NewTotalTCBox{\macro}{ O{} v }{
+    verbatim,
+    size=tight,
+    arc=1pt,
+    outer arc=1pt,
+    top=0.5pt, 
+    bottom=0.5pt,
+    left=2pt, 
+    right=2pt,
+    boxrule=0pt,
+    colframe=black!10,
+    colback=black!10,
+    fontupper=\small\ttfamily,
+    #1
+}{\vphantom{/g}\lstinline^#2^}
+
+\NewTotalTCBox{\titlemacro}{ s O{} m }{
+    verbatim,
+    size=tight,
+    arc=1pt,
+    outer arc=1pt,
+    top=0.5pt, 
+    bottom=0.5pt,
+    left=2pt, 
+    right=2pt,
+    boxrule=0pt,
+    colframe=black!10,
+    colback=black!10,
+    fontupper=\small\ttfamily,
+    title style hook,
+    #2
+}{\vphantom{/g}\IfBooleanT{#1}{\textbackslash}#3}
+
+\usepackage{jsonparse}
+
+\makedoctitle
+    [The jsonparse package]
+    {The \titlemacro{jsonparse} package}
+    {An easy way to parse, store and access JSON data from files or strings in LaTeX documents}
+    {Jasper Habicht}[E-mail: \href{mailto:mail@jasperhabicht.de}{mail@jasperhabicht.de}]
+    {Version \jsonparsefileversion, released on \jsonparsefiledate}
+
+\changes{v0.3.0}{2024/04/08}{First public beta release.}
+
+\begin{document}
+
+\printdoctitle
+
+\bigskip
+
+\section{Introduction}
+
+The \macro{jsonparse} package provides an easy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
+
+\section{Loading the package}
+
+To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installted, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document. 
+
+The package does not load any Dependencies.
+
+\begin{macrodef}debug\end{macrodef}
+The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
+
+\section{Main user commands}
+
+\begin{macrodef}
+|\JSONParse|{<token variable>}{<JSON string>}
+\end{macrodef}
+The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The first argument takes the name of the token variable that is created by the command. The second argument takes the JSON string to be parsed. 
+
+For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseGetValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
+
+\begin{macrodef}
+|\JSONParseFromFile|{<token variable>}{<JSON file>}
+\end{macrodef}
+The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
+
+\begin{macrodef}
+|\JSONParseGetValue|{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseGetValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
+
+If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable \macro{\myJSONdata}, using \macro{\JSONParseGetValue{\myJSONdata}{key}} would extract the value associated with the key \macro{key}, which in this case is \macro{value}, and typeset it to the document.
+
+Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseGetValue{\myJSONdata}{outer_key.inner_key}} can be used. The command \macro{\JSONParseGetValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the parsed JSON string \macro{{ "key" : [ "one" , "two" ] }}.
+
+\begin{macrodef}
+|\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
+\end{macrodef}
+The command \macro{\JSONParseGetArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to ass a subkey to every value. The last argument takes a string that is inserted between all values when they are typeset.
+
+For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
+
+\begin{codeexample}
+{
+  "array" : [
+    {
+      "key_a" : "one" ,
+      "key_b" : "two"
+    } ,
+    {
+      "key_a" : "three" ,
+      "key_b" : "four"
+    }
+  ]
+}
+\end{codeexample}
+
+Then using \macro{\JSONParseGetArrayValues{\myJSONdata}{array}[key_a]{, }}, the text \macro{one, three} is typeset to the document. 
+
+\begin{macrodef}
+|\JSONParseUseArrayValues|{<token variable>}{<key>}[<subkey>]{<command name>}
+\end{macrodef}
+The command \macro{\JSONParseUseArrayValues} takes the same first three arguments as the command \macro{\JSONParseGetArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and should accept one argument that represents the value of the array item. It will be called for every array item.
+
+For example, let us assume the same JSON data structure as defined above parsed into the token variable \macro{\myJSONdata}. Then, the following can be done:
+
+\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
+
+\begin{codeexamplecolumns}
+\newcommand{\myJSONitem}[1]{
+  \item \emph{#1}
+}
+
+\begin{itemize}
+  \JSONParseUseArrayValues{\myJSONdata}
+    {array}[key_a]{myJSONitem}
+\end{itemize}
+\end{codeexamplecolumns}
+
+\begin{macrodef}
+|\JSONParseObject|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific object can be taken from the complete structure using the command \macro{\JSONParseObject}. This command takes as first argument the token variable in which the parsed object should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the object that should be stored in the new token variable.
+
+\begin{macrodef}
+|\JSONParseArray|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific array can be taken from the complete structure using the command \macro{\JSONParseArray}. This command takes as first argument the token variable in which the parsed array should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the array that should be stored in the new token variable.
+
+\subsection{Commands to alter separators and output}
+
+The package provides a set of commands that can be used to change the separators used to select the relevant value in the JSON structure as well as the output that is generated from the JSON data.
+
+\begin{macrodef}
+|\JSONParseSetChildSeparator|{<string>}
+|\JSONParseSetArraySeparator|{<string>}{<string>}
+\end{macrodef}
+The two commands \macro{\JSONParseSetChildSeparator} and \macro{\JSONParseSetArraySeparator} can be used to change the separators for child objects or array items in the syntax used to select a specific value in the JSON data structure. Per default, the child separator is a dot (\macro{.}) while the array separators are sqare brackets (\macro{[} and \macro{]}). The command \macro{\JSONParseSetArraySeparator} takes two arguments of which the first is the character used before the array separator and the second is used after. Changing the separators can be useful if keys in the JSON structure already use these characters.
+
+\begin{macrodef}
+|\JSONParseSetTrueString|{<string>}
+|\JSONParseSetFalseString|{<string>}
+|\JSONParseSetNullString|{<string>}
+\end{macrodef}
+The commands \macro{\JSONParseSetTrueString} and \macro{\JSONParseSetFalseString} as well as the command \macro{\JSONParseSetNullString} can be used to change the output that is typeset if the JSON value is \macro{true}, \macro{false} or \macro{null}. The default strings that are typeset are \macro{true}, \macro{false} or \macro{null} resepctively.
+
+\begin{macrodef}
+|\JSONParseSetArrayIndexZeroBased|
+|\JSONParseSetArrayIndexOneBased|
+\end{macrodef}
+The command \macro{\JSONParseSetArrayIndexZeroBased} sets the numbering of the index of array items to zero-based. With the command \macro{\JSONParseSetArrayIndexOneBased}, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
+
+\subsection{Internal variables and commands}
+
+\begin{macrodef}
+|\l_jsonparse_debug_mode_bool|
+\end{macrodef}
+The token variable \macro{\l_jsonparse_debug_mode_bool} holds the boolean value true if the package is loaded with the \macro{debug} option and false otherwise. If set to true, the debug mode will be used for the following use of \macro{\jsonparse_parse:n}. 
+
+\begin{macrodef}
+|\l_jsonparse_child_sep_str|
+|\l_jsonparse_array_sep_left_str|
+|\l_jsonparse_array_sep_right_str|
+|\l_jsonparse_true_str|
+|\l_jsonparse_false_str|
+|\l_jsonparse_null_str|
+|\l_jsonparse_array_index_zero_based_bool|
+\end{macrodef}
+The token variable \macro{\l_jsonparse_child_sep_str} holds the string \macro{.} per default or the string set by the user command \macro{\JSONParseSetChildSeparator}.
+
+The token variable \macro{\l_jsonparse_array_sep_left_str} holds the string \macro{[} per default or the string given as first argument to the user command \macro{\JSONParseSetArraySeparator}. 
+
+The token variable \macro{\l_jsonparse_array_sep_right_str} holds the string \macro{]} per default or the string given as second argument to the user command \macro{\JSONParseSetArraySeparator}.
+
+The token variable \macro{\l_jsonparse_true_str} holds the string \macro{true} per default or the string set by the user command \macro{\JSONParseSetTrueString}.
+
+{\sloppy The token variable \macro{\l_jsonparse_false_str} holds the string \macro{false} per default or the string set by the user command \macro{\JSONParseSetFalseString}. \par}
+
+The token variable \macro{\l_jsonparse_null_str} holds the string \macro{null} per default or the string set by the user command \macro{\JSONParseSetNullString}.
+
+The token variable \macro{\l_jsonparse_array_index_zero_based_bool} holds a boolean value which is \macro{true} per default or if the user command \macro{\JSONParseSetArrayIndexZeroBased} was called. The boolean value is \macro{false} if the user command \macro{\JSONParseSetArrayIndexOneBased} was called.
+
+\begin{macrodef}
+|\g_jsonparse_entries_prop|
+\end{macrodef}
+The token variable (property list) \macro{\g_jsonparse_entries_prop} holds key-value pairs representing all elements of a JSON data structure generated by a previous run of \macro{\jsonparse_parse:n}. 
+
+\begin{macrodef}
+|\jsonparse_parse:n| {<JSON string>}
+\end{macrodef}
+The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string.
+  
+\begin{macrodef}
+|\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
+\end{macrodef}
+The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}.
+
+\begin{macrodef}
+|\jsonparse_remove_leading_spaces:N| <token variable>
+\end{macrodef}
+The command \macro{\jsonparse_remove_leading_spaces:N} trims leading spaces from the string stored in the token variable that is given to this command as argument.
+
+% =====
+
+\printchanges
+
+\end{document}
+
+%% End of file `dndicons-doc.tex`.

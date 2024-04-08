@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `author-maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-08} {0.2.8} 
+\ProvidesExplPackage {jsonparse} {2024-04-08} {0.3.0} 
   {JSON Parse}
 
 \bool_new:N \l_jsonparse_debug_mode_bool
@@ -122,12 +122,6 @@
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop 
 }
 
-\cs_new:Npn \_jsonparse_remove_leading_spaces:N #1 {
-  \bool_while_do:nn { \str_if_eq_p:en { \str_head:e { #1 } } { ~ } } {
-    \str_remove_once:Nn #1 { ~ }
-  }
-}
-
 \cs_new:Npn \jsonparse_parse:n #1 {
   \bool_if:NT \l_jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {
@@ -136,7 +130,7 @@
     } 
   }
   \str_set:Ne \l__jsonparse_input_str {#1}
-  \_jsonparse_remove_leading_spaces:N \l__jsonparse_input_str
+  \jsonparse_remove_leading_spaces:N \l__jsonparse_input_str
   \str_case_e:enF { \str_head_ignore_spaces:e { \l__jsonparse_input_str } } {
     { \c_left_brace_str } { 
       \exp_last_unbraced:Ne 
@@ -162,6 +156,12 @@
     % other
     \exp_last_unbraced:Ne 
       \__jsonparse_parse_other:w \l__jsonparse_input_str \q_stop 
+  }
+}
+
+\cs_new:Npn \jsonparse_remove_leading_spaces:N #1 {
+  \bool_while_do:nn { \str_if_eq_p:en { \str_head:e { #1 } } { ~ } } {
+    \str_remove_once:Nn #1 { ~ }
   }
 }
 
@@ -335,7 +335,7 @@
       }
     }
   }
-  \_jsonparse_remove_leading_spaces:N \l__jsonparse_remainder_str
+  \jsonparse_remove_leading_spaces:N \l__jsonparse_remainder_str
   \str_set:Ne \l__jsonparse_remainder_str { 
     \str_range:een { \l__jsonparse_remainder_str } { 
       \int_eval:n {
@@ -347,7 +347,7 @@
 }
 
 \cs_new:Npn \__jsonparse_parse_remainder: {
-  \_jsonparse_remove_leading_spaces:N \l__jsonparse_remainder_str
+  \jsonparse_remove_leading_spaces:N \l__jsonparse_remainder_str
   \str_if_eq:enT { \str_head_ignore_spaces:e { \l__jsonparse_remainder_str } } { , } {
     \str_remove_once:Nn \l__jsonparse_remainder_str { , }
   }
@@ -366,7 +366,7 @@
 
 \NewExpandableDocumentCommand { \JSONParse } { m m } {
   \prop_new:N #1
-  \jsonparse_parse_data:Nn #1 { #2 } 
+  \jsonparse_parse_to_prop:Nn #1 { #2 } 
 }
 
 \NewExpandableDocumentCommand { \JSONParseFromFile } { m m } {
@@ -380,7 +380,35 @@
   \ior_close:N \l__jsonparse_json_ior
 
   \prop_new:N #1
-  \jsonparse_parse_to_tl:Nn #1 { \l__jsonparse_json_str } 
+  \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_json_str } 
+}
+
+\NewExpandableDocumentCommand { \JSONParseObject } { m m m } {
+  \prop_new:N #1
+  \str_set:Ne \l__jsonparse_object_prefix_str { #3 \l_jsonparse_child_sep_str }
+  \prop_map_inline:Nn #2 {
+    \str_if_eq:eeT { 
+      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_object_prefix_str } 
+    } { \l__jsonparse_object_prefix_str } {
+      \prop_put:Nen #1 {  
+         \str_range:nee {##1} { \int_eval:n { \str_count:N \l__jsonparse_object_prefix_str + 1 } } { -1 } 
+      } {##2}
+    } 
+  }
+}
+
+\NewExpandableDocumentCommand { \JSONParseArray } { m m m } {
+  \prop_new:N #1
+  \str_set:Ne \l__jsonparse_array_prefix_str { #3 \l_jsonparse_array_sep_left_str }
+  \prop_map_inline:Nn #2 {
+    \str_if_eq:eeT { 
+      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_array_prefix_str } 
+    } { \l__jsonparse_array_prefix_str } {
+      \prop_put:Nen #1 {  
+         \str_range:nee {##1} { \int_eval:n { \str_count:N \l__jsonparse_array_prefix_str } } { -1 } 
+      } {##2}
+    } 
+  }
 }
 
 \NewExpandableDocumentCommand { \JSONParseGetValue } { m m } {
@@ -419,34 +447,6 @@
       } {#3} {
         \use:c {#4} { \prop_item:Nn #1 {##1} }
       }
-    } 
-  }
-}
-
-\NewExpandableDocumentCommand { \JSONParseObject } { m m m } {
-  \prop_new:N #1
-  \str_set:Ne \l__jsonparse_object_prefix_str { #3 \l_jsonparse_child_sep_str }
-  \prop_map_inline:Nn #2 {
-    \str_if_eq:eeT { 
-      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_object_prefix_str } 
-    } { \l__jsonparse_object_prefix_str } {
-      \prop_put:Nen #1 {  
-         \str_range:nee {##1} { \int_eval:n { \str_count:N \l__jsonparse_object_prefix_str + 1 } } { -1 } 
-      } {##2}
-    } 
-  }
-}
-
-\NewExpandableDocumentCommand { \JSONParseArray } { m m m } {
-  \prop_new:N #1
-  \str_set:Ne \l__jsonparse_array_prefix_str { #3 \l_jsonparse_array_sep_left_str }
-  \prop_map_inline:Nn #2 {
-    \str_if_eq:eeT { 
-      \str_range:nne {##1} { 1 } { \str_count:N \l__jsonparse_array_prefix_str } 
-    } { \l__jsonparse_array_prefix_str } {
-      \prop_put:Nen #1 {  
-         \str_range:nee {##1} { \int_eval:n { \str_count:N \l__jsonparse_array_prefix_str } } { -1 } 
-      } {##2}
     } 
   }
 }

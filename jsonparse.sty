@@ -116,13 +116,7 @@
 	
 % ===
 
-\cs_new:Npn \jsonparse_parse_to_tl:Nn #1#2 {
-  \bool_if:NT \l_jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
-      \iow_newline: 
-      Parsing ~ JSON ~ ... 
-    } 
-  }
+\cs_new:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \prop_gclear:N \g_jsonparse_entries_prop
   \jsonparse_parse:n {#2}
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop 
@@ -135,6 +129,12 @@
 }
 
 \cs_new:Npn \jsonparse_parse:n #1 {
+  \bool_if:NT \l_jsonparse_debug_mode_bool {
+    \msg_log:nne { jsonparse } { debug-info } {
+      \iow_newline: 
+      Parsing ~ JSON ~ ... 
+    } 
+  }
   \str_set:Ne \l__jsonparse_input_str {#1}
   \_jsonparse_remove_leading_spaces:N \l__jsonparse_input_str
   \str_case_e:enF { \str_head_ignore_spaces:e { \l__jsonparse_input_str } } {

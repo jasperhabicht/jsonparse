@@ -202,7 +202,7 @@ The \macro{jsonparse} package provides an easy way to read in JSON data from fil
 
 To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installted, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document. 
 
-The package does not load any Dependencies.
+The package does not load any dependencies.
 
 \begin{macrodef}debug\end{macrodef}
 The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
@@ -279,10 +279,15 @@ For example, let us assume the same JSON data structure as defined above parsed 
 \end{macrodef}
 Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific object can be taken from the complete structure using the command \macro{\JSONParseObject}. This command takes as first argument the token variable in which the parsed object should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the object that should be stored in the new token variable.
 
+Again using the example from above, we can create a new token variable \macro{\myJSONobject} with \macro{\JSONParseObject{\myJSONobject}{\myJSONdata}{array[0]}} containing the object associated with the key \macro{array[0]}. Using \macro{\JSONParseGetValue{\myJSONobject}{key_a}}, the text \macro{b} would be typeset to the document.
+
 \begin{macrodef}
 |\JSONParseArray|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
 Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific array can be taken from the complete structure using the command \macro{\JSONParseArray}. This command takes as first argument the token variable in which the parsed array should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the array that should be stored in the new token variable.
+
+Assuming the JSON string \macro{{ "number" : 1 , "array" : [ "a" , "b" ] }} is parsed into the token variable \macro{\myJSONdata}, we can create a new token variable \macro{\myJSONarray} with \macro{\JSONParseObject{\myJSONarray}{\myJSONdata}{array}} representing the array associated with the key \macro{array}. With \macro{\JSONParseGetValue{\myJSONarray}{[0]}}, the output is then \macro{a}.
+
 
 \subsection{Commands to alter separators and output}
 

@@ -13,8 +13,6 @@
 \ProvidesExplPackage {jsonparse} {2024-04-09} {0.5.2} 
   {JSON Parse}
 
-  \debug_on:n {all}
-
 \bool_new:N \l_jsonparse_debug_mode_bool
 \keys_define:nn { jsonparse } { 
     debug .bool_set:N = \l_jsonparse_debug_mode_bool ,
@@ -81,7 +79,8 @@
 
 % ===
 
-\cs_generate_variant:Nn \tl_range:nnn { nne , nen , ene , een }
+\cs_generate_variant:Nn \tl_range:nnn { nne , nen }
+\cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { Ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
 \cs_generate_variant:Nn \str_count:n { e }
@@ -228,7 +227,7 @@
 
 \cs_new:Npn \__jsonparse_parse_array_end:w ] #1 \q_stop {
     \tl_set:Ne \l__jsonparse_object_array_val_tl { 
-      \tl_range:ene { \l__jsonparse_object_array_val_tl } { 1 } {
+      \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
         \int_eval:n {
           -1 * \tl_count:e {#1} - 1
         }
@@ -361,7 +360,7 @@
   }
   \tl_set:Ne \l__jsonparse_remainder_tl { \tl_trim_spaces:V \l__jsonparse_remainder_tl }
   \tl_set:Ne \l__jsonparse_remainder_tl { 
-    \tl_range:een { \l__jsonparse_remainder_tl } { 
+    \tl_range:Nen \l__jsonparse_remainder_tl { 
       \int_eval:n {
         \tl_count:e { #1 } + 1 
       }

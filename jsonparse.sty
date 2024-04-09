@@ -124,7 +124,10 @@
     } 
   }
   \prop_gclear:N \g_jsonparse_entries_prop
-  \jsonparse_parse:n {#2}
+  \group_begin:
+    \tl_set_eq:NN \par \c_space_tl
+    \jsonparse_parse:n {#2}
+  \group_end:
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop 
   \bool_if:NT \l_jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {
@@ -369,7 +372,7 @@
 
 % ===
 
-\NewExpandableDocumentCommand { \JSONParse } { m m } {
+\NewExpandableDocumentCommand { \JSONParse } { m +m } {
   \prop_new:N #1
   \jsonparse_parse_to_prop:Nn #1 {#2} 
 }
@@ -378,7 +381,7 @@
   \ior_open:Nn \l__jsonparse_json_ior {#2}
   
   \tl_clear:N \l__jsonparse_json_tl
-  \ior_str_map_inline:Nn \l__jsonparse_json_ior {
+  \ior_map_inline:Nn \l__jsonparse_json_ior {
     \tl_put_right:Nn \l__jsonparse_json_tl {##1}
   }
   

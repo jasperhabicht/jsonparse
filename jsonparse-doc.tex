@@ -11,7 +11,7 @@
 % This work has the LPPL maintenance status `author-maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.3.0}
+\def\jsonparsefileversion{0.5.0}
 \def\jsonparsefiledate{8 April 2024}
 
 \usepackage[T1]{fontenc}
@@ -187,6 +187,7 @@
     {Version \jsonparsefileversion, released on \jsonparsefiledate}
 
 \changes{v0.3.0}{2024/04/08}{First public beta release.}
+\changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
 
 \begin{document}
 
@@ -273,21 +274,6 @@ For example, let us assume the same JSON data structure as defined above parsed 
     {array}[key_a]{myJSONitem}
 \end{itemize}
 \end{codeexamplecolumns}
-
-\begin{macrodef}
-|\JSONParseObject|{<token variable>}{<token variable>}{<key>}
-\end{macrodef}
-Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific object can be taken from the complete structure using the command \macro{\JSONParseObject}. This command takes as first argument the token variable in which the parsed object should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the object that should be stored in the new token variable.
-
-Again using the example from above, we can create a new token variable \macro{\myJSONobject} with \macro{\JSONParseObject{\myJSONobject}{\myJSONdata}{array[0]}} containing the object associated with the key \macro{array[0]}. Using \macro{\JSONParseGetValue{\myJSONobject}{key_a}}, the text \macro{b} would be typeset to the document.
-
-\begin{macrodef}
-|\JSONParseArray|{<token variable>}{<token variable>}{<key>}
-\end{macrodef}
-Once a complete JSON string or JSON file has been parsed using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, a specific array can be taken from the complete structure using the command \macro{\JSONParseArray}. This command takes as first argument the token variable in which the parsed array should be stored (the token variable will be created by this command). The second argument takes the token variable that represents the complete JSON data structure. The third argument takes the key that identifies the array that should be stored in the new token variable.
-
-Assuming the JSON string \macro{{ "number" : 1 , "array" : [ "a" , "b" ] }} is parsed into the token variable \macro{\myJSONdata}, we can create a new token variable \macro{\myJSONarray} with \macro{\JSONParseObject{\myJSONarray}{\myJSONdata}{array}} representing the array associated with the key \macro{array}. With \macro{\JSONParseGetValue{\myJSONarray}{[0]}}, the output is then \macro{a}.
-
 
 \subsection{Commands to alter separators and output}
 

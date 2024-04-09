@@ -11,7 +11,7 @@
 % This work has the LPPL maintenance status `author-maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.5.2}
+\def\jsonparsefileversion{0.5.5}
 \def\jsonparsefiledate{9 April 2024}
 
 \usepackage[T1]{fontenc}
@@ -188,7 +188,7 @@
 
 \changes{v0.3.0}{2024/04/08}{First public beta release.}
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
-\changes{v0.5.2}{2024/04/09}{Minor bug fixes.}
+\changes{v0.5.5}{2024/04/09}{Bug fixes, introduction and enhancement of user functions.}
 
 \begin{document}
 
@@ -237,7 +237,7 @@ When a key is associated with an object or array, the whole object or array is o
 \begin{macrodef}
 |\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
-The command \macro{\JSONParseGetArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to ass a subkey to every value. The last argument takes a string that is inserted between all values when they are typeset.
+The command \macro{\JSONParseGetArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
 For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
 
@@ -261,15 +261,15 @@ Then using \macro{\JSONParseGetArrayValues{\myJSONdata}{array}[key_a]{, }}, the 
 \begin{macrodef}
 |\JSONParseUseArrayValues|{<token variable>}{<key>}[<subkey>]{<command name>}
 \end{macrodef}
-The command \macro{\JSONParseUseArrayValues} takes the same first three arguments as the command \macro{\JSONParseGetArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and should accept one argument that represents the value of the array item. It will be called for every array item.
+The command \macro{\JSONParseUseArrayValues} takes the same first three arguments as the command \macro{\JSONParseGetArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its defintion, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
 
 For example, let us assume the same JSON data structure as defined above parsed into the token variable \macro{\myJSONdata}. Then, the following can be done:
 
 \JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
 \begin{codeexamplecolumns}
-\newcommand{\myJSONitem}[1]{
-  \item \emph{#1}
+\newcommand{\myJSONitem}{
+  \item \emph{\JSONParseArrayValue}
 }
 
 \begin{itemize}
@@ -277,6 +277,11 @@ For example, let us assume the same JSON data structure as defined above parsed 
     {array}[key_a]{myJSONitem}
 \end{itemize}
 \end{codeexamplecolumns}
+
+\begin{macrodef}
+|\JSONParseGetArrayCount|{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseGetArrayCount} takes as frist argument a token variable that holds a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
 
 \subsection{Commands to alter separators and output}
 

@@ -346,15 +346,10 @@ The command \macro{\jsonparse_parse:n} takes as argument a JSON string and popul
 \end{macrodef}
 The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}.
 
-\begin{macrodef}
-|\jsonparse_remove_leading_spaces:N| <token variable>
-\end{macrodef}
-The command \macro{\jsonparse_remove_leading_spaces:N} trims leading spaces from the string stored in the token variable that is given to this command as argument.
-
 % =====
 
 \printchanges
 
 \end{document}
 
-%% End of file `dndicons-doc.tex`.
+%% End of file `jsonparse-doc.tex`.

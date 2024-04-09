@@ -232,6 +232,8 @@ If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable
 
 Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseGetValue{\myJSONdata}{outer_key.inner_key}} can be used. The command \macro{\JSONParseGetValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the parsed JSON string \macro{{ "key" : [ "one" , "two" ] }}.
 
+When a key is associated with an object or array, the whole object or array is output as JSON string. This string can again be parsed using \macro{\JSONParse}. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) return the whole JSON object.
+
 \begin{macrodef}
 |\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}

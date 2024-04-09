@@ -79,14 +79,17 @@
 
 % ===
 
+\cs_generate_variant:Nn \tl_count:n { e }
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { Ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
-\cs_generate_variant:Nn \str_count:n { e }
+\cs_generate_variant:Nn \tl_trim_spaces:n { V }
+\cs_generate_variant:Nn \str_case_e:nn { en }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { e }
 \cs_generate_variant:Nn \str_set:Nn { Ne }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
+\cs_generate_variant:Nn \prop_put:Nnn { Nee }
 \cs_generate_variant:Nn \seq_use:Nn { Ne }
 \cs_generate_variant:Nn \msg_log:nnn { nno }
 

@@ -240,6 +240,7 @@ The command \macro{\JSONParseFromFile} is used to parse a JSON file and store th
 
 \begin{macrodef}
 |\JSONParseGetValue|{<token variable>}{<key>}
+|\JSONParseGetValue*|{<token variable>}{<key>}
 \end{macrodef}
 The command \macro{\JSONParseGetValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
 
@@ -249,8 +250,11 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 When a key is associated with an object or array, the whole object or array is output as JSON string. This string can again be parsed using \macro{\JSONParse}. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) return the whole JSON object.
 
+The starred variant, \macro{\JSONParseGetValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
+
 \begin{macrodef}
 |\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
+|\JSONParseGetArrayValues*|{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
 The command \macro{\JSONParseGetArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
@@ -273,8 +277,11 @@ For example, let us assume the following JSON data structure is parsed into the 
 
 Then using \macro{\JSONParseGetArrayValues{\myJSONdata}{array}[key_a]{, }}, the text \macro{one, three} is typeset to the document. 
 
+The starred variant, \macro{\JSONParseGetArrayValues*}, rescans the token lists before they are typeset. 
+
 \begin{macrodef}
 |\JSONParseUseArrayValues|{<token variable>}{<key>}[<subkey>]{<command name>}
+|\JSONParseUseArrayValues*|{<token variable>}{<key>}[<subkey>]{<command name>}
 \end{macrodef}
 The command \macro{\JSONParseUseArrayValues} takes the same first three arguments as the command \macro{\JSONParseGetArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its defintion, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
 
@@ -292,6 +299,8 @@ For example, let us assume the same JSON data structure as defined above parsed 
     {array}[key_a]{myJSONitem}
 \end{itemize}
 \end{codeexamplecolumns}
+
+The starred variant, \macro{\JSONParseUseArrayValues*}, rescans the token lists before they are typeset. 
 
 \begin{macrodef}
 |\JSONParseGetArrayCount|{<token variable>}{<key>}

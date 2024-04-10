@@ -281,7 +281,7 @@
   \str_if_eq:enTF { \tl_head:n { #2 } } { : } {
     \tl_remove_once:Ne \l__jsonparse_remainder_tl { \c_colon_str }
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
-  } { 
+  } {
     \tl_set:Ne \l__jsonparse_val_tl {#1}
     \prop_gput:Nee \g_jsonparse_entries_prop 
       { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -430,24 +430,34 @@
   \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_json_tl } 
 }
 
-\NewExpandableDocumentCommand { \JSONParseGetValue } { m m } {
-  \prop_item:Nn #1 {#2} 
+\cs_generate_variant:Nn \tl_rescan:nn { ne }
+
+\NewExpandableDocumentCommand { \JSONParseGetValue } { s m m } {
+  \bool_if:NTF #1 {
+    \tl_rescan:ne { } { \prop_item:Nn #2 {#3} }
+  } {
+    \prop_item:Nn #2 {#3} 
+  }
 }
 
-\NewExpandableDocumentCommand { \JSONParseGetArrayValues } { m m O{} m } {
+\NewExpandableDocumentCommand { \JSONParseGetArrayValues } { s m m O{} m } {
   \group_begin:
-    \jsonparse_filter:Nn #1 {#2}
+    \jsonparse_filter:Nn #2 {#3}
     \bool_set_true:N \l__prop_map_first_bool
-    \prop_map_inline:Nn #1 {
+    \prop_map_inline:Nn #2 {
       \str_if_eq:enT { 
-        \tl_range:nen {##1} { \int_eval:n { -1 * \tl_count:n {#3} } } { -1 } 
-      } {#3} {
+        \tl_range:nen {##1} { \int_eval:n { -1 * \tl_count:n {#4} } } { -1 } 
+      } {#4} {
         \bool_if:NTF \l__prop_map_first_bool { 
           \bool_set_false:N \l__prop_map_first_bool
         } {        
-          #4 
+          #5 
         }
-        ##2
+        \bool_if:NTF #1 {
+          \tl_rescan:ne { } {##2}
+        } {
+          ##2
+        }
       } 
     }
   \group_end:
@@ -476,18 +486,22 @@
   \group_end:
 }
 
-\NewExpandableDocumentCommand { \JSONParseUseArrayValues } { m m O{} m } {
+\NewExpandableDocumentCommand { \JSONParseUseArrayValues } { s m m O{} m } {
   \group_begin:
-    \jsonparse_filter:Nn #1 {#2}
-    \prop_map_inline:Nn #1 {
+    \jsonparse_filter:Nn #2 {#3}
+    \prop_map_inline:Nn #2 {
       \str_if_eq:enT { 
-        \tl_range:nen {##1} { \int_eval:n { -1 * \tl_count:n {#3} } } { -1 } 
-      } {#3} {
+        \tl_range:nen {##1} { \int_eval:n { -1 * \tl_count:n {#4} } } { -1 } 
+      } {#4} {
         \int_incr:N \l__jsonparse_array_index_int
         \tl_set:Ne \JSONParseArrayIndex { \__jsonparse_get_array_index:w ##1 \q_stop }
         \tl_set:Ne \JSONParseArrayKey { ##1 }
-        \tl_set:Ne \JSONParseArrayValue { \prop_item:Nn #1 {##1} }
-        \use:c {#4} 
+        \bool_if:NTF #1 {
+          \tl_set_rescan:Nne \JSONParseArrayValue { } { \prop_item:Nn #2 {##1} }
+        } {
+          \tl_set:Ne \JSONParseArrayValue { \prop_item:Nn #2 {##1} }
+        }
+        \use:c {#5} 
       }
     } 
   \group_end:

@@ -86,6 +86,7 @@
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { Ne }
+\cs_generate_variant:Nn \tl_rescan:nn { ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
 \cs_generate_variant:Nn \tl_trim_spaces:n { V }
 \cs_generate_variant:Nn \str_case_e:nn { en }
@@ -429,8 +430,6 @@
   \prop_new:N #1
   \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_json_tl } 
 }
-
-\cs_generate_variant:Nn \tl_rescan:nn { ne }
 
 \NewExpandableDocumentCommand { \JSONParseGetValue } { s m m } {
   \bool_if:NTF #1 {

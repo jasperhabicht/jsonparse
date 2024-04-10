@@ -48,6 +48,9 @@
 \bool_new:N \l_jsonparse_array_index_zero_based_bool
 \bool_set_true:N \l_jsonparse_array_index_zero_based_bool
 
+\bool_new:N \l_jsonparse_escape_input_bool
+\bool_set_true:N \l_jsonparse_escape_input_bool
+
 \NewDocumentCommand { \JSONParseSetChildSeparator } { m } {
   \str_set:Nn \l_jsonparse_child_sep_str { #1 }
 }
@@ -132,7 +135,12 @@
   }
   \prop_gclear:N \g_jsonparse_entries_prop
   \group_begin:
-    \tl_set_eq:NN \par \c_space_tl
+    \bool_if:NT \l_jsonparse_escape_input_bool {
+      \tl_set_eq:NN \par \c_space_tl
+      \tl_set:Nn \" { { " } }
+      \tl_set:Nn \/ { { / } }
+      \tl_set:Nn \\ { { \c_backslash_str } }
+    }
     \jsonparse_parse:n {#2}
   \group_end:
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop 

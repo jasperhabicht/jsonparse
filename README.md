@@ -33,8 +33,8 @@ Let's assume a file with the name `example.json` is stored in the working direct
   ],
   "children": [
     "Tom,
-    "Dick",
-    "Dick"
+    "Doug",
+    "Harry"
   ],
   "memberOf": null
 }

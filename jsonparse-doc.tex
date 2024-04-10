@@ -216,11 +216,11 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines internally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{{"}} (i.\,e. a quotation mark inside a group and thus hidden from the parser), \macro{\/} expands to \macro{{/}} (i.\,e. a solidus inside a group) and \macro{\\} expands to \macro{{\c_backslash_str}} (i.\,e. a backslash with category code 12 (other) inside a group).
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines internally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{{"}} (i.\,e. a quotation mark inside a group and thus hidden from the parser), \macro{\/} expands to \macro{/} and \macro{\\} expands to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12 (other)).
 
 Note that other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped and it is up to the user to process these sequences before feeding them into the commands provided by this package.
 
-Apart from the backslash (see above), characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
+Characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
 
 Setting the internal boolean \macro{\l_jsonparse_escape_input_bool} to false disables the treatment of the input as described in this section.
 

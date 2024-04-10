@@ -138,8 +138,8 @@
     \bool_if:NT \l_jsonparse_escape_input_bool {
       \tl_set_eq:NN \par \c_space_tl
       \tl_set:Nn \" { { " } }
-      \tl_set:Nn \/ { { / } }
-      \tl_set:Nn \\ { { \c_backslash_str } }
+      \tl_set:Nn \/ { / }
+      \tl_set:Nn \\ { \c_backslash_str }
     }
     \jsonparse_parse:n {#2}
   \group_end:

@@ -15,6 +15,7 @@ Let's assume a file with the name `example.json` is stored in the working direct
   "givenName": "Joe",
   "familyName": "Public",
   "points": 1.7,
+  "hasCertification": true,
   "address": {
     "streetAddress": "10 Main St",
     "locality": "Cityville",

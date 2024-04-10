@@ -12,35 +12,33 @@ Let's assume a file with the name `example.json` is stored in the working direct
 
 ```
 {
-  "first_name": "John",
-  "last_name": "Smith",
-  "is_alive": true,
-  "age": 27,
+  "givenName": "Joe",
+  "familyName": "Public",
+  "points": 1.7,
   "address": {
-    "street_address": "21 2nd Street",
-    "city": "New York",
-    "state": "NY",
-    "postal_code": "10021-3100"
+    "streetAddress": "10 Main St",
+    "locality": "Cityville",
+    "postalCode": "12345"
   },
-  "phone_numbers": [
+  "contactPoint": [
     {
-      "type": "home",
-      "number": "212 555-1234"
+      "contactType": "office",
+      "telephone": "+1 (555) 555-1234"
     },
     {
-      "type": "office",
-      "number": "646 555-4567"
+      "contactType": "mobile",
+      "telephone": "+1 (555) 555-6789"
     }
   ],
   "children": [
-    "Catherine",
-    "Thomas",
-    "Trevor"
+    "Tom,
+    "Dick",
+    "Dick"
   ],
-  "spouse": null
+  "memberOf": null
 }
 ```
 
-We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseGetValue{\myJSONdata}{phone_numbers[0].number}` would then result in the output `212 555-1234` (indices are zero-based per default). 
+We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseGetValue{\myJSONdata}{contactPoint[0].telephone}` would then result in the output `+1 (555) 555-1234` (indices are zero-based per default). 
 
 This package including all files is subject to the LPPL 1.3c license.

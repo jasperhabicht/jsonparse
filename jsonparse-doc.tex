@@ -12,7 +12,7 @@
 % 
 \documentclass[a4paper]{article}
 \def\jsonparsefileversion{0.5.6}
-\def\jsonparsefiledate{9 April 2024}
+\def\jsonparsefiledate{11 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -189,7 +189,7 @@
 \changes{v0.3.0}{2024/04/08}{First public beta release.}
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
 \changes{v0.5.5}{2024/04/09}{Bug fixes, introduction and enhancement of user functions.}
-\changes{v0.5.6}{2024/04/10}{Bug fixes, escaping of special chars added.}
+\changes{v0.5.6}{2024/04/11}{Bug fixes, escaping of special chars added.}
 
 \begin{document}
 
@@ -216,9 +216,9 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines internally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{{"}} (i.\,e. a quotation mark inside a group and thus hidden from the parser), \macro{\/} expands to \macro{/} and \macro{\\} expands to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12 (other)).
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines internally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are properly parsed. Also, \macro{\/} expands to \macro{/} and \macro{\\} expands to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12 (other)).
 
-Note that other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped and it is up to the user to process these sequences before feeding them into the commands provided by this package.
+Other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped and it is up to the user to process these sequences before feeding them into the commands provided by this package.
 
 Characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
 
@@ -248,9 +248,9 @@ If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable
 
 Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseGetValue{\myJSONdata}{outer_key.inner_key}} can be used. The command \macro{\JSONParseGetValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the parsed JSON string \macro{{ "key" : [ "one" , "two" ] }}.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. This string can again be parsed using \macro{\JSONParse}. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) return the whole JSON object.
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) returns the whole JSON object as string. The output of whole objects or arrays is not meant to be printed, but it can again be parsed using \macro{\JSONParse}. 
 
-The starred variant, \macro{\JSONParseGetValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
+The starred variant, \macro{\JSONParseGetValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
 
 \begin{macrodef}
 |\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}

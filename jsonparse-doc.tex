@@ -216,7 +216,9 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines internally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are properly parsed. Also, \macro{\/} expands to \macro{/} and \macro{\\} expands to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12 (other)).
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. Similarly, \macro{\/} expands to \macro{\exp_not:N \/} and finally to \macro{/} while \macro{\\} expands to \macro{\exp_not:N \\} and finally to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). 
+
+Due to the above procedure, the TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source, so that they become \macro{\\\"} and \macro{\\\\} respectively. 
 
 Other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped and it is up to the user to process these sequences before feeding them into the commands provided by this package.
 

@@ -5,7 +5,7 @@
 % conditions of the LaTeX Project Public License version 1.3c,
 % available at http://www.latex-project.org/lppl/.
 % 
-% This file is part of the `jsonparse'  package (The Work in LPPL)
+% This file is part of the `jsonparse' package (The Work in LPPL)
 % and all files in that bundle must be distributed together.
 % 
 % This work has the LPPL maintenance status `maintained'.
@@ -190,7 +190,7 @@
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
 \changes{v0.5.5}{2024/04/09}{Bug fixes, introduction and enhancement of user functions.}
 \changes{v0.5.6}{2024/04/11}{Bug fixes, escaping of special chars added.}
-\changes{v0.5.7}{2024/04/14}{Bug fixes.}
+\changes{v0.5.7}{2024/04/14}{Bug fixes, added key-value option setting.}
 
 \begin{document}
 
@@ -210,10 +210,12 @@ To install the package, copy the package file \macro{jsonparse.sty} into the wor
 
 The package does not load any dependencies.
 
-\begin{macrodef}debug\end{macrodef}
+\begin{macrodef}
+|debug|
+\end{macrodef}
 The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
 
-\section{Escaping and special treatment of the input}
+\section{Escaping and special treatment of the input}\label{sec:escaping}
 
 The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
 
@@ -225,7 +227,7 @@ Other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\
 
 Characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
 
-Setting the internal boolean \macro{\l_jsonparse_escape_input_bool} to false disables the treatment of the input as described in this section.
+Setting the boolean key \macro{escape input} to false disables the treatment of the input as described in this section. 
 
 \section{Main user commands}
 
@@ -310,63 +312,46 @@ The starred variant, \macro{\JSONParseUseArrayValues*}, rescans the token lists 
 \end{macrodef}
 The command \macro{\JSONParseGetArrayCount} takes as frist argument a token variable that holds a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
 
-\subsection{Commands to alter separators and output}
+\subsection{Changing separators, output and other settings}
 
-The package provides a set of commands that can be used to change the separators used to select the relevant value in the JSON structure as well as the output that is generated from the JSON data.
-
-\begin{macrodef}
-|\JSONParseSetChildSeparator|{<string>}
-|\JSONParseSetArraySeparator|{<string>}{<string>}
-\end{macrodef}
-The two commands \macro{\JSONParseSetChildSeparator} and \macro{\JSONParseSetArraySeparator} can be used to change the separators for child objects or array items in the syntax used to select a specific value in the JSON data structure. Per default, the child separator is a dot (\macro{.}) while the array separators are sqare brackets (\macro{[} and \macro{]}). The command \macro{\JSONParseSetArraySeparator} takes two arguments of which the first is the character used before the array separator and the second is used after. Changing the separators can be useful if keys in the JSON structure already use these characters.
+The package provides a set of keys can be set to change the separators used to select the relevant value in the JSON structure, the output that is generated from the JSON data as well as other things.
 
 \begin{macrodef}
-|\JSONParseSetTrueString|{<string>}
-|\JSONParseSetFalseString|{<string>}
-|\JSONParseSetNullString|{<string>}
+|\JSONParseSet|{<key-value list>}
 \end{macrodef}
-The commands \macro{\JSONParseSetTrueString} and \macro{\JSONParseSetFalseString} as well as the command \macro{\JSONParseSetNullString} can be used to change the output that is typeset if the JSON value is \macro{true}, \macro{false} or \macro{null}. The default strings that are typeset are \macro{true}, \macro{false} or \macro{null} resepctively.
+The commands \macro{\JSONParseSet} can be used to specify settings via key-value pairs (separated by commas). The following keys are available:
 
 \begin{macrodef}
-|\JSONParseSetArrayIndexZeroBased|
-|\JSONParseSetArrayIndexOneBased|
+|child sep|={<string>}
 \end{macrodef}
-The command \macro{\JSONParseSetArrayIndexZeroBased} sets the numbering of the index of array items to zero-based. With the command \macro{\JSONParseSetArrayIndexOneBased}, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
-
-\subsection{L3 ariables and commands}
+With the key \macro{child sep}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
 
 \begin{macrodef}
-|\l_jsonparse_debug_mode_bool|
+|array sep left|={<string>}
+|array sep right|={<string>}
 \end{macrodef}
-The token variable \macro{\l_jsonparse_debug_mode_bool} holds the boolean value true if the package is loaded with the \macro{debug} option and false otherwise. If set to true, the debug mode will be used for the following use of \macro{\jsonparse_parse:n}. 
+With the keys \macro{array sep left} and \macro{array sep right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. Currently, only single-character separators are supported.
 
 \begin{macrodef}
-|\l_jsonparse_child_sep_str|
-|\l_jsonparse_array_sep_left_str|
-|\l_jsonparse_array_sep_right_str|
-|\l_jsonparse_true_str|
-|\l_jsonparse_false_str|
-|\l_jsonparse_null_str|
-|\l_jsonparse_array_index_zero_based_bool|
+|true|={<string>}
+|false|={<string>}
+|null|={<string>}
 \end{macrodef}
-The token variable \macro{\l_jsonparse_child_sep_str} holds the string \macro{.} per default or the string set by the user command \macro{\JSONParseSetChildSeparator}.
-
-The token variable \macro{\l_jsonparse_array_sep_left_str} holds the string \macro{[} per default or the string given as first argument to the user command \macro{\JSONParseSetArraySeparator}. 
-
-The token variable \macro{\l_jsonparse_array_sep_right_str} holds the string \macro{]} per default or the string given as second argument to the user command \macro{\JSONParseSetArraySeparator}.
-
-The token variable \macro{\l_jsonparse_true_str} holds the string \macro{true} per default or the string set by the user command \macro{\JSONParseSetTrueString}.
-
-{\sloppy The token variable \macro{\l_jsonparse_false_str} holds the string \macro{false} per default or the string set by the user command \macro{\JSONParseSetFalseString}. \par}
-
-The token variable \macro{\l_jsonparse_null_str} holds the string \macro{null} per default or the string set by the user command \macro{\JSONParseSetNullString}.
-
-The token variable \macro{\l_jsonparse_array_index_zero_based_bool} holds a boolean value which is \macro{true} per default or if the user command \macro{\JSONParseSetArrayIndexZeroBased} was called. The boolean value is \macro{false} if the user command \macro{\JSONParseSetArrayIndexOneBased} was called.
+With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} resepctively.
 
 \begin{macrodef}
-|\g_jsonparse_entries_prop|
+|array index zero-based|
+|array index zero-based|={<boolean>}
 \end{macrodef}
-The token variable (property list) \macro{\g_jsonparse_entries_prop} holds key-value pairs representing all elements of a JSON data structure generated by a previous run of \macro{\jsonparse_parse:n}. 
+If set (or explicitly set to \macro{true}), the key \macro{array index zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
+
+\begin{macrodef}
+|escape input|
+|escape input|={<boolean>}
+\end{macrodef}
+If set (or explicitly set to \macro{true}), the key \macro{escape input} acticates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above (\ref{sec:escaping}).
+
+\subsection{L3 commands}
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
@@ -377,6 +362,11 @@ The command \macro{\jsonparse_parse:n} takes as argument a JSON string and popul
 |\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}.
+
+\begin{macrodef}
+|\jsonparse_filter:Nn| <token variable> {<key>}
+\end{macrodef}
+The command \macro{\jsonparse_parse_to_prop:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. 
 
 % =====
 

@@ -68,6 +68,7 @@
 
 % ===
 
+\cs_generate_variant:Nn \exp_last_unbraced:Nnn { Nne }
 \cs_generate_variant:Nn \tl_count:n { e }
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
@@ -145,19 +146,8 @@
     \exp_last_unbraced:Ne 
       \__jsonparse_parse_object:w \l__jsonparse_input_tl \q_stop 
   } {
-    \str_case_e:enF { \str_head_ignore_spaces:e { \l__jsonparse_input_tl } } {
-      { [ } { 
-        \exp_last_unbraced:Ne 
-          \__jsonparse_parse_array_begin:w \l__jsonparse_input_tl \q_stop 
-      }
-      { ] } { 
-        \exp_last_unbraced:Ne 
-          \__jsonparse_parse_array_end:w \l__jsonparse_input_tl \q_stop 
-      }
-      { " } { 
-        \exp_last_unbraced:Ne 
-          \__jsonparse_parse_string_key:w \l__jsonparse_input_tl \q_stop 
-      }
+    \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:e { \l__jsonparse_input_tl } :w } {
+      \l__jsonparse_input_tl \q_stop
     } {
       % other
       \exp_last_unbraced:Ne 
@@ -203,6 +193,21 @@
     }
   \group_end:
   \__jsonparse_parse_remainder:
+}
+
+\cs_new:cpn { __jsonparse_parse_ [ :w } #1 \q_stop {
+  \exp_last_unbraced:Ne 
+    \__jsonparse_parse_array_begin:w #1 \q_stop
+}
+
+\cs_new:cpn { __jsonparse_parse_ ] :w } #1 \q_stop {
+  \exp_last_unbraced:Ne 
+    \__jsonparse_parse_array_end:w #1 \q_stop
+}
+
+\cs_new:cpn { __jsonparse_parse_ " :w } #1 \q_stop {
+  \exp_last_unbraced:Ne 
+    \__jsonparse_parse_string_key:w #1 \q_stop
 }
 
 \cs_new:Npn \__jsonparse_parse_array_begin:w [ #1 \q_stop {
@@ -271,7 +276,7 @@
   \__jsonparse_array_key_set:
   \tl_set:Nn \l__jsonparse_remainder_tl {#2}
   % key or string?
-  \str_if_eq:enTF { \tl_head:n { #2 } } { : } {
+  \str_if_eq:enTF { \tl_head:n {#2} } { : } {
     \tl_remove_once:Ne \l__jsonparse_remainder_tl { \c_colon_str }
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
   } {
@@ -306,7 +311,7 @@
 \cs_new:Npn \__jsonparse_parse_other_aux:w #1 , #2 \q_stop {
   \tl_set:Nn \l__jsonparse_temp_tl {#1}
   \str_case:enF { 
-    \str_lowercase:f { \l__jsonparse_temp_tl } 
+    \str_casefold:V \l__jsonparse_temp_tl 
   } {
     { true } {
       \tl_set_eq:NN \l__jsonparse_val_tl \l__jsonparse_true_str 
@@ -366,7 +371,7 @@
   \tl_set:Ne \l__jsonparse_remainder_tl { 
     \tl_range:Nen \l__jsonparse_remainder_tl { 
       \int_eval:n {
-        \tl_count:e { #1 } + 1 
+        \tl_count:e {#1} + 1 
       }
     } { -1 }
   }

@@ -8,15 +8,15 @@
 % This file is part of the `jsonparse'  package (The Work in LPPL)
 % and all files in that bundle must be distributed together.
 % 
-% This work has the LPPL maintenance status `author-maintained'.
+% This work has the LPPL maintenance status `maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-11} {0.5.6} 
+\ProvidesExplPackage {jsonparse} {2024-04-14} {0.5.7} 
   {JSON Parse}
 
 \bool_new:N \l_jsonparse_debug_mode_bool
 \keys_define:nn { jsonparse } { 
-    debug .bool_set:N = \l_jsonparse_debug_mode_bool ,
-    debug .default:n  = { true } ,
+  debug .bool_set:N = \l_jsonparse_debug_mode_bool ,
+  debug .default:n  = { true } ,
 }
 \ProcessKeyOptions [ jsonparse ]
 
@@ -128,9 +128,9 @@
 
 % ===
 
-\cs_new:Npn \jsonparse_parse_to_prop:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \bool_if:NT \l_jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
+    \msg_log:nnn { jsonparse } { debug-info } {
       \iow_newline: 
       Parsing ~ JSON ~ ... 
     } 
@@ -147,13 +147,13 @@
   \group_end:
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop 
   \bool_if:NT \l_jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
+    \msg_log:nnn { jsonparse } { debug-info } {
       JSON ~ parsing ~ done. \iow_newline: 
     } 
   }
 }
 
-\cs_new:Npn \jsonparse_parse:n #1 {
+\cs_new_protected:Npn \jsonparse_parse:n #1 {
   \tl_set:Ne \l__jsonparse_input_tl { \tl_trim_spaces:n {#1} }
   \tl_if_head_is_group:eTF { \l__jsonparse_input_tl } {
     \exp_last_unbraced:Ne 
@@ -184,22 +184,22 @@
 
 \cs_new:Npn \__jsonparse_parse_object:w #1#2 \q_stop {
   \__jsonparse_array_key_set:
-  \tl_set:Ne \l__jsonparse_remainder_tl {#2}
+  \tl_set:Nn \l__jsonparse_remainder_tl {#2}
   \group_begin:
     % object begin
     \bool_if:NT \l_jsonparse_debug_mode_bool {
-      \msg_log:nne { jsonparse } { debug-info } {
+      \msg_log:nnn { jsonparse } { debug-info } {
         (obj ~ begin) 
       } 
     }
     \tl_if_empty:NTF \l__jsonparse_key_tl {
-      \tl_set:Ne \l__jsonparse_object_array_key_tl { \l_jsonparse_child_sep_str }
+      \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l_jsonparse_child_sep_str 
     } {
-      \tl_set:Ne \l__jsonparse_object_array_key_tl { \l__jsonparse_key_tl }
+      \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
       \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l_jsonparse_child_sep_str }
-      \tl_set:Ne \l__jsonparse_val_tl {#1}
+      \tl_set:Nn \l__jsonparse_val_tl {#1}
     }
-    \tl_set:Ne \l__jsonparse_object_array_val_tl { { #1 } }
+    \tl_set:Nn \l__jsonparse_object_array_val_tl { { #1 } }
     \exp_args:Ne \jsonparse_parse:n {#1}
     \prop_gput:Nee \g_jsonparse_entries_prop 
       { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
@@ -211,7 +211,7 @@
     } 
     % object end
     \bool_if:NT \l_jsonparse_debug_mode_bool {
-      \msg_log:nne { jsonparse } { debug-info } {
+      \msg_log:nnn { jsonparse } { debug-info } {
         (obj ~ end) 
       } 
     }
@@ -222,10 +222,10 @@
 \cs_new:Npn \__jsonparse_parse_array_begin:w [ #1 \q_stop {
   \__jsonparse_array_key_set:
   \group_begin:
-    \tl_set:Ne \l__jsonparse_remainder_tl {#1}
+    \tl_set:Nn \l__jsonparse_remainder_tl {#1}
     % array begin
     \bool_if:NT \l_jsonparse_debug_mode_bool {
-      \msg_log:nne { jsonparse } { debug-info } {
+      \msg_log:nnn { jsonparse } { debug-info } {
         (arr ~ begin) 
       }   
     }
@@ -233,7 +233,7 @@
     \bool_if:NT \l_jsonparse_array_index_zero_based_bool {
       \int_decr:N \l__jsonparse_array_index_int
     }
-    \tl_set:Ne \l__jsonparse_object_array_key_tl { \l__jsonparse_key_tl }
+    \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
     \tl_set:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l_jsonparse_array_sep_left_str }
     \__jsonparse_parse_remainder:
@@ -256,10 +256,10 @@
       } 
     } 
   \group_end:
-  \tl_set:Ne \l__jsonparse_remainder_tl {#1}
+  \tl_set:Nn \l__jsonparse_remainder_tl {#1}
   % array end
   \bool_if:NT \l_jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
+    \msg_log:nnn { jsonparse } { debug-info } {
       (arr ~ end) 
     } 
   }
@@ -278,7 +278,7 @@
 
 \cs_new:Npn \__jsonparse_parse_string_key:w " #1 " #2 \q_stop {
   \__jsonparse_array_key_set:
-  \tl_set:Ne \l__jsonparse_remainder_tl {#2}
+  \tl_set:Nn \l__jsonparse_remainder_tl {#2}
   % key or string?
   \str_if_eq:enTF { \tl_head:n { #2 } } { : } {
     \tl_remove_once:Ne \l__jsonparse_remainder_tl { \c_colon_str }
@@ -288,7 +288,7 @@
       \tl_set:Nn \" { " }
       \tl_set:Nn \/ { / }
       \tl_set:Nn \\ { \c_backslash_str }
-      \tl_set:Ne \l__jsonparse_val_tl {#1}
+      \tl_set:Nn \l__jsonparse_val_tl {#1}
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % string
@@ -305,22 +305,20 @@
 
 \cs_new:Npn \__jsonparse_parse_other:w #1 \q_stop {
   \__jsonparse_array_key_set:
-  \tl_set:Ne \l__jsonparse_remainder_tl {#1}
-  \tl_set:Ne \l__jsonparse_temp_tl { #1 , }
+  \tl_set:Nn \l__jsonparse_remainder_tl {#1}
+  \tl_set:Nn \l__jsonparse_temp_tl { #1 , }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { , }
   \exp_last_unbraced:Ne
     \__jsonparse_parse_other_aux:w \l__jsonparse_temp_tl \q_stop
 }
 
 \cs_new:Npn \__jsonparse_parse_other_aux:w #1 , #2 \q_stop {
-  \tl_set:Ne \l__jsonparse_temp_tl {#1}
+  \tl_set:Nn \l__jsonparse_temp_tl {#1}
   \str_case:enF { 
     \str_lowercase:f { \l__jsonparse_temp_tl } 
   } {
     { true } {
-      \tl_set:Ne \l__jsonparse_val_tl { 
-        \l_jsonparse_true_str 
-      }
+      \tl_set_eq:NN \l__jsonparse_val_tl \l_jsonparse_true_str 
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % true
@@ -332,9 +330,7 @@
       }  
     }
     { false } {
-      \tl_set:Ne \l__jsonparse_val_tl { 
-        \l_jsonparse_false_str 
-      }
+      \tl_set_eq:NN \l__jsonparse_val_tl \l_jsonparse_false_str 
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % false
@@ -346,9 +342,7 @@
       }
     }
     { null } {
-      \tl_set:Ne \l__jsonparse_val_tl { 
-        \l_jsonparse_null_str 
-      }
+      \tl_set_eq:NN \l__jsonparse_val_tl \l_jsonparse_null_str
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % null
@@ -365,7 +359,7 @@
       \msg_error:nnee { jsonparse } { parsing-error }
         { \l__jsonparse_key_tl } {#1}
     } { 
-      \tl_set:Ne \l__jsonparse_val_tl {#1}
+      \tl_set:Nn \l__jsonparse_val_tl {#1}
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % number
@@ -398,7 +392,7 @@
   }
 }	
 
-\cs_new:Npn \jsonparse_filter:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
   \prop_map_inline:Nn #1 {
     \str_case_e:en { 
       \tl_range:nne {##1} { 1 } { \int_eval:n { \tl_count:e {#2} + 1 } } 
@@ -418,12 +412,12 @@
 
 % ===
 
-\NewExpandableDocumentCommand { \JSONParse } { m +m } {
+\NewDocumentCommand { \JSONParse } { m +m } {
   \prop_new:N #1
   \jsonparse_parse_to_prop:Nn #1 {#2} 
 }
 
-\NewExpandableDocumentCommand { \JSONParseFromFile } { m m } {
+\NewDocumentCommand { \JSONParseFromFile } { m m } {
   \ior_open:Nn \l__jsonparse_json_ior {#2}
   
   \tl_clear:N \l__jsonparse_json_tl
@@ -445,7 +439,7 @@
   }
 }
 
-\NewExpandableDocumentCommand { \JSONParseGetArrayValues } { s m m O{} m } {
+\NewDocumentCommand { \JSONParseGetArrayValues } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}
     \bool_set_true:N \l__prop_map_first_bool
@@ -472,7 +466,7 @@
   #1
 }
 
-\NewExpandableDocumentCommand { \JSONParseGetArrayCount } { m m } {
+\NewDocumentCommand { \JSONParseGetArrayCount } { m m } {
   \group_begin:
     \jsonparse_filter:Nn #1 {#2}
     \int_zero:N \l__jsonparse_array_count_int
@@ -491,7 +485,7 @@
   \group_end:
 }
 
-\NewExpandableDocumentCommand { \JSONParseUseArrayValues } { s m m O{} m } {
+\NewDocumentCommand { \JSONParseUseArrayValues } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}
     \prop_map_inline:Nn #2 {
@@ -500,7 +494,7 @@
       } {#4} {
         \int_incr:N \l__jsonparse_array_index_int
         \tl_set:Ne \JSONParseArrayIndex { \__jsonparse_get_array_index:w ##1 \q_stop }
-        \tl_set:Ne \JSONParseArrayKey { ##1 }
+        \tl_set:Ne \JSONParseArrayKey {##1}
         \bool_if:NTF #1 {
           \tl_set_rescan:Nne \JSONParseArrayValue { } { \prop_item:Nn #2 {##1} }
         } {

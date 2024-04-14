@@ -8,11 +8,11 @@
 % This file is part of the `jsonparse'  package (The Work in LPPL)
 % and all files in that bundle must be distributed together.
 % 
-% This work has the LPPL maintenance status `author-maintained'.
+% This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.5.6}
-\def\jsonparsefiledate{11 April 2024}
+\def\jsonparsefileversion{0.5.7}
+\def\jsonparsefiledate{14 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -190,6 +190,7 @@
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
 \changes{v0.5.5}{2024/04/09}{Bug fixes, introduction and enhancement of user functions.}
 \changes{v0.5.6}{2024/04/11}{Bug fixes, escaping of special chars added.}
+\changes{v0.5.7}{2024/04/14}{Bug fixes.}
 
 \begin{document}
 
@@ -205,7 +206,7 @@ This package is still in a beta stage and not thoroughly tested. Bugs or improve
 
 \section{Loading the package}
 
-To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installted, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document. 
+To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document. 
 
 The package does not load any dependencies.
 
@@ -216,7 +217,7 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX macros \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. Similarly, \macro{\/} expands to \macro{\exp_not:N \/} and finally to \macro{/} while \macro{\\} expands to \macro{\exp_not:N \\} and finally to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). 
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. Similarly, \macro{\/} expands to \macro{\exp_not:N \/} and finally to \macro{/} while \macro{\\} expands to \macro{\exp_not:N \\} and finally to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). 
 
 Due to the above procedure, the TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source, so that they become \macro{\\\"} and \macro{\\\\} respectively. 
 
@@ -250,7 +251,7 @@ If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable
 
 Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseGetValue{\myJSONdata}{outer_key.inner_key}} can be used. The command \macro{\JSONParseGetValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the parsed JSON string \macro{{ "key" : [ "one" , "two" ] }}.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) returns the whole JSON object as string. The output of whole objects or arrays is not meant to be printed, but it can again be parsed using \macro{\JSONParse}. 
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) returns the whole JSON object as string. The output of whole objects or arrays is not meant to be printed, but it can again be parsed using \macro{\JSONParse}. Such nested use, however, is only possible with the (non-starred) command \macro{\JSONParseGetValue}. 
 
 The starred variant, \macro{\JSONParseGetValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
 
@@ -332,7 +333,7 @@ The commands \macro{\JSONParseSetTrueString} and \macro{\JSONParseSetFalseString
 \end{macrodef}
 The command \macro{\JSONParseSetArrayIndexZeroBased} sets the numbering of the index of array items to zero-based. With the command \macro{\JSONParseSetArrayIndexOneBased}, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
 
-\subsection{Internal variables and commands}
+\subsection{L3 ariables and commands}
 
 \begin{macrodef}
 |\l_jsonparse_debug_mode_bool|

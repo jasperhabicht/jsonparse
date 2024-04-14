@@ -227,7 +227,7 @@ Other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\
 
 Characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
 
-Setting the boolean key \macro{escape input} to false disables the treatment of the input as described in this section. 
+Setting the boolean key \macro{escape input} to false disables the treatment of the input as described in this section. See more on setting keys below in section \ref{sec:escaping}.
 
 \section{Main user commands}
 
@@ -312,7 +312,7 @@ The starred variant, \macro{\JSONParseUseArrayValues*}, rescans the token lists 
 \end{macrodef}
 The command \macro{\JSONParseGetArrayCount} takes as frist argument a token variable that holds a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
 
-\subsection{Changing separators, output and other settings}
+\subsection{Changing separators, output and other settings}\label{sec:settings}
 
 The package provides a set of keys can be set to change the separators used to select the relevant value in the JSON structure, the output that is generated from the JSON data as well as other things.
 
@@ -330,7 +330,7 @@ With the key \macro{child sep}, the separator for child objects that is used in 
 |array sep left|={<string>}
 |array sep right|={<string>}
 \end{macrodef}
-With the keys \macro{array sep left} and \macro{array sep right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. Currently, only single-character separators are supported.
+With the keys \macro{array sep left} and \macro{array sep right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. 
 
 \begin{macrodef}
 |true|={<string>}
@@ -349,7 +349,7 @@ If set (or explicitly set to \macro{true}), the key \macro{array index zero-base
 |escape input|
 |escape input|={<boolean>}
 \end{macrodef}
-If set (or explicitly set to \macro{true}), the key \macro{escape input} acticates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above (\ref{sec:escaping}).
+If set (or explicitly set to \macro{true}), the key \macro{escape input} acticates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above in section \ref{sec:escaping}.
 
 \subsection{L3 commands}
 

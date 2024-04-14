@@ -88,7 +88,7 @@
 \prg_generate_conditional_variant:Nnn \tl_if_head_is_group:n { e } { TF }
 \prg_generate_conditional_variant:Nnn \str_case:nn { en } { F }
 \prg_generate_conditional_variant:Nnn \str_case_e:nn { en } { F }
-\prg_generate_conditional_variant:Nnn \str_if_eq:nn { ee } { T }
+\prg_generate_conditional_variant:Nnn \str_if_eq:nn { eV } { T }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { T , TF }
 
 \prop_new:N \g_jsonparse_entries_prop
@@ -258,13 +258,13 @@
 }
 
 \cs_new:Npn \__jsonparse_array_key_set: {
-  \str_if_eq:eeT { 
+  \str_if_eq:eVT { 
     \tl_range:Nen \l__jsonparse_prefix_tl { 
       \int_eval:n { 
         -1 * \tl_count:N \l__jsonparse_array_sep_left_str 
       } 
     } { -1 }
-  } { \l__jsonparse_array_sep_left_str } {
+  } \l__jsonparse_array_sep_left_str {
     \int_incr:N \l__jsonparse_array_index_int
     \tl_set:Ne \l__jsonparse_key_tl { 
       \l__jsonparse_prefix_tl \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str 

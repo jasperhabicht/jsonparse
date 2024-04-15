@@ -190,8 +190,8 @@
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
 \changes{v0.5.5}{2024/04/09}{Bug fixes, introduction and enhancement of user functions.}
 \changes{v0.5.6}{2024/04/11}{Bug fixes, escaping of special chars added.}
-\changes{v0.5.7}{2024/04/14}{Bug fixes.}
-\changes{v0.6.0}{2024/04/15}{Bug fixes, added key-value option setting.}
+\changes{v0.5.7}{2024/04/14}{Bug fixes, key-value option setting added.}
+\changes{v0.6.0}{2024/04/15}{Bug fixes, renaming of several commands.}
 
 \begin{document}
 
@@ -237,7 +237,7 @@ Setting the boolean key \macro{escape input} to false disables the treatment of 
 \end{macrodef}
 The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The first argument takes the name of the token variable that is created by the command. The second argument takes the JSON string to be parsed. 
 
-For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseGetValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
+For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
 
 \begin{macrodef}
 |\JSONParseFromFile|{<token variable>}{<JSON file>}
@@ -245,24 +245,27 @@ For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the r
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
 
 \begin{macrodef}
-|\JSONParseGetValue|{<token variable>}{<key>}
-|\JSONParseGetValue*|{<token variable>}{<key>}
+|\JSONParseValue|{<token variable>}{<key>}
+|\JSONParseValue*|{<token variable>}{<key>}
+|\JSONParseExpandableValue|{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseGetValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
+The command \macro{\JSONParseValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
 
-If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable \macro{\myJSONdata}, using \macro{\JSONParseGetValue{\myJSONdata}{key}} would extract the value associated with the key \macro{key}, which in this case is \macro{value}, and typeset it to the document.
+If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable \macro{\myJSONdata}, using \macro{\JSONParseValue{\myJSONdata}{key}} would extract the value associated with the key \macro{key}, which in this case is \macro{value}, and typeset it to the document.
 
-Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseGetValue{\myJSONdata}{outer_key.inner_key}} can be used. The command \macro{\JSONParseGetValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the parsed JSON string \macro{{ "key" : [ "one" , "two" ] }}.
+Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseValue{\myJSONdata}{outer_key.inner_key}} can be used. To give an example for an array, the command \macro{\JSONParseValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the JSON string \macro{{ "key" : [ "one" , "two" ] }}.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using \macro{\JSONParseSetChildSeparator}) returns the whole JSON object as string. The output of whole objects or arrays is not meant to be printed, but it can again be parsed using \macro{\JSONParse}. Such nested use, however, is only possible with the (non-starred) command \macro{\JSONParseGetValue}. 
+The starred variant, \macro{\JSONParseValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
 
-The starred variant, \macro{\JSONParseGetValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string. 
+
+If the output of whole objects or arrays is meant to be parsed again using \macro{\JSONParse}, the expandable command \macro{\JSONParseExpandableValue} is to be used. 
 
 \begin{macrodef}
-|\JSONParseGetArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
-|\JSONParseGetArrayValues*|{<token variable>}{<key>}[<subkey>]{<string>}
+|\JSONParseArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
+|\JSONParseArrayValues*|{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
-The command \macro{\JSONParseGetArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
+The command \macro{\JSONParseArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
 For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
 
@@ -281,15 +284,15 @@ For example, let us assume the following JSON data structure is parsed into the 
 }
 \end{codeexample}
 
-Then using \macro{\JSONParseGetArrayValues{\myJSONdata}{array}[key_a]{, }}, the text \macro{one, three} is typeset to the document. 
+Then, when using \macro{\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }}, `one, three' is typeset to the document. 
 
-The starred variant, \macro{\JSONParseGetArrayValues*}, rescans the token lists before they are typeset. 
+The starred variant, \macro{\JSONParseArrayValues*}, rescans the token lists before they are typeset. 
 
 \begin{macrodef}
-|\JSONParseUseArrayValues|{<token variable>}{<key>}[<subkey>]{<command name>}
-|\JSONParseUseArrayValues*|{<token variable>}{<key>}[<subkey>]{<command name>}
+|\JSONParseArrayValuesMap|{<token variable>}{<key>}[<subkey>]{<command name>}
+|\JSONParseArrayValuesMap*|{<token variable>}{<key>}[<subkey>]{<command name>}
 \end{macrodef}
-The command \macro{\JSONParseUseArrayValues} takes the same first three arguments as the command \macro{\JSONParseGetArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its defintion, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
+The command \macro{\JSONParseArrayValuesMap} takes the same first three arguments as the command \macro{\JSONParseArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its defintion, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
 
 For example, let us assume the same JSON data structure as defined above parsed into the token variable \macro{\myJSONdata}. Then, the following can be done:
 
@@ -301,17 +304,17 @@ For example, let us assume the same JSON data structure as defined above parsed 
 }
 
 \begin{itemize}
-  \JSONParseUseArrayValues{\myJSONdata}
+  \JSONParseArrayValuesMap{\myJSONdata}
     {array}[key_a]{myJSONitem}
 \end{itemize}
 \end{codeexamplecolumns}
 
-The starred variant, \macro{\JSONParseUseArrayValues*}, rescans the token lists before they are typeset. 
+The starred variant, \macro{\JSONParseArrayValuesMap*}, rescans the token lists before they are typeset. 
 
 \begin{macrodef}
-|\JSONParseGetArrayCount|{<token variable>}{<key>}
+|\JSONParseArrayCount|{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseGetArrayCount} takes as frist argument a token variable that holds a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
+The command \macro{\JSONParseArrayCount} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
 
 \subsection{Changing separators, output and other settings}\label{sec:settings}
 

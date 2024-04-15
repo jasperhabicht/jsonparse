@@ -427,7 +427,11 @@
   \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_json_tl } 
 }
 
-\NewExpandableDocumentCommand { \JSONParseGetValue } { s m m } {
+\NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
+  \prop_item:Nn #1 {#2} 
+}
+
+\NewDocumentCommand { \JSONParseValue } { s m m } {
   \bool_if:NTF #1 {
     \tl_rescan:ne { } { \prop_item:Nn #2 {#3} }
   } {
@@ -435,7 +439,7 @@
   }
 }
 
-\NewDocumentCommand { \JSONParseGetArrayValues } { s m m O{} m } {
+\NewDocumentCommand { \JSONParseArrayValues } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}
     \bool_set_true:N \l__prop_map_first_bool
@@ -462,7 +466,7 @@
   #1
 }
 
-\NewDocumentCommand { \JSONParseGetArrayCount } { m m } {
+\NewDocumentCommand { \JSONParseArrayCount } { m m } {
   \group_begin:
     \jsonparse_filter:Nn #1 {#2}
     \int_zero:N \l__jsonparse_array_count_int
@@ -481,7 +485,7 @@
   \group_end:
 }
 
-\NewDocumentCommand { \JSONParseUseArrayValues } { s m m O{} m } {
+\NewDocumentCommand { \JSONParseArrayValuesMap } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}
     \prop_map_inline:Nn #2 {

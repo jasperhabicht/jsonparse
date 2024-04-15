@@ -68,6 +68,10 @@
 
 % ===
 
+\cs_if_exist:NF \str_casefold:n { 
+  \cs_new:Npn \str_casefold:n { \str_foldcase:n }
+}
+
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { Ne }
@@ -76,9 +80,11 @@
 \cs_generate_variant:Nn \tl_set_rescan:Nnn { Nne }
 \cs_generate_variant:Nn \tl_trim_spaces:n { V }
 \cs_generate_variant:Nn \str_case_e:nn { en }
+\cs_generate_variant:Nn \str_casefold:n { V }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { e }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
 \cs_generate_variant:Nn \prop_put:Nnn { Nee }
+\cs_generate_variant:Nn \msg_error:nnnn { nnee }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
 
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { eN } { T , TF }
@@ -96,7 +102,6 @@
 \tl_new:N \l__jsonparse_val_tl
 \tl_new:N \l__jsonparse_object_array_key_tl
 \tl_new:N \l__jsonparse_object_array_val_tl
-\tl_new:N \l__jsonparse_array_prefix_tl
 \tl_new:N \l__jsonparse_remainder_tl
 
 \int_new:N \l__jsonparse_array_index_int
@@ -275,9 +280,11 @@
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
   } {
     \group_begin:
-      \tl_set:Nn \" { " }
-      \tl_set:Nn \/ { / }
-      \tl_set:Nn \\ { \c_backslash_str }
+      \bool_if:NT \l__jsonparse_escape_input_bool {
+        \tl_set:Nn \" { " }
+        \tl_set:Nn \/ { / }
+        \tl_set:Nn \\ { \c_backslash_str }
+      }
       \tl_set:Nn \l__jsonparse_val_tl {#1}
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }

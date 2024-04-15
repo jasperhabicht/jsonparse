@@ -265,7 +265,7 @@ If the output of whole objects or arrays is meant to be parsed again using \macr
 |\JSONParseArrayValues|{<token variable>}{<key>}[<subkey>]{<string>}
 |\JSONParseArrayValues*|{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
-The command \macro{\JSONParseArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional an can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
+The command \macro{\JSONParseArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional and can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
 For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
 
@@ -292,7 +292,7 @@ The starred variant, \macro{\JSONParseArrayValues*}, rescans the token lists bef
 |\JSONParseArrayValuesMap|{<token variable>}{<key>}[<subkey>]{<command name>}
 |\JSONParseArrayValuesMap*|{<token variable>}{<key>}[<subkey>]{<command name>}
 \end{macrodef}
-The command \macro{\JSONParseArrayValuesMap} takes the same first three arguments as the command \macro{\JSONParseArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its defintion, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
+The command \macro{\JSONParseArrayValuesMap} takes the same first three arguments as the command \macro{\JSONParseArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its definition, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. 
 
 For example, let us assume the same JSON data structure as defined above parsed into the token variable \macro{\myJSONdata}. Then, the following can be done:
 
@@ -341,7 +341,7 @@ With the keys \macro{array sep left} and \macro{array sep right}, the separators
 |false|={<string>}
 |null|={<string>}
 \end{macrodef}
-With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} resepctively.
+With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively.
 
 \begin{macrodef}
 |array index zero-based|
@@ -353,7 +353,7 @@ If set (or explicitly set to \macro{true}), the key \macro{array index zero-base
 |escape input|
 |escape input|={<boolean>}
 \end{macrodef}
-If set (or explicitly set to \macro{true}), the key \macro{escape input} acticates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above in section \ref{sec:escaping}.
+If set (or explicitly set to \macro{true}), the key \macro{escape input} activates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above in section \ref{sec:escaping}.
 
 \subsection{L3 commands}
 

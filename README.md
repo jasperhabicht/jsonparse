@@ -1,4 +1,4 @@
-![Version 0.5.7](https://img.shields.io/badge/version-0.5.7-blue)
+![Version 0.6.0](https://img.shields.io/badge/version-0.6.0-blue)
 
 # The `jsonparse` package
 
@@ -32,7 +32,7 @@ Let's assume a file with the name `example.json` is stored in the working direct
     }
   ],
   "children": [
-    "Tom,
+    "Tom",
     "Doug",
     "Harry"
   ],

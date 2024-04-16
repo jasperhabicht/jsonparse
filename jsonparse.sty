@@ -25,9 +25,15 @@
 }
 
 \msg_new:nnn { jsonparse } { parsing-error } {
-  \msg_warning_text:n { jsonparse } \iow_newline:
+  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Parsing ~ error ~ at ~ key ~ `#1` ~ with ~ value ~ `#2`. 
+}
+
+\msg_new:nnn { jsonparse } { nested-non-expandable } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Nested ~ use ~ of ~ \token_to_str:N \JSONParseValue \c_space_tl not ~ allowed. \iow_newline:
+  Use ~ \token_to_str:N \JSONParseExpandableValue \c_space_tl instead. 
 }
 
 % ===
@@ -108,7 +114,7 @@
 \int_new:N \l__jsonparse_array_count_int
 \int_new:N \l__jsonparse_array_count_last_int
 
-\bool_new:N \l__prop_map_first_bool
+\bool_new:N \l__jsonparse_prop_map_first_bool
 
 \ior_new:N \l__jsonparse_json_ior
 
@@ -410,6 +416,9 @@
 % ===
 
 \NewDocumentCommand { \JSONParse } { m +m } {
+  \tl_if_eq:enT { \tl_head:n {#2} } { \JSONParseValue } {
+    \msg_error:nn { jsonparse } { nested-non-expandable }
+  } 
   \prop_new:N #1
   \jsonparse_parse_to_prop:Nn #1 {#2} 
 }
@@ -443,13 +452,13 @@
 \NewDocumentCommand { \JSONParseArrayValues } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}
-    \bool_set_true:N \l__prop_map_first_bool
+    \bool_set_true:N \l__jsonparse_prop_map_first_bool
     \prop_map_inline:Nn #2 {
       \str_if_eq:enT { 
         \tl_range:nen {##1} { \int_eval:n { -1 * \tl_count:n {#4} } } { -1 } 
       } {#4} {
-        \bool_if:NTF \l__prop_map_first_bool { 
-          \bool_set_false:N \l__prop_map_first_bool
+        \bool_if:NTF \l__jsonparse_prop_map_first_bool { 
+          \bool_set_false:N \l__jsonparse_prop_map_first_bool
         } {        
           #5 
         }

@@ -358,6 +358,15 @@
         \cs_set:Npn \\ { \c_backslash_str }
       }
       \tl_set:Nn \l__jsonparse_val_tl {#1}
+      \bool_if:NT \l__jsonparse_escape_full_bool {
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 98 } { 12 } } { b }
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 102 } { 12 } } { f }
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 110 } { 12 } } { n }
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 114 } { 12 } } { r }
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 116 } { 12 } } { t }
+        \tl_replace_all:Nen \l__jsonparse_val_tl { \char_generate:nn { 117 } { 12 } } { u }
+      }
+      \tl_analysis_log:N \l__jsonparse_val_tl
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
       % string

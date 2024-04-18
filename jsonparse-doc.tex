@@ -237,7 +237,7 @@ With the key \macro{escape} set to \macro{basic}, other escape sequences defined
 
 If the key \macro{escape} is set to \macro{full}, apart from the above, the JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (followed by a hex value) are parsed if the JSON source is read in as file using \macro{\JSONParseFromFile} (in other words, full escaping functionality is not supported for the command \macro{\JSONParse}). During parsing, these escape sequences are not expanded and only when being typeset expand to their relevant replacement. The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\char"} followed by the relevant four hex digits. The escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab) expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting keys below in section \ref{sec:settings}.
 
-Note that if the key \macro{escape} is set to \macro{full}, the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} will be set to 12 (other). Changing the category codes is necessary to be able to define single-letter control sequences in TeX. 
+Note that if the key \macro{escape} is set to \macro{full}, the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} will be set to 12 (other). Changing the category codes is necessary to be able to define single-letter control sequences in TeX. The category codes of these characters are changed back to 10 (letter) when stored in the property list that contains the parsed JSON string.
 
 \begin{macrodef}
 replacement/|backspace|={<string>}
@@ -262,7 +262,7 @@ For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the r
 \end{macrodef}
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
 
-This command will change the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} to 12 (other) if full escaping is activated. See more on escaping above in section \ref{sec:escaping}. Therefore, \macro{\JSONParseValue*} or the other starred versions of the relevant commands should be used to reset the category codes of the typeset output.
+This command will temporarily change the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} to 12 (other) if full escaping is activated. See more on escaping above in section \ref{sec:escaping}. 
 
 \begin{macrodef}
 |\JSONParseValue|{<token variable>}{<key>}

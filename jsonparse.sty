@@ -129,9 +129,10 @@
 \cs_generate_variant:Nn \msg_error:nnnn { nnee }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
 
+\prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { eN } { T , TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_is_group:n { e } { TF }
-\prg_generate_conditional_variant:Nnn \str_if_eq:nn { en, eV } { T }
+\prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T }
 
 \prop_new:N \g_jsonparse_entries_prop
 \prop_new:N \l__jsonparse_temp_prop

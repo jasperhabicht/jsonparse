@@ -225,7 +225,7 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 In general, characters in the JSON source that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. However, certain escaping procedures are available to conform with the way JSON treats certain escape sequences.
 
-The key \macro{escape} takes one of the values \macro{false}, \macro{basic} or \macro{full}. If no value is given, \macro{basic} is assumed and \macro{basic} is also the default setting if the key is not set at all. See more on setting keys below in section \ref{sec:settings}.
+The key \macro{escape} takes one of the values \macro{false}, \macro{basic} or \macro{full}. If no value is given, \macro{basic} is assumed and \macro{basic} is also the default setting if the key is not set at all. See more on setting keys below in section \ref{sec:settings}. The three values select different escape modes that are designed to have as little influence as possible to how TeX normally acts. While it would surely be possible to parse and rescan the input by changing category codes and rescanning the output per default, such practice might result un unintended output in special cases. Therefore, the current approach was chosen where changes to category codes are only introduced with the most most extensive escaping mode and rescanning of token sequences can be controlled by the user.
 
 Setting the key to \macro{false} disables the treatment of the input as described in the following of this section. The source code will be read and parsed as is. If the source does not contain any escape sequences, empty lines or TeX macro, this choice should be used.
 
@@ -237,7 +237,7 @@ With the key \macro{escape} set to \macro{basic}, other escape sequences defined
 
 If the key \macro{escape} is set to \macro{full}, apart from the above, the JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (followed by a hex value) are parsed if the JSON source is read in as file using \macro{\JSONParseFromFile} (in other words, full escaping functionality is not supported for the command \macro{\JSONParse}). During parsing, these escape sequences are not expanded and only when being typeset expand to their relevant replacement. The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\char"} followed by the relevant four hex digits. The escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab) expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting keys below in section \ref{sec:settings}.
 
-Note that if the key \macro{escape} is set to \macro{full}, the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} will be set to 12 (other). 
+Note that if the key \macro{escape} is set to \macro{full}, the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} will be set to 12 (other). Changing the category codes is necessary to be able to define single-letter control sequences in TeX. 
 
 \begin{macrodef}
 replacement/|backspace|={<string>}

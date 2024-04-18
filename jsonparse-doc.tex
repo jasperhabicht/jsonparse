@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.6.0}
-\def\jsonparsefiledate{15 April 2024}
+\def\jsonparsefileversion{0.7.0}
+\def\jsonparsefiledate{18 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -192,6 +192,7 @@
 \changes{v0.5.6}{2024/04/11}{Bug fixes, escaping of special chars added.}
 \changes{v0.5.7}{2024/04/14}{Bug fixes, key-value option setting added.}
 \changes{v0.6.0}{2024/04/15}{Bug fixes, renaming of several commands.}
+\changes{v0.7.0}{2024/04/18}{Renaming and rearranging of keys, escaping of special JSON escape sequences added.}
 
 \begin{document}
 
@@ -201,7 +202,7 @@
 
 \section{Introduction}
 
-The \macro{jsonparse} package provides an easy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
+The \macro{jsonparse} package provides a handy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
 
 This package is still in a beta stage and not thoroughly tested. Bugs or improvements can be issued via GitHub at \url{https://github.com/jasperhabicht/jsonparse/issues}.
 
@@ -218,17 +219,34 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
-The package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space.
+\begin{macrodef}
+|escape|={<choice>}
+\end{macrodef}
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. Similarly, \macro{\/} expands to \macro{\exp_not:N \/} and finally to \macro{/} while \macro{\\} expands to \macro{\exp_not:N \\} and finally to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). 
+In general, characters in the JSON source that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. However, certain escaping procedures are available to conform with the way JSON treats certain escape sequences.
 
-Due to the above procedure, the TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source, so that they become \macro{\\\"} and \macro{\\\\} respectively. 
+The key \macro{escape} takes one of the values \macro{false}, \macro{basic} or \macro{full}. If no value is given, \macro{basic} is assumed and \macro{basic} is also the default setting if the key is not set at all. See more on setting keys below in section \ref{sec:settings}.
 
-Other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped and it is up to the user to process these sequences before feeding them into the commands provided by this package.
+Setting the key to \macro{false} disables the treatment of the input as described in the following of this section. The source code will be read and parsed as is. If the source does not contain any escape sequences, empty lines or TeX macro, this choice should be used.
 
-Characters that are special to TeX are not handled in a special way and will be treated by TeX the same way as if the user had input them in the document. 
+If the key \macro{escape} is set to \macro{basic}, the package allows for empty lines in JSON strings. During parsing, every instance of the TeX macro \macro{\par} is replaced by a space. 
 
-Setting the boolean key \macro{escape input} to false disables the treatment of the input as described in this section. See more on setting keys below in section \ref{sec:escaping}.
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). If the key \macro{escape} is set to \macro{basic}, this package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/} and \macro{\\}. During parsing, \macro{\"} expands to \macro{\exp_not:N \"} (i.\,e. it is prevented to expand during parsing) and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. Similarly, the control symbol \macro{\/} expands to \macro{\exp_not:N \/} and finally to \macro{/} while \macro{\\} expands to \macro{\exp_not:N \\} and finally to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). Due to this procedure, the TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source, so that they become \macro{\\\"} and \macro{\\\\} respectively. 
+
+With the key \macro{escape} set to \macro{basic}, other escape sequences defined by JSON, such as \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (the latter followed by a hex value) are not escaped.
+
+If the key \macro{escape} is set to \macro{full}, apart from the above, the JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} or \macro{\u} (followed by a hex value) are parsed if the JSON source is read in as file using \macro{\JSONParseFromFile} (in other words, full escaping functionality is not supported for the command \macro{\JSONParse}). During parsing, these escape sequences are not expanded and only when being typeset expand to their relevant replacement. The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\char"} followed by the relevant four hex digits. The escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab) expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting keys below in section \ref{sec:settings}.
+
+Note that if the key \macro{escape} is set to \macro{full}, the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} will be set to 12 (other). 
+
+\begin{macrodef}
+replacement/|backspace|={<string>}
+replacement/|formfeed|={<string>}
+replacement/|linefeed|={<string>}
+replacement/|carriage return|={<string>}
+replacement/|horizontal tab|={<string>}
+\end{macrodef}
+These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement.
 
 \section{Main user commands}
 
@@ -244,6 +262,8 @@ For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the r
 \end{macrodef}
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
 
+This command will change the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} to 12 (other) if full escaping is activated. See more on escaping above in section \ref{sec:escaping}. Therefore, \macro{\JSONParseValue*} or the other starred versions of the relevant commands should be used to reset the category codes of the typeset output.
+
 \begin{macrodef}
 |\JSONParseValue|{<token variable>}{<key>}
 |\JSONParseValue*|{<token variable>}{<key>}
@@ -255,7 +275,7 @@ If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable
 
 Nested objects and arrays are assigned keys that adhere to JavaScript syntax. For example, if the JSON string \macro{{ "outer_key" : { "inner_key" : "value" } }} is parsed into the token variable \macro{\myJSONdata}, to select the value associated with the key \macro{inner_key}, the command \macro{\JSONParseValue{\myJSONdata}{outer_key.inner_key}} can be used. To give an example for an array, the command \macro{\JSONParseValue{\myJSONdata}{key[0]}} selects the first value of the array associated with the key \macro{key} in the JSON string \macro{{ "key" : [ "one" , "two" ] }}.
 
-The starred variant, \macro{\JSONParseValue*}, rescans the token list before it is typeset, making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
+The starred variant, \macro{\JSONParseValue*}, rescans the token list before it is typeset (which means that all category codes that may have been changed before are set to the default values), making it possible to place TeX commands in the JSON file. The starred variants of this and similar commands should not be placed in a \macro{\JSONParse} command. In order to adhere to proper JSON syntax, backslashes need to be escaped in the JSON source with another backslash. 
 
 When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string. 
 
@@ -323,25 +343,25 @@ The package provides a set of keys can be set to change the separators used to s
 \begin{macrodef}
 |\JSONParseSet|{<key-value list>}
 \end{macrodef}
-The commands \macro{\JSONParseSet} can be used to specify settings via key-value pairs (separated by commas). The following keys are available:
+The commands \macro{\JSONParseSet} can be used to specify settings via key-value pairs (separated by commas). Keys that are presented here as a subkey (i.\,e. preceded by another key and a slash) can also be set using the syntax \macro{key={subkey}} and multiple subkeys belonging to one key can be combined using a comma as separator. The following keys are available:
 
 \begin{macrodef}
-|child sep|={<string>}
+separator/|child|={<string>}
 \end{macrodef}
 With the key \macro{child sep}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
 
 \begin{macrodef}
-|array sep left|={<string>}
-|array sep right|={<string>}
+separator/|array left|={<string>}
+separator/|array right|={<string>}
 \end{macrodef}
 With the keys \macro{array sep left} and \macro{array sep right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. 
 
 \begin{macrodef}
-|true|={<string>}
-|false|={<string>}
-|null|={<string>}
+replacement/|true|={<string>}
+replacement/|false|={<string>}
+replacement/|null|={<string>}
 \end{macrodef}
-With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively.
+With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement.
 
 \begin{macrodef}
 |array index zero-based|
@@ -349,23 +369,17 @@ With the keys \macro{true}, \macro{false} and \macro{null}, the string that is t
 \end{macrodef}
 If set (or explicitly set to \macro{true}), the key \macro{array index zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
 
-\begin{macrodef}
-|escape input|
-|escape input|={<boolean>}
-\end{macrodef}
-If set (or explicitly set to \macro{true}), the key \macro{escape input} activates escaping of the JSON input. If set to false, the escaping is disabled. Per default, escaping is active. See more on escaping above in section \ref{sec:escaping}.
-
 \subsection{L3 commands}
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
 \end{macrodef}
-The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string.
+The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string. This command does not escape the input in any way.
   
 \begin{macrodef}
 |\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
 \end{macrodef}
-The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}.
+The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}. 
 
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}

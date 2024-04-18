@@ -1,8 +1,8 @@
-![Version 0.6.0](https://img.shields.io/badge/version-0.6.0-blue)
+![Version 0.7.0](https://img.shields.io/badge/version-0.7.0-blue)
 
 # The `jsonparse` package
 
-The `jsonparse` package provides an easy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
+The `jsonparse` package provides a handy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
 
 Using the commands `\JSONParseFromFile` or `\JSONParse`, JSON data can be stored in a token variable. Using the command `\JSONParseValue`, certain entried can be extracted from the stored data.
 

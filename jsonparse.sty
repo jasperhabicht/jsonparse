@@ -41,6 +41,11 @@
   Could ~ not ~ find ~ file ~ #1.
 }
 
+\msg_new:nnn { jsonparse } { escape-in-key } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Invalid ~ escape ~ sequence ~ #1 ~ in ~ key.
+}
+
 % ===
 	
 \str_new:N \l__jsonparse_child_sep_str
@@ -341,6 +346,15 @@
   % key or string?
   \tl_if_head_eq_charcode:eNTF { \l__jsonparse_remainder_tl } : {
     \tl_remove_once:Ne \l__jsonparse_remainder_tl { \c_colon_str }
+    \bool_if:NT \l__jsonparse_escape_full_bool {
+      \clist_map_inline:nn { \b , \f , \n , \r , \t , \u } {
+        \tl_if_in:nnT {#1} {##1} {
+          \msg_error:nne { jsonparse } { escape-in-key } {
+            \token_to_str:N ##1
+          }
+        }
+      }
+    }
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
   } {
     \group_begin:

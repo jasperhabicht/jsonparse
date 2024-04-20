@@ -131,6 +131,7 @@
 \cs_generate_variant:Nn \str_casefold:n { e }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { e }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
+\cs_generate_variant:Nn \prop_item:Nn { Ne }
 \cs_generate_variant:Nn \prop_put:Nnn { Nee }
 \cs_generate_variant:Nn \msg_error:nnnn { nnee }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
@@ -530,14 +531,14 @@
 }
 
 \NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
-  \prop_item:Nn #1 {#2} 
+  \prop_item:Ne #1 {#2} 
 }
 
 \NewDocumentCommand { \JSONParseValue } { s m m } {
   \bool_if:NTF #1 {
-    \tl_rescan:ne { } { \prop_item:Nn #2 {#3} }
+    \tl_rescan:ne { } { \prop_item:Ne #2 {#3} }
   } {
-    \prop_item:Nn #2 {#3} 
+    \prop_item:Ne #2 {#3} 
   }
 }
 

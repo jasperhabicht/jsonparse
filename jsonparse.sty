@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-18} {0.7.0} 
+\ProvidesExplPackage {jsonparse} {2024-04-20} {0.7.1} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -138,6 +138,7 @@
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T }
 \prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { eN } { T , TF }
 \prg_generate_conditional_variant:Nnn \tl_if_head_is_group:n { e } { TF }
+\prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { F }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T }
 
 \prop_new:N \g_jsonparse_entries_prop
@@ -485,6 +486,7 @@
 }	
 
 \cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
+  \prop_clear:N \l__jsonparse_temp_prop
   \prop_map_inline:Nn #1 {
     \str_case_e:en { 
       \tl_range:nne {##1} { 1 } { \int_eval:n { \tl_count:n {#2} + 1 } } 
@@ -537,6 +539,26 @@
   } {
     \prop_item:Nn #2 {#3} 
   }
+}
+
+\NewDocumentCommand { \JSONParseKeys } { m m } {
+  \tl_if_exist:NF #2 {
+    \tl_new:N #2
+  }
+  \bool_set_true:N \l__jsonparse_prop_map_first_bool
+  \tl_set:Nn \l__jsonparse_temp_tl { [ }
+    \prop_map_inline:Nn #1 {
+      \tl_if_in:nVF {##1} \l__jsonparse_child_sep_str { 
+        \bool_if:NTF \l__jsonparse_prop_map_first_bool { 
+          \bool_set_false:N \l__jsonparse_prop_map_first_bool
+        } {  
+          \tl_put_right:Nn \l__jsonparse_temp_tl { , } 
+        }
+        \tl_put_right:Nn \l__jsonparse_temp_tl { " ##1 " }
+      }
+    }
+  \tl_put_right:Nn \l__jsonparse_temp_tl { ] } 
+  \tl_set_eq:NN #2 \l__jsonparse_temp_tl
 }
 
 \NewDocumentCommand { \JSONParseArrayValues } { s m m O{} m } {

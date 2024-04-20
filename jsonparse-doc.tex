@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.7.0}
-\def\jsonparsefiledate{18 April 2024}
+\def\jsonparsefileversion{0.7.1}
+\def\jsonparsefiledate{20 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -193,6 +193,7 @@
 \changes{v0.5.7}{2024/04/14}{Bug fixes, key-value option setting added.}
 \changes{v0.6.0}{2024/04/15}{Bug fixes, renaming of several commands.}
 \changes{v0.7.0}{2024/04/18}{Renaming and rearranging of keys, escaping of special JSON escape sequences added.}
+\changes{v0.7.1}{2024/04/20}{Access to first-level keys of object added.}
 
 \begin{document}
 
@@ -263,6 +264,11 @@ For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the r
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
 
 This command will temporarily change the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} to 12 (other) if full escaping is activated. See more on escaping above in section \ref{sec:escaping}. 
+
+\begin{macrodef}
+|\JSONParseKeys|{<token variable>}{<token variable>}
+\end{macrodef}
+The command \macro{\JSONParseKeys} is used to store all top-level keys of a parsed JSON object as array into a token variable. The command takes as first argument the token variable that holds the parsed JSON data. The second argument takes the token variable that is assigned a JSON array containing the top-level keys of the object represented by the token variable in the first argument. The token variable to store the keys as array is created if it does not exist.
 
 \begin{macrodef}
 |\JSONParseValue|{<token variable>}{<key>}

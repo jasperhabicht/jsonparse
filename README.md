@@ -43,3 +43,5 @@ Let's assume a file with the name `example.json` is stored in the working direct
 We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseValue{\myJSONdata}{contactPoint[0].telephone}` would then result in the output `+1 (555) 555-1234` (indices are zero-based per default). 
 
 This package including all files is subject to the LPPL 1.3c license.
+Copyright 2024 Jasper Habicht (mail(at)jasperhabicht.de).
+

@@ -517,7 +517,6 @@
     \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
     \cs_set:Npn \u { \char" }
     \tl_set:Ne \l__jsonparse_temp_tl {#1}
-    \tl_analysis_log:N \l__jsonparse_temp_tl
     \cs_set:Npn \" { \__jsonparse_tex_quote }
     \cs_set:Npn \\ { \__jsonparse_tex_backslash }
     \tl_rescan:no { } { \l__jsonparse_temp_tl }

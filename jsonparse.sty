@@ -106,20 +106,21 @@
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { NV }
+\cs_generate_variant:Nn \tl_replace_once:Nnn { Non }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
 \cs_generate_variant:Nn \tl_trim_spaces:n { e }
 \cs_generate_variant:Nn \str_case_e:nn { en }
-\cs_generate_variant:Nn \str_casefold:n { e }
-\cs_generate_variant:Nn \str_head_ignore_spaces:n { e }
+\cs_generate_variant:Nn \str_casefold:n { o }
+\cs_generate_variant:Nn \str_head_ignore_spaces:n { o }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
 \cs_generate_variant:Nn \prop_item:Nn { Ne , ce }
 \cs_generate_variant:Nn \prop_put:Nnn { Nen , Nee }
-\cs_generate_variant:Nn \msg_error:nnnn { nnee }
+\cs_generate_variant:Nn \msg_error:nnnn { nnoo }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
 
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T }
-\prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { eN } { T , TF }
+\prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { oN } { T , TF }
 \prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { F }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T , TF }
 
@@ -174,12 +175,12 @@
 }
 
 \cs_new_protected:Npn \jsonparse_parse:n #1 {
-  \tl_set:Ne \l__jsonparse_input_tl { \tl_trim_spaces:n {#1} }
-  \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:e { \l__jsonparse_input_tl } :w } { 
+  \tl_set:Ne \l__jsonparse_input_tl { \tl_trim_spaces:e {#1} }
+  \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:o { \l__jsonparse_input_tl } :w } { 
     \l__jsonparse_input_tl \q_stop
   } {
     % other
-    \exp_last_unbraced:Ne 
+    \exp_last_unbraced:No 
       \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop 
   }
 }
@@ -187,28 +188,43 @@
 % ===
 
 \cs_new:cpn { __jsonparse_parse_ \c_left_brace_str :w } #1 \q_stop {
-  \exp_last_unbraced:Ne 
+  \exp_last_unbraced:No 
     \__jsonparse_parse_object_begin:w #1 \q_stop
 }
 
 \cs_new:cpn { __jsonparse_parse_ \c_right_brace_str :w } #1 \q_stop {
-  \exp_last_unbraced:Ne 
+  \exp_last_unbraced:No 
     \__jsonparse_parse_object_end:w #1 \q_stop
 }
 
 \cs_new:cpn { __jsonparse_parse_ [ :w } #1 \q_stop {
-  \exp_last_unbraced:Ne 
+  \exp_last_unbraced:No 
     \__jsonparse_parse_array_begin:w #1 \q_stop
 }
 
 \cs_new:cpn { __jsonparse_parse_ ] :w } #1 \q_stop {
-  \exp_last_unbraced:Ne 
+  \exp_last_unbraced:No 
     \__jsonparse_parse_array_end:w #1 \q_stop
 }
 
 \cs_new:cpn { __jsonparse_parse_ " :w } #1 \q_stop {
-  \exp_last_unbraced:Ne 
+  \exp_last_unbraced:No 
     \__jsonparse_parse_string_key:w #1 \q_stop
+}
+
+\cs_new:Npn \__jsonparse_array_key_set: {
+  \str_if_eq:eVT { 
+    \tl_range:Nen \l__jsonparse_prefix_tl { 
+      \int_eval:n { 
+        -1 * \tl_count:N \l__jsonparse_array_sep_left_str 
+      } 
+    } { -1 }
+  } \l__jsonparse_array_sep_left_str {
+    \int_incr:N \l__jsonparse_array_index_int
+    \tl_set:Ne \l__jsonparse_key_tl { 
+      \l__jsonparse_prefix_tl \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str 
+    }
+  }
 }
 
 \exp_last_unbraced:NNo \cs_new:Npn \__jsonparse_parse_object_begin:w \c_left_brace_str #1 \q_stop {
@@ -305,26 +321,11 @@
   \__jsonparse_parse_remainder:
 }
 
-\cs_new:Npn \__jsonparse_array_key_set: {
-  \str_if_eq:eVT { 
-    \tl_range:Nen \l__jsonparse_prefix_tl { 
-      \int_eval:n { 
-        -1 * \tl_count:N \l__jsonparse_array_sep_left_str 
-      } 
-    } { -1 }
-  } \l__jsonparse_array_sep_left_str {
-    \int_incr:N \l__jsonparse_array_index_int
-    \tl_set:Ne \l__jsonparse_key_tl { 
-      \l__jsonparse_prefix_tl \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str 
-    }
-  }
-}
-
 \cs_new:Npn \__jsonparse_parse_string_key:w " #1 " #2 \q_stop {
   \__jsonparse_array_key_set:
   \tl_set:Ne \l__jsonparse_remainder_tl { \tl_trim_spaces:n {#2} }
   % key or string?
-  \tl_if_head_eq_charcode:eNTF { \l__jsonparse_remainder_tl } : {
+  \tl_if_head_eq_charcode:oNTF { \l__jsonparse_remainder_tl } : {
     \tl_remove_once:NV \l__jsonparse_remainder_tl \c_colon_str 
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
   } {      
@@ -347,17 +348,17 @@
   \tl_set:Nn \l__jsonparse_remainder_tl {#1}
   \tl_set:Nn \l__jsonparse_temp_tl { #1 , }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { , }
-  \tl_replace_once:Nen \l__jsonparse_temp_tl { \c_right_brace_str } { , }
-  \exp_last_unbraced:Ne
+  \tl_replace_once:Non \l__jsonparse_temp_tl { \c_right_brace_str } { , }
+  \exp_last_unbraced:No
     \__jsonparse_parse_other_aux:w \l__jsonparse_temp_tl \q_stop
 }
 
 \cs_new:Npn \__jsonparse_parse_other_aux:w #1 , #2 \q_stop {
   \tl_set:Ne \l__jsonparse_temp_tl { \tl_trim_spaces:n {#1} }
-  \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:e { \l__jsonparse_temp_tl } : } {
+  \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
     \fp_if_nan:nTF {#1} { 
       % nan
-      \msg_error:nnee { jsonparse } { parsing-error }
+      \msg_error:nnoo { jsonparse } { parsing-error }
         { \l__jsonparse_key_tl } {#1}
     } { 
       \tl_set:Nn \l__jsonparse_val_tl {#1}
@@ -424,11 +425,11 @@
 
 \cs_new:Npn \__jsonparse_parse_remainder: {
   \tl_set:Ne \l__jsonparse_remainder_tl { \tl_trim_spaces:e { \l__jsonparse_remainder_tl } }
-  \tl_if_head_eq_charcode:eNT { \l__jsonparse_remainder_tl } , {
+  \tl_if_head_eq_charcode:oNT { \l__jsonparse_remainder_tl } , {
     \tl_remove_once:Nn \l__jsonparse_remainder_tl { , }
   }
   \tl_if_empty:NF \l__jsonparse_remainder_tl {
-    \exp_args:Ne \jsonparse_parse:n { \l__jsonparse_remainder_tl }
+    \exp_args:No \jsonparse_parse:n { \l__jsonparse_remainder_tl }
   }
 }	
 
@@ -607,7 +608,7 @@
       } {#4} {
         \int_incr:N \l__jsonparse_array_index_int
         \tl_set:Ne \JSONParseArrayIndex { \__jsonparse_get_array_index:w ##1 \q_stop }
-        \tl_set:Ne \JSONParseArrayKey {##1}
+        \tl_set:Nn \JSONParseArrayKey {##1}
         \bool_if:NTF #1 {
           \tl_set:Nn \JSONParseArrayValue { \prop_item:Nn #2 {##1} }
         } {

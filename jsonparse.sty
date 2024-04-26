@@ -43,7 +43,7 @@
 
 \msg_new:nnn { jsonparse } { file-exists } {
   \msg_error_text:n { jsonparse } \iow_newline:
-  File ~ #1 ~ already existing.
+  File ~ #1 ~ already ~ existing.
 }
 
 \msg_new:nnn { jsonparse } { escape-in-key } {
@@ -158,6 +158,7 @@
 \int_new:N \l__jsonparse_array_count_last_int
 
 \bool_new:N \l__jsonparse_prop_map_first_bool
+\bool_new:N \l__jsonparse_load_external_bool
 
 \ior_new:N \l__jsonparse_json_ior
 \iow_new:N \g__jsonparse_externalize_iow
@@ -498,7 +499,13 @@
 % ===
 
 \NewDocumentCommand { \JSONParse } { o m +v } {
-  \bool_lazy_and:nnTF { ! \tl_if_novalue_p:n {#1} } { \file_if_exist_p:n { #1 .jsonparse } } {
+  \bool_set_false:N \l__jsonparse_load_external_bool
+  \tl_if_novalue:nF {#1} {
+    \file_if_exist:nT { #1 .jsonparse } {
+      \bool_set_true:N \l__jsonparse_load_external_bool
+    }
+  }
+  \bool_if:NTF \l__jsonparse_load_external_bool {
     \msg_info:nnn { jsonparse } { loading-external }
       { #1 .jsonparse }
     \file_input:n { #1 .jsonparse }
@@ -530,7 +537,13 @@
     \msg_error:nnn { jsonparse } { file-not-found }
       {#3}
   }
-  \bool_lazy_and:nnTF { ! \tl_if_novalue_p:n {#1} } { \file_if_exist_p:n { #1 .jsonparse } } {
+  \bool_set_false:N \l__jsonparse_load_external_bool
+  \tl_if_novalue:nF {#1} {
+    \file_if_exist:nT { #1 .jsonparse } {
+      \bool_set_true:N \l__jsonparse_load_external_bool
+    }
+  }
+  \bool_if:NTF \l__jsonparse_load_external_bool {
     \msg_info:nnn { jsonparse } { loading-external }
       { #1 .jsonparse }
     \file_input:n { #1 .jsonparse }

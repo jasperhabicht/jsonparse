@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.8.0}
-\def\jsonparsefiledate{24 April 2024}
+\def\jsonparsefileversion{0.8.2}
+\def\jsonparsefiledate{26 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -195,6 +195,7 @@
 \changes{v0.7.0}{2024/04/18}{Renaming and rearranging of keys, escaping of special JSON escape sequences added.}
 \changes{v0.7.1}{2024/04/20}{Access to first-level keys of object added.}
 \changes{v0.8.0}{2024/04/24}{Internal rewrite, escaping procedures changed.}
+\changes{v0.8.2}{2024/04/26}{Bug fixes, externalizing parsed data.}
 
 \begin{document}
 
@@ -258,18 +259,18 @@ These keys can be used to set the replacement text for the JSON escape sequences
 \section{Main user commands}
 
 \begin{macrodef}
-|\JSONParse|{<token variable>}{<JSON string>}
+|\JSONParse|[<file name>]{<token variable>}{<JSON string>}
 \end{macrodef}
-The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The first argument takes the name of the token variable that is created by the command. The second argument takes the JSON string to be parsed. 
+The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The second argument takes the name of the token variable that is created by the command. The third argument takes the JSON string to be parsed. 
 
 For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
 
-\begin{macrodef}
-|\JSONParseFromFile|{<token variable>}{<JSON file>}
-\end{macrodef}
-The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as second argument the path to the JSON file relative to the working directory.
+The first optinal argument can be used to externalize the parsed JSON data to a file. See more on externalization in section \ref{sec:externalizing} below.
 
-This command will temporarily change the category code of \macro{b}, \macro{f}, \macro{n}, \macro{r}, \macro{t} and \macro{u} to 12 (other) if full escaping is activated. See more on escaping above in section \ref{sec:escaping}. 
+\begin{macrodef}
+|\JSONParseFromFile|[<file name>]{<token variable>}{<JSON file>}
+\end{macrodef}
+The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as third argument the path to the JSON file relative to the working directory.
 
 \begin{macrodef}
 |\JSONParseKeys|{<token variable>}{<token variable>}
@@ -347,6 +348,15 @@ The starred variant, \macro{\JSONParseArrayValuesMap*}, does not rescan the toke
 |\JSONParseArrayCount|{<token variable>}{<key>}
 \end{macrodef}
 The command \macro{\JSONParseArrayCount} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key. It returns an integer representing the number of items contained in the selected array.
+
+\subsection{Externalising parsed JSON data}\label{sec:externalizing}
+
+Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. The first opional argument of the commands \macro{\JSONParse} and \macro{\JSONParseFromFile} can be used to provide the name of a file (without file extension) that will be created in the working directory and which stores the relevant information. The file name will have the extension \macro{.jsonparse}. If a file with the same name and file extension already exists, an error will be issued. Once the file has been created, the package will try to load the data from this file instead of parsing the JSON data again. 
+
+\begin{macrodef}
+|\JSONParsePut|{<token variable>}{<key>}[<JSON string>]
+\end{macrodef}
+The commannd \macro{\JSONParsePut} is used by the externalization procedure to re-read already parsed JSON data to the main file. It essentially just adds a key-value pair to a property list (where the value part is read as string). Hence, it can also be used to append more entries to an already existing property list containing parsed JSON data.
 
 \subsection{Changing separators, output and other settings}\label{sec:settings}
 

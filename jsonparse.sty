@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-04-24} {0.8.0} 
+\ProvidesExplPackage {jsonparse} {2024-04-26} {0.8.2} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -41,9 +41,24 @@
   Could ~ not ~ find ~ file ~ #1.
 }
 
+\msg_new:nnn { jsonparse } { file-exists } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  File ~ #1 ~ already existing.
+}
+
 \msg_new:nnn { jsonparse } { escape-in-key } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Invalid ~ escape ~ sequence ~ #1 ~ in ~ key.
+}
+
+\msg_new:nnn { jsonparse } { saving-external } {
+  \msg_info_text:n { jsonparse } \iow_newline:
+  Saving ~ external ~ file: ~ #1.
+}
+
+\msg_new:nnn { jsonparse } { loading-external } {
+  \msg_info_text:n { jsonparse } \iow_newline:
+  Loading ~ from ~ external ~ file: ~ #1.
 }
 
 % ===
@@ -116,6 +131,7 @@
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
 \cs_generate_variant:Nn \prop_item:Nn { Ne , ce }
 \cs_generate_variant:Nn \prop_put:Nnn { Nen , Nee }
+\cs_generate_variant:Nn \iow_now:Nn { Ne }
 \cs_generate_variant:Nn \msg_error:nnnn { nnoo }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
 
@@ -144,6 +160,7 @@
 \bool_new:N \l__jsonparse_prop_map_first_bool
 
 \ior_new:N \l__jsonparse_json_ior
+\iow_new:N \g__jsonparse_externalize_iow
 
 % ===
 
@@ -454,49 +471,90 @@
 
 % ===
 
-\NewDocumentCommand { \JSONParse } { m +v } {
-  \tl_if_eq:enT { \tl_head:n {#2} } { \JSONParseValue } {
-    \msg_error:nn { jsonparse } { nested-non-expandable }
+\NewDocumentCommand { \JSONParsePut } { m m +v } {
+  \prop_if_exist:NF #1 {
+    \prop_new:N #1 
   } 
-  \prop_new:N #1
-  \tl_gclear:N \g__jsonparse_json_tl
-  \group_begin:
-    \cs_set:Npn \" { \exp_not:N \" }
-    \cs_set:Npn \/ { \exp_not:N \/ }
-    \cs_set:Npn \\ { \exp_not:N \\ }
-    \cs_set:Npn \b { \exp_not:N \b }
-    \cs_set:Npn \f { \exp_not:N \f }
-    \cs_set:Npn \n { \exp_not:N \n }
-    \cs_set:Npn \r { \exp_not:N \r }
-    \cs_set:Npn \t { \exp_not:N \t }
-    \cs_set:Npn \u { \exp_not:N \u }
-    \cs_set:Npn \x [ ##1 ] [ ##2 ] { \prop_item:ce {##1} {##2} }
-    \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#2} 
-    \exp_args:NNe \jsonparse_parse_to_prop:Nn #1 { \g__jsonparse_json_tl } 
-  \group_end:
+  \prop_gput:Nnn #1 { #2 } { #3 }
 }
 
-\NewDocumentCommand { \JSONParseFromFile } { m m } {
-  \file_if_exist:nF {#2} {
-    \msg_error:nnn { jsonparse } { file-not-found }
+\cs_new:Npn \__jsonparse_externalize:Nn #1#2 {
+  \file_if_exist:nTF {#2} {
+    \msg_error:nnn { jsonparse } { file-exists }
+      {#2}
+  } {
+    \iow_open:Nn \g__jsonparse_externalize_iow {#2}
+    \prop_map_inline:Nn #1 {
+      \iow_now:Nn \g__jsonparse_externalize_iow {
+        \JSONParsePut {#1} {##1} {##2}
+      }
+    }
+    \iow_close:N \g__jsonparse_externalize_iow
+    \msg_info:nnn { jsonparse } { saving-external }
       {#2}
   }
-  \prop_new:N #1
-  \tl_gclear:N \g__jsonparse_json_tl
-  \group_begin:
-    \cs_set:Npn \" { \exp_not:N \" }
-    \cs_set:Npn \/ { \exp_not:N \/ }
-    \cs_set:Npn \\ { \exp_not:N \\ }
-    \cs_set:Npn \b { \exp_not:N \b }
-    \cs_set:Npn \f { \exp_not:N \f }
-    \cs_set:Npn \n { \exp_not:N \n }
-    \cs_set:Npn \r { \exp_not:N \r }
-    \cs_set:Npn \t { \exp_not:N \t }
-    \cs_set:Npn \u { \exp_not:N \u }
-    \cs_set:Npn \x [ ##1 ] [ ##2 ] { \prop_item:ce {##1} {##2} }
-    \file_get:nnN {#2} { \cctab_select:N \c__jsonparse_json_escape_cctab } \g__jsonparse_json_tl
-    \exp_args:NNe \jsonparse_parse_to_prop:Nn #1 { \g__jsonparse_json_tl } 
-  \group_end:
+}
+
+% ===
+
+\NewDocumentCommand { \JSONParse } { o m +v } {
+  \bool_lazy_and:nnTF { ! \tl_if_novalue_p:n {#1} } { \file_if_exist_p:n { #1 .jsonparse } } {
+    \msg_info:nnn { jsonparse } { loading-external }
+      { #1 .jsonparse }
+    \file_input:n { #1 .jsonparse }
+  } {
+    \prop_new:N #2
+    \tl_gclear:N \g__jsonparse_json_tl
+    \group_begin:
+      \cs_set:Npn \" { \exp_not:N \" }
+      \cs_set:Npn \/ { \exp_not:N \/ }
+      \cs_set:Npn \\ { \exp_not:N \\ }
+      \cs_set:Npn \b { \exp_not:N \b }
+      \cs_set:Npn \f { \exp_not:N \f }
+      \cs_set:Npn \n { \exp_not:N \n }
+      \cs_set:Npn \r { \exp_not:N \r }
+      \cs_set:Npn \t { \exp_not:N \t }
+      \cs_set:Npn \u { \exp_not:N \u }
+      \cs_set:Npn \x [ ##1 ] [ ##2 ] { \prop_item:ce {##1} {##2} }
+      \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#3} 
+      \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl } 
+    \group_end:
+    \tl_if_novalue:nF {#1} {
+      \__jsonparse_externalize:Nn #2 { #1 .jsonparse }
+    }
+  }
+}
+
+\NewDocumentCommand { \JSONParseFromFile } { o m m } {
+  \file_if_exist:nF {#3} {
+    \msg_error:nnn { jsonparse } { file-not-found }
+      {#3}
+  }
+  \bool_lazy_and:nnTF { ! \tl_if_novalue_p:n {#1} } { \file_if_exist_p:n { #1 .jsonparse } } {
+    \msg_info:nnn { jsonparse } { loading-external }
+      { #1 .jsonparse }
+    \file_input:n { #1 .jsonparse }
+  } {
+    \prop_new:N #2
+    \tl_gclear:N \g__jsonparse_json_tl
+    \group_begin:
+      \cs_set:Npn \" { \exp_not:N \" }
+      \cs_set:Npn \/ { \exp_not:N \/ }
+      \cs_set:Npn \\ { \exp_not:N \\ }
+      \cs_set:Npn \b { \exp_not:N \b }
+      \cs_set:Npn \f { \exp_not:N \f }
+      \cs_set:Npn \n { \exp_not:N \n }
+      \cs_set:Npn \r { \exp_not:N \r }
+      \cs_set:Npn \t { \exp_not:N \t }
+      \cs_set:Npn \u { \exp_not:N \u }
+      \cs_set:Npn \x [ ##1 ] [ ##2 ] { \prop_item:ce {##1} {##2} }
+      \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \g__jsonparse_json_tl
+      \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl } 
+    \group_end:
+    \tl_if_novalue:nF {#1} {
+      \__jsonparse_externalize:Nn #2 { #1 .jsonparse }
+    }
+  }
 }
 
 \NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
@@ -518,8 +576,8 @@
     \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
     \cs_set:Npn \u { \char" }
     \tl_set:Ne \l__jsonparse_temp_tl {#1}
-    \cs_set:Npn \" { \__jsonparse_tex_quote }
-    \cs_set:Npn \\ { \__jsonparse_tex_backslash }
+    \cs_set_eq:NN \" \__jsonparse_tex_quote
+    \cs_set_eq:NN \\ \__jsonparse_tex_backslash 
     \tl_rescan:no { } { \l__jsonparse_temp_tl }
   \group_end:
 }
@@ -528,7 +586,7 @@
   \bool_if:NTF #1 {
     \prop_item:Ne #2 {#3}
   } {
-    \__jsonparse_rescan:n { \prop_item:Ne #2 {#3} }
+    \exp_args:Ne \__jsonparse_rescan:n { \prop_item:Ne #2 {#3} } 
   }
 }
 
@@ -612,7 +670,7 @@
         \bool_if:NTF #1 {
           \tl_set:Nn \JSONParseArrayValue { \prop_item:Nn #2 {##1} }
         } {
-          \tl_set:Nn \JSONParseArrayValue { \__jsonparse_rescan:n { \prop_item:Nn #2 {##1} } }
+          \tl_set:Nn \JSONParseArrayValue { \exp_args:Ne \__jsonparse_rescan:n { \prop_item:Nn #2 {##1} } }
         }
         \use:c {#5} 
       }

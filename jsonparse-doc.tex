@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.8.2}
-\def\jsonparsefiledate{26 April 2024}
+\def\jsonparsefileversion{0.8.3}
+\def\jsonparsefiledate{28 April 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -183,7 +183,7 @@
     [The jsonparse package]
     {The \titlemacro{jsonparse} package}
     {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
-    {Jasper Habicht}[E-mail: \href{mailto:mail@jasperhabicht.de}{mail@jasperhabicht.de}. I am grateful to Joseph Wright, Jonathan P. Spratte and David Carlisle who helped me navigating the peculiarities of TeX and optimizing the code.]
+    {Jasper Habicht}[E-mail: \href{mailto:mail@jasperhabicht.de}{mail@jasperhabicht.de}. I am grateful to Joseph Wright, Jonathan P. Spratte and David Carlisle who helped me navigating the peculiarities of TeX and optimizing the code. Jason, the JSON parsing horse: Copyright 2024 Hannah Klöber.]
     {Version \jsonparsefileversion, released on \jsonparsefiledate}
 
 \changes{v0.3.0}{2024/04/08}{First public beta release.}
@@ -196,8 +196,11 @@
 \changes{v0.7.1}{2024/04/20}{Access to first-level keys of object added.}
 \changes{v0.8.0}{2024/04/24}{Internal rewrite, escaping procedures changed.}
 \changes{v0.8.2}{2024/04/26}{Bug fixes, externalizing parsed data.}
+\changes{v0.8.3}{2024/04/28}{Escaping of characters with special meaning in TeX.}
 
 \begin{document}
+\vspace*{-1cm}
+\noindent\includegraphics[width=5cm]{img/jason.pdf}
 
 \printdoctitle
 
@@ -246,6 +249,21 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
 
     \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
+
+\begin{macrodef}
+|escape|={<all>}
+|escape|={<none>}
+|escape|={<number sign>}
+|escape|={<dollar sign>}
+|escape|={<percent sign>}
+|escape|={<ampersand>}
+|escape|={<circumflex accent>}
+|escape|={<low line>}
+|escape|={<tilde>}
+\end{macrodef}
+The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into their relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}. With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected. 
+
+The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
 \begin{macrodef}
 replacement/|backspace|={<string>}
@@ -356,7 +374,7 @@ Parsing large JSON files can take quite a while. In order to speed up follow-up 
 \begin{macrodef}
 |\JSONParsePut|{<token variable>}{<key>}[<JSON string>]
 \end{macrodef}
-The commannd \macro{\JSONParsePut} is used by the externalization procedure to re-read already parsed JSON data to the main file. It essentially just adds a key-value pair to a property list (where the value part is read as string). Hence, it can also be used to append more entries to an already existing property list containing parsed JSON data.
+The command \macro{\JSONParsePut} is used by the externalization procedure to re-read already parsed JSON data to the main file. It just adds a key-value pair to the property list (where the value part is read as string). Hence, it can also be used to append more entries to an already existing property list containing parsed JSON data.
 
 \subsection{Changing separators, output and other settings}\label{sec:settings}
 

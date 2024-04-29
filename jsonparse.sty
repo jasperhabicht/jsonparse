@@ -757,6 +757,10 @@
   \group_end:
 }
 
+\tl_new:N \JSONParseArrayIndex 
+\tl_new:N \JSONParseArrayKey 
+\tl_new:N \JSONParseArrayValue 
+
 \NewDocumentCommand { \JSONParseArrayValuesMap } { s m m O{} m } {
   \group_begin:
     \jsonparse_filter:Nn #2 {#3}

@@ -1,6 +1,6 @@
 ![Version 0.8.3](https://img.shields.io/badge/version-0.8.3-blue)
 
-![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/d6abde3a-fa12-4b63-a213-ad8332e32199)
+![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/7db6e723-156c-4108-bd48-0af13cc8269a)
 
 # The `jsonparse` package
 

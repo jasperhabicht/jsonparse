@@ -1,0 +1,277 @@
+\documentclass{standalone}
+\usepackage{l3draw}
+
+\begin{document}
+\ExplSyntaxOn
+
+\color_set:nnn { color_i } { rgb } { 0.356863 , 0.639216 , 0.870588 }
+\color_set:nnn { color_ii } { rgb } { 0.729412 , 0.552941 , 0.364706 }
+\color_set:nnn { color_iii } { rgb } { 0.964706 , 0.52549 , 0.137255 }
+\color_set:nnn { color_iv } { rgb } { 0.592157 , 0.427451 , 0.27451 }
+\color_set:nnn { color_v } { rgb } { 0.317647 , 0.172549 , 0.0823529 }
+\color_set:nnn { color_vi } { rgb } { 0.203922 , 0.101961 , 0.0745098 }
+\color_set:nnn { color_vii } { rgb } { 1 , 1 , 1 }
+
+\draw_begin:
+
+\cs_new:Npn \__jsonparse_jason_path_i: {
+    \draw_path_moveto:n { 433.418 , 221.836 } 
+    \draw_path_curveto:nnn { 433.418 , 335.695 } { 341.117 , 428 } { 227.254 , 428 }
+    \draw_path_curveto:nnn { 113.391 , 428 } { 21.086 , 335.695 } { 21.086 , 221.836 }
+    \draw_path_curveto:nnn { 21.086 , 107.973 } { 113.391 , 15.668 } { 227.254 , 15.668 }
+    \draw_path_curveto:nnn { 341.117 , 15.668 } { 433.418 , 107.973 } { 433.418 , 221.836 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_ii: {
+    \draw_path_moveto:n { 406.586 , 385.5 } 
+    \draw_path_curveto:nnn { 406.586 , 385.5 } { 396.254 , 373.168 } { 370.586 , 298.836 } 
+    \draw_path_curveto:nnn { 344.922 , 224.5 } { 332.254 , 185.168 } { 321.918 , 158.836 } 
+    \draw_path_curveto:nnn { 316.367 , 144.684 } { 309.375 , 136.508 } { 304.09 , 131.965 } 
+    \draw_path_curveto:nnn { 311.859 , 126.008 } { 319.867 , 118.781 } { 323.918 , 111.836 } 
+    \draw_path_curveto:nnn { 330.82 , 100 } { 335.586 , 87.336 } { 339.586 , 73.336 } 
+    \draw_path_curveto:nnn { 341.984 , 64.941 } { 349.254 , 59.168 } { 349.254 , 59.168 } 
+    \draw_path_curveto:nnn { 349.254 , 59.168 } { 294.254 , 46.168 } { 270.586 , 88.668 } 
+    \draw_path_curveto:nnn { 269.051 , 91.422 } { 267.551 , 94.051 } { 266.047 , 96.559 } 
+    \draw_path_lineto:n { 140.461 , 121.891 }  
+    \draw_path_curveto:nnn { 129.957 , 133 } { 118.902 , 147.27 } { 114.254 , 161.836 } 
+    \draw_path_curveto:nnn { 110.125 , 174.766 } { 102.918 , 177.836 } { 87.918 , 189.836 } 
+    \draw_path_curveto:nnn { 72.918 , 201.836 } { 40.52 , 233.609 } { 40.52 , 233.609 } 
+    \draw_path_lineto:n { 52.629 , 282.461 }  
+    \draw_path_lineto:n { 108.742 , 351.707 }  
+    \draw_path_curveto:nnn { 122.176 , 342.695 } { 136.945 , 331.641 } { 155.254 , 324.586 } 
+    \draw_path_curveto:nnn { 169.125 , 319.234 } { 188.387 , 316.105 } { 206.367 , 312.504 } 
+    \draw_path_curveto:nnn { 208.922 , 318.824 } { 215.195 , 335.516 } { 217.754 , 352.836 } 
+    \draw_path_curveto:nnn { 221.004 , 374.836 } { 222.254 , 444.336 } { 222.254 , 444.336 } 
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_iii: {
+    \draw_path_moveto:n { 453.754 , 303.168 } 
+    \draw_path_curveto:nnn { 453.754 , 303.168 } { 444.086 , 288.336 } { 432.086 , 282.168 } 
+    \draw_path_curveto:nnn { 420.676 , 276.305 } { 407.586 , 275 } { 407.586 , 275 } 
+    \draw_path_curveto:nnn { 407.586 , 275 } { 410.438 , 263.355 } { 418.754 , 252.168 } 
+    \draw_path_curveto:nnn { 427.918 , 239.836 } { 444.254 , 229.5 } { 444.254 , 229.5 } 
+    \draw_path_lineto:n { 392.754 , 212 }  
+    \draw_path_curveto:nnn { 392.754 , 212 } { 409.918 , 205.5 } { 417.918 , 198.168 } 
+    \draw_path_curveto:nnn { 427.016 , 189.832 } { 431.254 , 168.168 } { 431.254 , 168.168 } 
+    \draw_path_curveto:nnn { 431.254 , 168.168 } { 383.633 , 170.973 } { 376.918 , 153 } 
+    \draw_path_curveto:nnn { 371.754 , 139.168 } { 390.254 , 109.836 } { 390.254 , 109.836 } 
+    \draw_path_curveto:nnn { 390.254 , 109.836 } { 362.918 , 103.5 } { 349.086 , 103.668 } 
+    \draw_path_curveto:nnn { 341.516 , 103.758 } { 333.258 , 104.543 } { 326.984 , 106.223 } 
+    \draw_path_curveto:nnn { 326.004 , 108.113 } { 324.996 , 109.988 } { 323.918 , 111.836 } 
+    \draw_path_curveto:nnn { 319.867 , 118.781 } { 311.859 , 126.008 } { 304.09 , 131.965 } 
+    \draw_path_curveto:nnn { 309.375 , 136.508 } { 316.367 , 144.684 } { 321.918 , 158.836 } 
+    \draw_path_curveto:nnn { 332.254 , 185.168 } { 344.922 , 224.5 } { 370.586 , 298.836 } 
+    \draw_path_curveto:nnn { 396.254 , 373.168 } { 406.586 , 385.5 } { 406.586 , 385.5 } 
+    \draw_path_lineto:n { 439.086 , 349 }  
+    \draw_path_curveto:nnn { 423.918 , 346 } { 416.754 , 328.5 } { 416.754 , 328.5 } 
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_iv: {
+    \draw_path_moveto:n { 255.586 , 71 } 
+    \draw_path_curveto:nnn { 244.922 , 61.336 } { 233.754 , 60.168 } { 224.918 , 59.836 } 
+    \draw_path_curveto:nnn { 209.812 , 59.266 } { 199.918 , 33.168 } { 199.918 , 33.168 } 
+    \draw_path_curveto:nnn { 199.918 , 33.168 } { 199.918 , 48.336 } { 196.918 , 51.5 } 
+    \draw_path_curveto:nnn { 190.754 , 42.168 } { 177.586 , 39.668 } { 167.254 , 40.5 } 
+    \draw_path_curveto:nnn { 152.656 , 41.68 } { 143.254 , 52.168 } { 143.254 , 52.168 } 
+    \draw_path_curveto:nnn { 143.254 , 52.168 } { 157.754 , 49.336 } { 167.418 , 59.336 } 
+    \draw_path_curveto:nnn { 177.086 , 69.336 } { 177.586 , 74.5 } { 177.586 , 74.5 } 
+    \draw_path_curveto:nnn { 170.418 , 65.5 } { 151.754 , 68.168 } { 135.418 , 79.836 } 
+    \draw_path_curveto:nnn { 119.086 , 91.5 } { 123.918 , 122.836 } { 123.918 , 122.836 } 
+    \draw_path_curveto:nnn { 123.918 , 122.836 } { 127.586 , 110 } { 144.586 , 102.168 } 
+    \draw_path_curveto:nnn { 151.156 , 99.141 } { 168.586 , 98.5 } { 168.586 , 98.5 }
+    \draw_path_curveto:nnn { 168.586 , 98.5 } { 143.754 , 99.336 } { 138.918 , 128.336 } 
+    \draw_path_curveto:nnn { 136.012 , 145.789 } { 142.586 , 160.668 } { 142.586 , 160.668 } 
+    \draw_path_curveto:nnn { 142.586 , 160.668 } { 144.086 , 145.168 } { 158.918 , 136 } 
+    \draw_path_curveto:nnn { 169.23 , 129.629 } { 180.754 , 126.668 } { 180.754 , 126.668 } 
+    \draw_path_curveto:nnn { 175.586 , 130.5 } { 177.586 , 141.5 } { 177.586 , 141.5 } 
+    \draw_path_curveto:nnn { 177.586 , 141.5 } { 186.586 , 126.336 } { 210.418 , 127.836 } 
+    \draw_path_curveto:nnn { 240.898 , 129.754 } { 253.441 , 117.625 } { 266.047 , 96.559 } 
+    \draw_path_curveto:nnn { 265.492 , 90.465 } { 263.41 , 78.09 } { 255.586 , 71 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_v: {
+    \draw_path_moveto:n { 108.738 , 351.707 } 
+    \draw_path_curveto:nnn { 117.086 , 341.312 } { 128.648 , 326.078 } { 131.504 , 318.086 } 
+    \draw_path_curveto:nnn { 139.004 , 297.086 } { 130.254 , 287.336 } { 125.504 , 280.086 } 
+    \draw_path_curveto:nnn { 120.754 , 272.836 } { 128.754 , 268.586 } { 115.504 , 255.836 } 
+    \draw_path_curveto:nnn { 102.254 , 243.086 } { 61.754 , 264.086 } { 56.254 , 261.586 } 
+    \draw_path_curveto:nnn { 50.754 , 259.086 } { 51.254 , 255.836 } { 49.754 , 244.836 } 
+    \draw_path_curveto:nnn { 48.254 , 233.836 } { 42.57 , 232.652 } { 33.254 , 233.836 } 
+    \draw_path_curveto:nnn { 20.605 , 235.438 } { 14.754 , 258.336 } { 11.504 , 274.086 } 
+    \draw_path_curveto:nnn { 8.254 , 289.836 } { -0.047 , 289.59 } { 1.754 , 303.086 } 
+    \draw_path_curveto:nnn { 2.605 , 309.484 } { 6.199 , 316.066 } { 17.652 , 318.48 } 
+    \draw_path_curveto:nnn { 16.93 , 324.238 } { 16.715 , 331.266 } { 17.934 , 338.922 } 
+    \draw_path_curveto:nnn { 21.098 , 358.809 } { 52.738 , 368.754 } { 76.242 , 366.492 } 
+    \draw_path_curveto:nnn { 87 , 365.461 } { 97.395 , 359.312 } { 108.738 , 351.707 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_vi: {
+    \draw_path_moveto:n { 108.738 , 351.707 } 
+    \draw_path_curveto:nnn { 122.176 , 342.695 } { 136.945 , 331.641 } { 155.254 , 324.586 }
+    \draw_path_curveto:nnn { 179.297 , 315.316 } { 219.527 , 312.707 } { 241.223 , 302.762 } 
+    \draw_path_curveto:nnn { 262.918 , 292.82 } { 265.629 , 259.371 } { 265.629 , 259.371 }
+
+    \draw_path_moveto:n { 222.254 , 444.336 } 
+    \draw_path_curveto:nnn { 222.254 , 444.336 } { 221.004 , 374.836 } { 217.754 , 352.836 }
+    \draw_path_curveto:nnn { 215.195 , 335.516 } { 208.922 , 318.824 } { 206.363 , 312.504 } 
+    \draw_path_curveto:nnn { 206.18 , 312.539 } { 205.996 , 312.574 } { 205.812 , 312.613 }
+
+    \draw_path_moveto:n { 284.254 , 145.336 } 
+    \draw_path_curveto:nnn { 284.254 , 145.336 } { 314.586 , 127.836 } { 323.918 , 111.836 }
+    \draw_path_curveto:nnn { 330.82 , 100 } { 335.586 , 87.336 } { 339.586 , 73.336 } 
+    \draw_path_curveto:nnn { 341.984 , 64.941 } { 349.254 , 59.168 } { 349.254 , 59.168 } 
+    \draw_path_curveto:nnn { 349.254 , 59.168 } { 294.254 , 46.168 } { 270.586 , 88.668 } 
+    \draw_path_curveto:nnn { 269.051 , 91.422 } { 267.551 , 94.051 } { 266.047 , 96.559 }
+
+    \draw_path_moveto:n { 140.461 , 121.891 } 
+    \draw_path_curveto:nnn { 129.957 , 133 } { 118.898 , 147.27 } { 114.254 , 161.836 } 
+    \draw_path_curveto:nnn { 110.125 , 174.766 } { 102.918 , 177.836 } { 87.918 , 189.836 } 
+    \draw_path_curveto:nnn { 72.918 , 201.836 } { 40.52 , 233.609 } { 40.52 , 233.609 }
+}
+
+\cs_new:Npn \__jsonparse_jason_path_vii: {
+    \draw_path_moveto:n { 177.586 , 74.5 } 
+    \draw_path_curveto:nnn { 177.586 , 74.5 } { 177.086 , 69.336 } { 167.418 , 59.336 } 
+    \draw_path_curveto:nnn { 165.707 , 57.562 } { 163.84 , 56.199 } { 161.93 , 55.145 } 
+    \draw_path_curveto:nnn { 162.246 , 61.227 } { 162.852 , 66.336 } { 163.234 , 69.152 } 
+    \draw_path_curveto:nnn { 169.391 , 68.957 } { 174.535 , 70.668 } { 177.586 , 74.5 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_viii: {
+    \draw_path_moveto:n { 167.254 , 40.5 } 
+    \draw_path_curveto:nnn { 177.586 , 39.668 } { 190.754 , 42.168 } { 196.918 , 51.5 } 
+    \draw_path_curveto:nnn { 199.918 , 48.336 } { 199.918 , 33.168 } { 199.918 , 33.168 } 
+    \draw_path_curveto:nnn { 199.918 , 33.168 } { 207.445 , 53.012 } { 219.391 , 58.465 } 
+    \draw_path_curveto:nnn { 214.809 , 42.316 } { 198.312 , 27.348 } { 191.504 , 21.836 } 
+    \draw_path_curveto:nnn { 184.504 , 16.168 } { 174.879 , 2.5 } { 174.879 , 2.5 } 
+    \draw_path_curveto:nnn { 174.879 , 2.5 } { 165.898 , 13.836 } { 162.898 , 31.5 } 
+    \draw_path_curveto:nnn { 162.355 , 34.695 } { 162.035 , 38.043 } { 161.867 , 41.383 } 
+    \draw_path_curveto:nnn { 163.57 , 40.965 } { 165.367 , 40.652 } { 167.254 , 40.5 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_ix: {
+    \draw_path_moveto:n { 230.922 , 186.793 } 
+    \draw_path_curveto:nnn { 230.922 , 196.391 } { 222.188 , 204.168 } { 211.422 , 204.168 } 
+    \draw_path_curveto:nnn { 200.648 , 204.168 } { 191.922 , 196.391 } { 191.922 , 186.793 } 
+    \draw_path_curveto:nnn { 191.922 , 177.195 } { 200.648 , 169.418 } { 211.422 , 169.418 } 
+    \draw_path_curveto:nnn { 222.188 , 169.418 } { 230.922 , 177.195 } { 230.922 , 186.793 }
+    \draw_path_close:
+}
+
+\cs_new:Npn \__jsonparse_jason_path_x: {
+    \draw_path_moveto:n { 217.922 , 188.836 } 
+    \draw_path_curveto:nnn { 217.922 , 192.699 } { 214.375 , 195.836 } { 210.004 , 195.836 } 
+    \draw_path_curveto:nnn { 205.633 , 195.836 } { 202.086 , 192.699 } { 202.086 , 188.836 } 
+    \draw_path_curveto:nnn { 202.086 , 184.969 } { 205.633 , 181.836 } { 210.004 , 181.836 } 
+    \draw_path_curveto:nnn { 214.375 , 181.836 } { 217.922 , 184.969 } { 217.922 , 188.836 }
+    \draw_path_close:
+}
+
+% nostril
+\cs_new:Npn \__jsonparse_jason_path_xi: {
+    \draw_path_moveto:n { 68.77 , 289.297 } 
+    \draw_path_curveto:nnn { 68.77 , 289.297 } { 71.215 , 285.078 } { 74.879 , 280.211 } 
+    \draw_path_curveto:nnn { 79.305 , 274.324 } { 87.262 , 269.184 } { 91.254 , 268.836 } 
+    \draw_path_curveto:nnn { 98.379 , 268.211 } { 103.449 , 269.938 } { 100.551 , 275.527 } 
+    \draw_path_curveto:nnn { 97.652 , 281.117 } { 88.188 , 287.027 } { 81.254 , 287.961 } 
+    \draw_path_curveto:nnn { 74.316 , 288.891 } { 68.77 , 289.297 } { 68.77 , 289.297 }
+    \draw_path_close:
+}
+
+% mouth
+\cs_new:Npn \__jsonparse_jason_path_xii: {
+    \draw_path_moveto:n { 27.488 , 319.328 } 
+    \draw_path_curveto:nnn { 26.766 , 323.887 } { 26.395 , 330.605 } { 29.504 , 334.336 } 
+    \draw_path_curveto:nnn { 34.504 , 340.336 } { 44.004 , 349.336 } { 65.504 , 336.336 } 
+    \draw_path_curveto:nnn { 83.551 , 325.422 } { 106.699 , 303.945 } { 113.672 , 297.328 } 
+    \draw_path_curveto:nnn { 109.645 , 300.484 } { 98.965 , 306.266 } { 74.754 , 306.086 } 
+    \draw_path_curveto:nnn { 48.09 , 305.883 } { 41.801 , 318.445 } { 27.488 , 319.328 }
+    \draw_path_close:
+}
+
+% mouth edge
+\cs_new:Npn \__jsonparse_jason_path_xiii: {
+    \draw_path_moveto:n { 17.652 , 318.48 } 
+    \draw_path_curveto:nnn { 19.613 , 318.891 } { 21.801 , 319.188 } { 24.254 , 319.336 } 
+    \draw_path_curveto:nnn { 25.383 , 319.402 } { 26.453 , 319.395 } { 27.488 , 319.328 }
+}
+
+% teeth
+\cs_new:Npn \__jsonparse_jason_path_xiv: {
+    \draw_path_moveto:n { 96.598 , 304.234 } 
+    \draw_path_curveto:nnn { 80.379 , 312.863 } { 52.5 , 327.137 } { 44.855 , 327.496 } 
+    \draw_path_curveto:nnn { 37.57 , 327.84 } { 31.289 , 322.75 } { 27.891 , 319.293 } 
+    \draw_path_curveto:nnn { 27.758 , 319.305 } { 27.625 , 319.32 } { 27.488 , 319.328 }
+}
+
+\draw_transform_yscale:n { -1 }
+\draw_linewidth:n { 3pt }
+\draw_miterlimit:n { 10 }
+\color_stroke:n { color_v }
+
+\draw_scope_begin: 
+
+    \color_fill:n { color_i }
+    \__jsonparse_jason_path_i:
+    \draw_path_use_clear:n { fill , clip }
+    
+    \color_fill:n { color_ii }
+    \__jsonparse_jason_path_ii:
+    \draw_path_use_clear:n { fill }
+    
+    \color_fill:n { color_iii }
+    \__jsonparse_jason_path_iii:
+    \draw_path_use_clear:n { fill , draw }
+
+    \__jsonparse_jason_path_vi:
+    \draw_path_use_clear:n { draw }
+
+\draw_scope_end: 
+
+\color_fill:n { color_ii }
+\__jsonparse_jason_path_vii:
+\draw_path_use_clear:n { fill , draw }
+
+\__jsonparse_jason_path_viii:
+\draw_path_use_clear:n { fill , draw }
+
+\color_fill:n { color_iii }
+\__jsonparse_jason_path_iv:
+\draw_path_use_clear:n { fill , draw }
+
+\color_fill:n { color_iv }
+\__jsonparse_jason_path_v:
+\draw_path_use_clear:n { fill , draw }
+
+\color_fill:n { color_vii }
+\__jsonparse_jason_path_ix:
+\draw_path_use_clear:n { fill , draw }
+
+\color_fill:n { color_vi }
+\__jsonparse_jason_path_x:
+\draw_path_use_clear:n { fill }
+
+\__jsonparse_jason_path_xi:
+\draw_path_use_clear:n { fill }
+
+\color_fill:n { color_vii }
+\__jsonparse_jason_path_xii:
+\draw_path_use_clear:n { fill , draw }
+
+\__jsonparse_jason_path_xiii:
+\draw_path_use_clear:n { draw }
+
+\__jsonparse_jason_path_xiv:
+\draw_path_use_clear:n { draw }
+
+\draw_end:
+
+\ExplSyntaxOff
+\end{document}

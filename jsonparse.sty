@@ -14,12 +14,12 @@
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
-\keys_define:nn { jsonparse } { 
+\keys_define:nn { jsonparse / global } { 
   debug .bool_set:N = \l__jsonparse_debug_mode_bool ,
   debug .default:n  = { true } ,
   debug .initial:n  = { false } 
 }
-\ProcessKeyOptions [ jsonparse ]
+\ProcessKeyOptions [ jsonparse / global ]
 
 \msg_new:nnn { jsonparse } { debug-info } {
   #1
@@ -44,7 +44,7 @@
 
 \msg_new:nnn { jsonparse } { file-exists } {
   \msg_error_text:n { jsonparse } \iow_newline:
-  File ~ #1 ~ already ~ existing.
+  File ~ #1 ~ already ~ existing. 
 }
 
 \msg_new:nnn { jsonparse } { escape-in-key } {
@@ -55,6 +55,11 @@
 \msg_new:nnn { jsonparse } { escape-char-not-found } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Escape ~ character ~ #1 ~ not ~ found.
+}
+
+\msg_new:nnn { jsonparse } { unknown-key } {
+  \msg_warning_text:n { jsonparse } \iow_newline:
+  Ignoring ~ unknown ~ key; ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { saving-external } {
@@ -68,10 +73,12 @@
 }
 
 % ===
-	
-\tl_new:N \l__jsonparse_externalize_file_name_tl
+
 \str_new:N \l_jsonparse_externalize_prefix_str
 \str_new:N \l_jsonparse_current_prop_str
+
+\tl_new:N \l__jsonparse_externalize_file_name_tl
+
 \str_new:N \l__jsonparse_child_sep_str
 \str_new:N \l__jsonparse_array_sep_left_str
 \str_new:N \l__jsonparse_array_sep_right_str
@@ -87,6 +94,8 @@
 \str_new:N \l__jsonparse_linefeed_str
 \str_new:N \l__jsonparse_carriage_return_str
 \str_new:N \l__jsonparse_horizontal_tab_str
+
+\clist_new:N \l__jsonparse_unused_keys_clist
 
 \clist_new:N \l__jsonparse_escape_tex_chars_clist
 \clist_set:Nn \l__jsonparse_escape_tex_chars_clist {
@@ -104,7 +113,7 @@
   \bool_new:c { l__jsonparse_escape_ #1 _bool }
 }
 
-\keys_define:nn { jsonparse } {
+\keys_define:nn { jsonparse / parse } {
   externalize                 .bool_set:N = \l__jsonparse_externalize_bool ,
   externalize                 .default:n  = { true } ,
   externalize                 .initial:n  = { false } ,
@@ -114,7 +123,7 @@
   externalize ~ file ~ name   .initial:n  = { 
     \l_jsonparse_externalize_prefix_str \c_sys_jobname_str \c_underscore_str \l_jsonparse_current_prop_str
   } ,
-  separator                   .code:n     = { \keys_set:nn { jsonparse / separator } {#1} } ,
+  separator                   .code:n     = { \keys_set:nn { jsonparse / parse / separator } {#1} } ,
   separator / child           .str_set:N  = \l__jsonparse_child_sep_str ,
   separator / child           .initial:n  = { . } ,
   separator / array ~ left    .str_set:N  = \l__jsonparse_array_sep_left_str ,
@@ -124,13 +133,17 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  replace                     .code:n     = { \keys_set:nn { jsonparse / replace } {#1} } ,
+  replace                     .code:n     = { \keys_set:nn { jsonparse / parse / replace } {#1} } ,
   replace / true              .str_set:N  = \l__jsonparse_true_str ,
   replace / true              .initial:n  = { true } ,
   replace / false             .str_set:N  = \l__jsonparse_false_str ,
   replace / false             .initial:n  = { false } ,
   replace / null              .str_set:N  = \l__jsonparse_null_str ,
-  replace / null              .initial:n  = { null } ,
+  replace / null              .initial:n  = { null } 
+}
+
+\keys_define:nn { jsonparse / typeset } {
+  replace                     .code:n     = { \keys_set:nn { jsonparse / typeset / replace } {#1} } ,
   replace / backspace         .str_set:N  = \l__jsonparse_backspace_str ,
   replace / backspace         .initial:n  = { ~ } ,
   replace / formfeed          .str_set:N  = \l__jsonparse_formfeed_str ,
@@ -191,8 +204,19 @@
   rescan                      .groups:n   = { output }
 }
 
+\cs_new:Npn \__jsonparse_warning_unused_keys: {
+  \clist_map_inline:Nn \l__jsonparse_unused_keys_clist {
+    \msg_warning:nne { jsonparse } { unknown-key } {
+      ##1
+    } 
+  }
+}
+
 \NewDocumentCommand { \JSONParseSet } { m } {
-  \keys_set:nn { jsonparse } {#1}
+  \keys_set_known:nnN { jsonparse / global } {#1} \l__jsonparse_unused_keys_clist
+  \keys_set_known:noN { jsonparse / parse } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist 
+  \keys_set_known:noN { jsonparse / typeset } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist
+  \__jsonparse_warning_unused_keys:
 }
 
 % ===
@@ -218,12 +242,14 @@
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
 \cs_generate_variant:Nn \prop_item:Nn { Ne , ce }
 \cs_generate_variant:Nn \prop_put:Nnn { Nen , Nee }
+\cs_generate_variant:Nn \keys_set_known:nnN { noN }
 \cs_generate_variant:Nn \iow_now:Nn { Ne }
 \cs_generate_variant:Nn \iow_open:Nn { Ne }
 \cs_generate_variant:Nn \msg_error:nnn { nno }
 \cs_generate_variant:Nn \msg_error:nnnn { nnoo }
 \cs_generate_variant:Nn \msg_info:nnn { nne }
 \cs_generate_variant:Nn \msg_log:nnn { nne }
+\cs_generate_variant:Nn \msg_warning:nnn { nne }
 
 \prg_generate_conditional_variant:Nnn \file_if_exist:n { e } { T , TF }
 \prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T }
@@ -567,7 +593,7 @@
   \prop_if_exist:NF #1 {
     \prop_new:N #1 
   } 
-  \prop_gput:Nnn #1 { #2 } { #3 }
+  \prop_gput:Nnn #1 {#2} {#3}
 }
 
 \cs_new:Npn \__jsonparse_externalize:Nn #1#2 {
@@ -592,7 +618,9 @@
 \NewDocumentCommand { \JSONParse } { O{} m +v } {
   \group_begin:
     \str_set:Ne \l_jsonparse_current_prop_str { \cs_to_str:N #2 }
-    \keys_set:nn { jsonparse } { #1 }
+    \keys_set_known:nnN { jsonparse / global } {#1} \l__jsonparse_unused_keys_clist
+    \keys_set_known:noN { jsonparse / parse } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist 
+    \__jsonparse_warning_unused_keys:  
     \bool_set_false:N \l__jsonparse_externalize_load_bool
     \bool_if:NT \l__jsonparse_externalize_bool {
       \file_if_exist:eT { \l__jsonparse_externalize_file_name_tl .jsonparse } {
@@ -634,7 +662,9 @@
   }
   \group_begin:
     \str_set:Ne \l_jsonparse_current_prop_str { \cs_to_str:N #2 }
-    \keys_set:nn { jsonparse } { #1 }
+    \keys_set_known:nnN { jsonparse / global } {#1} \l__jsonparse_unused_keys_clist
+    \keys_set_known:noN { jsonparse / parse } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist 
+    \__jsonparse_warning_unused_keys: 
     \bool_set_false:N \l__jsonparse_externalize_load_bool
     \bool_if:NT \l__jsonparse_externalize_bool {
       \file_if_exist:eT { \l__jsonparse_externalize_file_name_tl .jsonparse } {
@@ -717,7 +747,7 @@
 
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {
   \group_begin:
-    \keys_set_groups:nnn { jsonparse } { output } { #1 }
+    \keys_set:nn { jsonparse / typeset } {#1}
     \bool_if:NTF \l__jsonparse_rescan_bool {
       \exp_args:Ne \__jsonparse_rescan:n { \prop_item:Ne #2 {#3} } 
     } {
@@ -748,7 +778,7 @@
 
 \NewDocumentCommand { \JSONParseArrayValues } { O{} m m O{} m } {
   \group_begin:
-    \keys_set_groups:nnn { jsonparse } { output } { #1 }
+    \keys_set:nn { jsonparse / typeset } {#1}
     \tl_set:Nn \l__jsonparse_temp_tl {#2}
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
@@ -800,7 +830,7 @@
 
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m } {
   \group_begin:
-    \keys_set_groups:nnn { jsonparse } { output } { #1 }
+    \keys_set:nn { jsonparse / typeset } {#1}
     \jsonparse_filter:Nn #2 {#3}
     \prop_map_inline:Nn #2 {
       \str_if_eq:enT { 

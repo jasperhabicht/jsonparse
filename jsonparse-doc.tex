@@ -226,6 +226,8 @@ The package does not load any dependencies.
 \end{macrodef}
 The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
 
+This key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
 In general, the package reads the JSON source as string, which means that all characters have category code 12 (other), except for spaces which have category code 10 (space). The \macro{\endlinechar} value is set to $-1$. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. JSON, however, defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (escpape). 
@@ -268,11 +270,15 @@ The key \macro{escape} can be used to convert characters that don't require esca
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
+
 \begin{macrodef}
 |rescan|
 |rescan|={<boolean>}
 \end{macrodef}
 The key \macro{rescan} can be used to activate and deactivate rescanning of the output. This key is active per default. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded before typesetting. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
 
 \section{Main user commands}
 
@@ -375,10 +381,14 @@ Parsing large JSON files can take quite a while. In order to speed up follow-up 
 \end{macrodef}
 With the key \macro{externalize} set (or set to true), a file will be created in the working directory that stores the externalization of the parsed JSON data. The file name gets the extension \macro{.jsonparse}. The file name is created automatically and consists of the name of the current file followed by an underscore and the name of the token variable where the JSON data is stored into. If a file with the same name and file extension already exists, an error will be issued. 
 
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+
 \begin{macrodef}
 |externalize prefix|={<string>}
 \end{macrodef}
 With the key \macro{externalize prefix}, a prefix can be defined that is added to the file name. Per default this is an empty string.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
 |externalize file name|={<token list>}
@@ -391,6 +401,8 @@ The key \macro{externalize file name} sets the schema for the file name. The def
 \end{codeexample}
 
 The token variable \macro{\l_jsonparse_externalize_prefix_str} contains the prefix that is set using the key \macro{externalize prefix}. \macro{\c_sys_jobname_str} holds the name of the current file (the current job name), \macro{\c_underscore_str} is an underscore and the token variable \macro{\l_jsonparse_current_prop_str} contains the name of the property list where the relevant JSON data is stored into.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
 |\JSONParsePut|{<token variable>}{<key>}[<JSON string>]
@@ -408,21 +420,31 @@ The commands \macro{\JSONParseSet} can be used to specify options via key-value 
 
 \begin{macrodef}
 separator/|child|={<string>}
-\end{macrodef}
-With the key \macro{child sep}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
-
-\begin{macrodef}
 separator/|array left|={<string>}
 separator/|array right|={<string>}
 \end{macrodef}
-With the keys \macro{array sep left} and \macro{array sep right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. 
+With the key \macro{separator/child}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
+
+With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. 
+
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+
+\begin{macrodef}
+|zero-based|
+|zero-based|={<boolean>}
+\end{macrodef}
+If set (or explicitly set to \macro{true}), the key \macro{zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
 replace/|true|={<string>}
 replace/|false|={<string>}
 replace/|null|={<string>}
 \end{macrodef}
-With the keys \macro{true}, \macro{false} and \macro{null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement. These replacements take place already during parsing.
+With the keys \macro{replace/true}, \macro{replace/false} and \macro{replace/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement. These replacements take place already during parsing.
+
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
 replace/|backspace|={<string>}
@@ -433,11 +455,7 @@ replace/|horizontal tab|={<string>}
 \end{macrodef}
 These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement. These replacements take place only during typesetting.
 
-\begin{macrodef}
-|zero-based|
-|zero-based|={<boolean>}
-\end{macrodef}
-If set (or explicitly set to \macro{true}), the key \macro{array index zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
 
 \subsection{L3 commands}
 

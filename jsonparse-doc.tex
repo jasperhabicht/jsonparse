@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.8.5}
-\def\jsonparsefiledate{5 May 2024}
+\def\jsonparsefileversion{0.8.6}
+\def\jsonparsefiledate{9 May 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -193,11 +193,12 @@
 \changes{v0.5.7}{2024/04/14}{Bug fixes, key-value option setting added.}
 \changes{v0.6.0}{2024/04/15}{Bug fixes, renaming of several commands.}
 \changes{v0.7.0}{2024/04/18}{Renaming and rearranging of keys, escaping of special JSON escape sequences added.}
-\changes{v0.7.1}{2024/04/20}{Access to first-level keys of object added.}
+\changes{v0.7.1}{2024/04/20}{Access to top-level keys of object added.}
 \changes{v0.8.0}{2024/04/24}{Internal rewrite, escaping procedures changed.}
 \changes{v0.8.2}{2024/04/26}{Bug fixes, externalizing parsed data.}
 \changes{v0.8.3}{2024/04/28}{Escaping of characters with special meaning in TeX.}
 \changes{v0.8.5}{2024/05/05}{Enhanced key management.}
+\changes{v0.8.6}{2024/05/09}{Bug fix in nesting function.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -239,9 +240,9 @@ Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \ma
 It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source, so that they become \macro{\\\"} and \macro{\\\\} respectively. 
 
 \begin{macrodef}
-|\x|[<token variable name>][<key>]
+|\x|{<token variable name>}{<key>}
 \end{macrodef}
-Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. The control sequence takes two arguments delimited by square brackets. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
+Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. The control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
     \JSONParse{\myJSONdataA}{ 
@@ -249,11 +250,13 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
     }
 
     \JSONParse{\myJSONdataB}{ 
-        { "d" : \x[myJSONdataA][a] } 
+        { "d" : \x{myJSONdataA}{a} } 
     }
 
     \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
+
+Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON.
 
 \begin{macrodef}
 |escape|={<all>}
@@ -425,7 +428,7 @@ separator/|array right|={<string>}
 \end{macrodef}
 With the key \macro{separator/child}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
 
-With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. 
+With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. Changing these separators to curly braces (\macro{{}}) is not supported due to their grouping function in TeX. 
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 

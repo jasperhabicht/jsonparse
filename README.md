@@ -46,5 +46,5 @@ We can store it in the token variable `\myJSONdata` using the command `\JSONPars
 
 This package including all files is subject to the LPPL 1.3c license. Copyright 2024 Jasper Habicht (mail(at)jasperhabicht.de).
 
-Jason, the JSON parseing horse: Copyright 2024 Hannah Klöber.
+Jason, the JSON parsing horse: Copyright 2024 Hannah Klöber.
 

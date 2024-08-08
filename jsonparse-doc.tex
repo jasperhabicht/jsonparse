@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.8.6}
-\def\jsonparsefiledate{9 May 2024}
+\def\jsonparsefileversion{0.8.7}
+\def\jsonparsefiledate{8 August 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -199,6 +199,7 @@
 \changes{v0.8.3}{2024/04/28}{Escaping of characters with special meaning in TeX.}
 \changes{v0.8.5}{2024/05/05}{Enhanced key management.}
 \changes{v0.8.6}{2024/05/09}{Bug fix in nesting function.}
+\changes{v0.8.7}{2024/08/08}{Corrections in documentation, error messages.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -259,15 +260,15 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
 Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON.
 
 \begin{macrodef}
-|escape|={<all>}
-|escape|={<none>}
-|escape|={<number sign>}
-|escape|={<dollar sign>}
-|escape|={<percent sign>}
-|escape|={<ampersand>}
-|escape|={<circumflex accent>}
-|escape|={<low line>}
-|escape|={<tilde>}
+|escape|={all}
+|escape|={none}
+|escape|={number sign}
+|escape|={dollar sign}
+|escape|={percent sign}
+|escape|={ampersand}
+|escape|={circumflex accent}
+|escape|={low line}
+|escape|={tilde}
 \end{macrodef}
 The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into the relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}. With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected. 
 

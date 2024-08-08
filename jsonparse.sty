@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-05-09} {0.8.6} 
+\ProvidesExplPackage {jsonparse} {2024-08-08} {0.8.7} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -59,7 +59,7 @@
 
 \msg_new:nnn { jsonparse } { unknown-key } {
   \msg_warning_text:n { jsonparse } \iow_newline:
-  Ignoring ~ unknown ~ key; ~ #1.
+  Ignoring ~ unknown ~ key: ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { saving-external } {

@@ -1,4 +1,4 @@
-![Version 0.8.7](https://img.shields.io/badge/version-0.8.7-blue)
+![Version 0.9.0](https://img.shields.io/badge/version-0.9.0-blue)
 
 ![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/ddfddc70-bf5f-4121-ba45-4b9128875d85)
 
@@ -47,4 +47,3 @@ We can store it in the token variable `\myJSONdata` using the command `\JSONPars
 This package including all files is subject to the LPPL 1.3c license. Copyright 2024 Jasper Habicht (mail(at)jasperhabicht.de).
 
 Jason, the JSON parsing horse: Copyright 2024 Hannah Klöber.
-

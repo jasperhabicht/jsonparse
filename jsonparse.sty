@@ -10,7 +10,7 @@
 % 
 % This work has the LPPL maintenance status `maintained'.
 % 
-\ProvidesExplPackage {jsonparse} {2024-08-08} {0.8.7} 
+\ProvidesExplPackage {jsonparse} {2024-08-27} {0.9.0} 
   {JSON Parse}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -652,6 +652,7 @@
         \cs_set:Npn \t { \exp_not:N \t }
         \cs_set:Npn \u { \exp_not:N \u }
         \__json_nested_construct_cs:Noo \x \c_left_brace_str \c_right_brace_str
+        \tl_set:Nn \obeyedline { ~ }
         \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#3} 
         \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl } 
       \group_end:

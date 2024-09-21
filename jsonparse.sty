@@ -86,6 +86,7 @@
 \str_new:N \l__jsonparse_false_str
 \str_new:N \l__jsonparse_null_str
 \bool_new:N \l__jsonparse_zero_based_bool
+\bool_new:N \l__jsonparse_number_check_bool
 \bool_new:N \l__jsonparse_rescan_bool
 \bool_new:N \l__jsonparse_externalize_bool
 
@@ -132,6 +133,9 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
+  number ~ check              .bool_set:N = \l__jsonparse_number_check_bool ,
+  number ~ check              .default:n  = { true } ,
+  number ~ check              .initial:n  = { true } ,
   replace                     .code:n     = { \keys_set:nn { jsonparse / parse / replace } {#1} } ,
   replace / true              .str_set:N  = \l__jsonparse_true_str ,
   replace / true              .initial:n  = { true } ,
@@ -304,7 +308,7 @@
     0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 
 }
 
-\prg_new_conditional:Npnn \jsonparse_if_fp:n #1 { T , F , TF } {
+\prg_new_conditional:Npnn \jsonparse_if_fp:n #1 { p , T , F , TF } {
     \bool_set_true:N \l__jsonparse_fp_bool    
     \bool_set_false:N \l__jsonparse_fp_zero_seen_bool
     \bool_set_false:N \l__jsonparse_fp_plus_minus_seen_bool
@@ -692,7 +696,24 @@
 \cs_new:Npn \__jsonparse_parse_other_aux:w #1 , #2 \q_stop {
   \tl_set:Ne \l__jsonparse_temp_tl { \tl_trim_spaces:n {#1} }
   \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
-    \jsonparse_if_fp:nTF {#1} { 
+    \bool_if:NTF \l__jsonparse_number_check_bool {
+      \jsonparse_if_fp:nTF {#1} { 
+        \tl_set:Nn \l__jsonparse_val_tl {#1}
+        \prop_gput:Nee \g_jsonparse_entries_prop 
+          { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
+        % number
+        \bool_if:NT \l__jsonparse_debug_mode_bool {
+          \msg_log:nne { jsonparse } { debug-info } {
+            (key) ~ \str_use:N \l__jsonparse_key_tl : \iow_newline:
+            \iow_char:N \  \iow_char:N \  (num) ~ \str_use:N \l__jsonparse_val_tl
+          } 
+        }
+      } { 
+        % not a valid JSON fp
+        \msg_error:nnoo { jsonparse } { parsing-error }
+          { \l__jsonparse_key_tl } {#1}
+      } 
+    } {
       \tl_set:Nn \l__jsonparse_val_tl {#1}
       \prop_gput:Nee \g_jsonparse_entries_prop 
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -703,11 +724,7 @@
           \iow_char:N \  \iow_char:N \  (num) ~ \str_use:N \l__jsonparse_val_tl
         } 
       }
-    } { 
-      % not a valid JSON fp
-      \msg_error:nnoo { jsonparse } { parsing-error }
-        { \l__jsonparse_key_tl } {#1}
-    } 
+    }
   }
   \tl_set:Ne \l__jsonparse_remainder_tl { \tl_trim_spaces:e { \l__jsonparse_remainder_tl } }
   \tl_set:Ne \l__jsonparse_remainder_tl { 

@@ -87,7 +87,6 @@
 \str_new:N \l__jsonparse_null_str
 \bool_new:N \l__jsonparse_zero_based_bool
 \bool_new:N \l__jsonparse_check_num_bool
-\bool_new:N \l__jsonparse_check_num_bool
 \bool_new:N \l__jsonparse_rescan_bool
 \bool_new:N \l__jsonparse_externalize_bool
 
@@ -134,9 +133,6 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
-  check ~ num                 .default:n  = { true } ,
-  check ~ num                 .initial:n  = { true } ,
   check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
   check ~ num                 .default:n  = { true } ,
   check ~ num                 .initial:n  = { true } ,

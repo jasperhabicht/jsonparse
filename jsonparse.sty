@@ -86,7 +86,7 @@
 \str_new:N \l__jsonparse_false_str
 \str_new:N \l__jsonparse_null_str
 \bool_new:N \l__jsonparse_zero_based_bool
-\bool_new:N \l__jsonparse_number_check_bool
+\bool_new:N \l__jsonparse_check_num_bool
 \bool_new:N \l__jsonparse_rescan_bool
 \bool_new:N \l__jsonparse_externalize_bool
 
@@ -133,9 +133,9 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  number ~ check              .bool_set:N = \l__jsonparse_number_check_bool ,
-  number ~ check              .default:n  = { true } ,
-  number ~ check              .initial:n  = { true } ,
+  check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
+  check ~ num                 .default:n  = { true } ,
+  check ~ num                 .initial:n  = { true } ,
   replace                     .code:n     = { \keys_set:nn { jsonparse / parse / replace } {#1} } ,
   replace / true              .str_set:N  = \l__jsonparse_true_str ,
   replace / true              .initial:n  = { true } ,
@@ -295,204 +295,204 @@
 
 % ===
 
-\tl_new:N \l__jsonparse_fp_input_tl
-\tl_new:N \l__jsonparse_fp_remainder_tl
-\tl_new:N \l__jsonparse_fp_input_last_tl
-\bool_new:N \l__jsonparse_fp_bool 
-\bool_new:N \l__jsonparse_fp_zero_seen_bool 
-\bool_new:N \l__jsonparse_fp_plus_minus_seen_bool 
-\bool_new:N \l__jsonparse_fp_fraction_seen_bool 
-\bool_new:N \l__jsonparse_fp_exponent_seen_bool
+\tl_new:N \l__jsonparse_num_input_tl
+\tl_new:N \l__jsonparse_num_remainder_tl
+\tl_new:N \l__jsonparse_num_input_last_tl
+\bool_new:N \l__jsonparse_num_bool 
+\bool_new:N \l__jsonparse_num_zero_seen_bool 
+\bool_new:N \l__jsonparse_num_plus_minus_seen_bool 
+\bool_new:N \l__jsonparse_num_fraction_seen_bool 
+\bool_new:N \l__jsonparse_num_exponent_seen_bool
 
-\clist_const:Nn \c__jsonparse_fp_digits_clist {
+\clist_const:Nn \c__jsonparse_num_digits_clist {
     0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 
 }
 
-\prg_new_conditional:Npnn \jsonparse_if_fp:n #1 { p , T , F , TF } {
-    \bool_set_true:N \l__jsonparse_fp_bool    
-    \bool_set_false:N \l__jsonparse_fp_zero_seen_bool
-    \bool_set_false:N \l__jsonparse_fp_plus_minus_seen_bool
-    \bool_set_false:N \l__jsonparse_fp_fraction_seen_bool
-    \bool_set_false:N \l__jsonparse_fp_exponent_seen_bool
-    \tl_set:Nn \l__jsonparse_fp_remainder_tl { #1 }
-    \tl_if_empty:NTF \l__jsonparse_fp_remainder_tl {
-        \bool_set_false:N \l__jsonparse_fp_bool  
+\prg_new_conditional:Npnn \jsonparse_if_num:n #1 { p , T , F , TF } {
+    \bool_set_true:N \l__jsonparse_num_bool    
+    \bool_set_false:N \l__jsonparse_num_zero_seen_bool
+    \bool_set_false:N \l__jsonparse_num_plus_minus_seen_bool
+    \bool_set_false:N \l__jsonparse_num_fraction_seen_bool
+    \bool_set_false:N \l__jsonparse_num_exponent_seen_bool
+    \tl_set:Nn \l__jsonparse_num_remainder_tl { #1 }
+    \tl_if_empty:NTF \l__jsonparse_num_remainder_tl {
+        \bool_set_false:N \l__jsonparse_num_bool  
     } {
-        \__jsonparse_parse_fp:n {#1}
+        \__jsonparse_parse_num:n {#1}
     }
     \bool_lazy_any:nT {
-        { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { + } }
-        { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { - } }
-        { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { . } }
-        { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { e } }
-        { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { E } }
+        { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { + } }
+        { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { - } }
+        { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { . } }
+        { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { e } }
+        { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { E } }
     } {
-        \bool_set_false:N \l__jsonparse_fp_bool 
+        \bool_set_false:N \l__jsonparse_num_bool 
     }
-    \bool_if:NTF \l__jsonparse_fp_bool {
+    \bool_if:NTF \l__jsonparse_num_bool {
         \prg_return_true:
     } {
         \prg_return_false:
     }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp:n #1 {
-    \tl_set:Ne \l__jsonparse_fp_input_tl { \tl_trim_spaces:e {#1} }
-    \tl_if_empty:NF \l__jsonparse_fp_input_tl {
-        \cs_if_exist_use:cTF { __jsonparse_parse_fp_ \str_head_ignore_spaces:o { \l__jsonparse_fp_input_tl } :w } { 
-            \l__jsonparse_fp_input_tl \q_stop
+\cs_new:Npn \__jsonparse_parse_num:n #1 {
+    \tl_set:Ne \l__jsonparse_num_input_tl { \tl_trim_spaces:e {#1} }
+    \tl_if_empty:NF \l__jsonparse_num_input_tl {
+        \cs_if_exist_use:cTF { __jsonparse_parse_num_ \str_head_ignore_spaces:o { \l__jsonparse_num_input_tl } :w } { 
+            \l__jsonparse_num_input_tl \q_stop
         } {
             \exp_last_unbraced:No 
-            \__jsonparse_parse_fp_other:w \l__jsonparse_fp_input_tl \q_stop 
+            \__jsonparse_parse_num_other:w \l__jsonparse_num_input_tl \q_stop 
         }
     }
 }
 
-\cs_new:cpn { __jsonparse_parse_fp_ + :w } #1 \q_stop {
+\cs_new:cpn { __jsonparse_parse_num_ + :w } #1 \q_stop {
   \exp_last_unbraced:No 
-    \__jsonparse_parse_fp_plus_minus:w #1 \q_stop
+    \__jsonparse_parse_num_plus_minus:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_parse_fp_ - :w } #1 \q_stop {
+\cs_new:cpn { __jsonparse_parse_num_ - :w } #1 \q_stop {
   \exp_last_unbraced:No 
-    \__jsonparse_parse_fp_plus_minus:w #1 \q_stop
+    \__jsonparse_parse_num_plus_minus:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_parse_fp_ . :w } #1 \q_stop {
+\cs_new:cpn { __jsonparse_parse_num_ . :w } #1 \q_stop {
   \exp_last_unbraced:No 
-    \__jsonparse_parse_fp_fraction:w #1 \q_stop
+    \__jsonparse_parse_num_fraction:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_parse_fp_ e :w } #1 \q_stop {
+\cs_new:cpn { __jsonparse_parse_num_ e :w } #1 \q_stop {
   \exp_last_unbraced:No 
-    \__jsonparse_parse_fp_exponent:w #1 \q_stop
+    \__jsonparse_parse_num_exponent:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_parse_fp_ E :w } #1 \q_stop {
+\cs_new:cpn { __jsonparse_parse_num_ E :w } #1 \q_stop {
   \exp_last_unbraced:No 
-    \__jsonparse_parse_fp_exponent:w #1 \q_stop
+    \__jsonparse_parse_num_exponent:w #1 \q_stop
 }
 
-\clist_map_inline:Nn \c__jsonparse_fp_digits_clist {
-    \cs_new:cpn { __jsonparse_parse_fp_ #1 :w } ##1 \q_stop {
+\clist_map_inline:Nn \c__jsonparse_num_digits_clist {
+    \cs_new:cpn { __jsonparse_parse_num_ #1 :w } ##1 \q_stop {
       \exp_last_unbraced:No 
-        \__jsonparse_parse_fp_digit:w ##1 \q_stop
+        \__jsonparse_parse_num_digit:w ##1 \q_stop
     }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp_plus_minus:w #1 \q_stop {
-    \bool_if:NTF \l__jsonparse_fp_plus_minus_seen_bool {
-        \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-        \bool_set_false:N \l__jsonparse_fp_bool
+\cs_new:Npn \__jsonparse_parse_num_plus_minus:w #1 \q_stop {
+    \bool_if:NTF \l__jsonparse_num_plus_minus_seen_bool {
+        \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+        \bool_set_false:N \l__jsonparse_num_bool
     } {
-        \tl_if_empty:NTF \l__jsonparse_fp_input_last_tl {
+        \tl_if_empty:NTF \l__jsonparse_num_input_last_tl {
             \str_if_eq:enT { \tl_head:n {#1} } { + } {
-                \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-                \bool_set_false:N \l__jsonparse_fp_bool
+                \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+                \bool_set_false:N \l__jsonparse_num_bool
             }
         } {
             \bool_lazy_any:nT {
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { + } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { - } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { . } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { e } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { E } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { + } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { - } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { . } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { e } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { E } }
             } {
-                \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-                \bool_set_false:N \l__jsonparse_fp_bool 
+                \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+                \bool_set_false:N \l__jsonparse_num_bool 
             }
         }
     }
-    \bool_set_true:N \l__jsonparse_fp_plus_minus_seen_bool
-    \tl_set:Ne \l__jsonparse_fp_input_last_tl { \tl_head:n {#1} }
-    \tl_set:Ne \l__jsonparse_fp_remainder_tl { \tl_tail:n {#1} }
-    \__jsonparse_parse_fp:n { \l__jsonparse_fp_remainder_tl }
+    \bool_set_true:N \l__jsonparse_num_plus_minus_seen_bool
+    \tl_set:Ne \l__jsonparse_num_input_last_tl { \tl_head:n {#1} }
+    \tl_set:Ne \l__jsonparse_num_remainder_tl { \tl_tail:n {#1} }
+    \__jsonparse_parse_num:n { \l__jsonparse_num_remainder_tl }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp_fraction:w #1 \q_stop {
-    \bool_if:NTF \l__jsonparse_fp_fraction_seen_bool {
-        \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-        \bool_set_false:N \l__jsonparse_fp_bool
+\cs_new:Npn \__jsonparse_parse_num_fraction:w #1 \q_stop {
+    \bool_if:NTF \l__jsonparse_num_fraction_seen_bool {
+        \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+        \bool_set_false:N \l__jsonparse_num_bool
     } {
-        \tl_if_empty:NTF \l__jsonparse_fp_input_last_tl {
-            \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-            \bool_set_false:N \l__jsonparse_fp_bool
+        \tl_if_empty:NTF \l__jsonparse_num_input_last_tl {
+            \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+            \bool_set_false:N \l__jsonparse_num_bool
         } {
             \bool_lazy_any:nT {
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { + } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { - } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { . } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { e } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { E } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { + } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { - } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { . } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { e } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { E } }
             } {
-                \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-                \bool_set_false:N \l__jsonparse_fp_bool 
+                \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+                \bool_set_false:N \l__jsonparse_num_bool 
             }
         }
     }
-    \bool_set_false:N \l__jsonparse_fp_zero_seen_bool
-    \bool_set_true:N \l__jsonparse_fp_plus_minus_seen_bool
-    \bool_set_true:N \l__jsonparse_fp_fraction_seen_bool
-    \tl_set:Ne \l__jsonparse_fp_input_last_tl { \tl_head:n {#1} }
-    \tl_set:Ne \l__jsonparse_fp_remainder_tl { \tl_tail:n {#1} }
-    \__jsonparse_parse_fp:n { \l__jsonparse_fp_remainder_tl }
+    \bool_set_false:N \l__jsonparse_num_zero_seen_bool
+    \bool_set_true:N \l__jsonparse_num_plus_minus_seen_bool
+    \bool_set_true:N \l__jsonparse_num_fraction_seen_bool
+    \tl_set:Ne \l__jsonparse_num_input_last_tl { \tl_head:n {#1} }
+    \tl_set:Ne \l__jsonparse_num_remainder_tl { \tl_tail:n {#1} }
+    \__jsonparse_parse_num:n { \l__jsonparse_num_remainder_tl }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp_exponent:w #1 \q_stop {
-    \bool_if:NTF \l__jsonparse_fp_exponent_seen_bool {
-        \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-        \bool_set_false:N \l__jsonparse_fp_bool
+\cs_new:Npn \__jsonparse_parse_num_exponent:w #1 \q_stop {
+    \bool_if:NTF \l__jsonparse_num_exponent_seen_bool {
+        \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+        \bool_set_false:N \l__jsonparse_num_bool
     } {
-        \tl_if_empty:NTF \l__jsonparse_fp_input_last_tl {
-            \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-            \bool_set_false:N \l__jsonparse_fp_bool
+        \tl_if_empty:NTF \l__jsonparse_num_input_last_tl {
+            \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+            \bool_set_false:N \l__jsonparse_num_bool
         } {
             \bool_lazy_any:nT {
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { + } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { - } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { . } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { e } }
-                { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { E } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { + } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { - } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { . } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { e } }
+                { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { E } }
             } {
-                \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-                \bool_set_false:N \l__jsonparse_fp_bool 
+                \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+                \bool_set_false:N \l__jsonparse_num_bool 
             }
         }
     }
-    \bool_set_false:N \l__jsonparse_fp_zero_seen_bool
-    \bool_set_false:N \l__jsonparse_fp_plus_minus_seen_bool
-    \bool_set_true:N \l__jsonparse_fp_fraction_seen_bool
-    \bool_set_true:N \l__jsonparse_fp_exponent_seen_bool
-    \tl_set:Ne \l__jsonparse_fp_input_last_tl { \tl_head:n {#1} }
-    \tl_set:Ne \l__jsonparse_fp_remainder_tl { \tl_tail:n {#1} }
-    \__jsonparse_parse_fp:n { \l__jsonparse_fp_remainder_tl }
+    \bool_set_false:N \l__jsonparse_num_zero_seen_bool
+    \bool_set_false:N \l__jsonparse_num_plus_minus_seen_bool
+    \bool_set_true:N \l__jsonparse_num_fraction_seen_bool
+    \bool_set_true:N \l__jsonparse_num_exponent_seen_bool
+    \tl_set:Ne \l__jsonparse_num_input_last_tl { \tl_head:n {#1} }
+    \tl_set:Ne \l__jsonparse_num_remainder_tl { \tl_tail:n {#1} }
+    \__jsonparse_parse_num:n { \l__jsonparse_num_remainder_tl }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp_digit:w #1 \q_stop {
+\cs_new:Npn \__jsonparse_parse_num_digit:w #1 \q_stop {
     \bool_lazy_any:nTF {
-        { \tl_if_empty_p:N \l__jsonparse_fp_input_last_tl }
+        { \tl_if_empty_p:N \l__jsonparse_num_input_last_tl }
         { \bool_lazy_and_p:nn 
-            { \str_if_eq_p:Vn \l__jsonparse_fp_input_last_tl { - } }
-            { \bool_not_p:n { \l__jsonparse_fp_exponent_seen_bool } }
+            { \str_if_eq_p:Vn \l__jsonparse_num_input_last_tl { - } }
+            { \bool_not_p:n { \l__jsonparse_num_exponent_seen_bool } }
         }
     } {
         \str_if_eq:enT { \tl_head:n {#1} } { 0 } {
-            \bool_set_true:N \l__jsonparse_fp_zero_seen_bool
+            \bool_set_true:N \l__jsonparse_num_zero_seen_bool
         } 
     } {
-        \bool_if:NT \l__jsonparse_fp_zero_seen_bool {
-            \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-            \bool_set_false:N \l__jsonparse_fp_bool
+        \bool_if:NT \l__jsonparse_num_zero_seen_bool {
+            \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+            \bool_set_false:N \l__jsonparse_num_bool
         }
     }
-    \tl_set:Ne \l__jsonparse_fp_input_last_tl { \tl_head:n {#1} }
-    \tl_set:Ne \l__jsonparse_fp_remainder_tl { \tl_tail:n {#1} }
-    \__jsonparse_parse_fp:n { \l__jsonparse_fp_remainder_tl }
+    \tl_set:Ne \l__jsonparse_num_input_last_tl { \tl_head:n {#1} }
+    \tl_set:Ne \l__jsonparse_num_remainder_tl { \tl_tail:n {#1} }
+    \__jsonparse_parse_num:n { \l__jsonparse_num_remainder_tl }
 }
 
-\cs_new:Npn \__jsonparse_parse_fp_other:w #1 \q_stop {
-    \tl_set:Nn \l__jsonparse_fp_remainder_tl { }
-    \bool_set_false:N \l__jsonparse_fp_bool 
+\cs_new:Npn \__jsonparse_parse_num_other:w #1 \q_stop {
+    \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+    \bool_set_false:N \l__jsonparse_num_bool 
 }
 
 % ===
@@ -696,8 +696,8 @@
 \cs_new:Npn \__jsonparse_parse_other_aux:w #1 , #2 \q_stop {
   \tl_set:Ne \l__jsonparse_temp_tl { \tl_trim_spaces:n {#1} }
   \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
-    \bool_if:NTF \l__jsonparse_number_check_bool {
-      \jsonparse_if_fp:nTF {#1} { 
+    \bool_if:NTF \l__jsonparse_check_num_bool {
+      \jsonparse_if_num:nTF {#1} { 
         \tl_set:Nn \l__jsonparse_val_tl {#1}
         \prop_gput:Nee \g_jsonparse_entries_prop 
           { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }

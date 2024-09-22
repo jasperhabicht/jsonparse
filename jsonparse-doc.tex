@@ -436,15 +436,6 @@ With the keys \macro{separator/array left} and \macro{separator/array right}, th
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
-|number check|
-|number check|={<boolean>}
-\end{macrodef}
-If set to \macro{false}, the key \macro{number check} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed.
-
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
-    
-
-\begin{macrodef}
 |zero-based|
 |zero-based|={<boolean>}
 \end{macrodef}
@@ -471,7 +462,14 @@ replace/|horizontal tab|={<string>}
 These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement. These replacements take place only during typesetting.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
+\begin{macrodef}
+|check num|
+|check num|={<boolean>}
+\end{macrodef}
+If set to \macro{false}, the key \macro{check num} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed.
 
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+    
 \subsection{L3 commands}
 
 \begin{macrodef}
@@ -490,12 +488,12 @@ The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given
 The command \macro{\jsonparse_parse_to_prop:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. 
 
 \begin{macrodef}
-|\jsonparse_if_fp:nTF| {<string>} {<true code>} {<false code>}
-|\jsonparse_if_fp:nT| {<string>} {<true code>} 
-|\jsonparse_if_fp:nF| {<string>} {<false code>}
-|\jsonparse_if_fp_p:n| {<string>}
+|\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
+|\jsonparse_if_num:nT| {<string>} {<true code>} 
+|\jsonparse_if_num:nF| {<string>} {<false code>}
+|\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}
-The command \macro{\jsonparse_if_fp:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_fp:nT} and \macro{\jsonparse_if_fp:nF} work accordingly. The command \macro{\jsonparse_if_fp_p:n} returns a boolean true or false.
+The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false.
 
 % =====
 

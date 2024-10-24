@@ -280,13 +280,13 @@
 \bool_new:N \l__jsonparse_prop_map_first_bool
 \bool_new:N \l__jsonparse_externalize_load_bool
 
-\ior_new:N \l__jsonparse_json_ior
 \iow_new:N \g__jsonparse_externalize_iow
 
 % ===
 
 \cctab_const:Nn \c__jsonparse_json_escape_cctab {
   \cctab_select:N \c_str_cctab
+  \char_set_catcode_space:n { 9 }
   \char_set_catcode_escape:n { 92 }
   \bool_lazy_or:nnF
     { \sys_if_engine_xetex_p: } { \sys_if_engine_luatex_p: }

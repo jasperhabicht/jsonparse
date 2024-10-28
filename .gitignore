@@ -7,4 +7,5 @@
 *.synctex.gz
 *.zip
 
+jsonparse/*
 testfiles/*

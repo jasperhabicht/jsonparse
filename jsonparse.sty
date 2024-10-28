@@ -916,7 +916,7 @@
 \cs_set_eq:NN \__jsonparse_tex_quote: \"
 \cs_set_eq:NN \__jsonparse_tex_backslash: \\
 
-\cs_new:Npn \__jsonparse_unicode_char:w #1#2#3#4 {
+\cs_new:Npn \__jsonparse_unicode_char:NNNN #1#2#3#4 {
   \symbol{ " \str_uppercase:n { #1 #2 #3 #4 } } { }
 }
 
@@ -930,7 +930,7 @@
     \cs_set:Npn \n { \l__jsonparse_linefeed_str }
     \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
     \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
-    \cs_set_eq:NN \u \__jsonparse_unicode_char:w
+    \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNN
     \tl_set:Ne \l__jsonparse_temp_tl {#1}
     \cs_set_eq:NN \" \__jsonparse_tex_quote:
     \cs_set_eq:NN \\ \__jsonparse_tex_backslash: 

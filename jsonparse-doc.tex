@@ -263,7 +263,7 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
     \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
-Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON.
+Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
 
 \begin{macrodef}
 |escape|={all}

@@ -898,8 +898,6 @@
         \cs_set:Npn \r { \exp_not:N \r }
         \cs_set:Npn \t { \exp_not:N \t }
         \cs_set:Npn \u { \exp_not:N \u }
-        \__json_nested_construct_cs:Noo \x \c_left_brace_str \c_right_brace_str
-        \tl_set:Nn \obeyedline { ~ }
         \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \g__jsonparse_json_tl
         \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl } 
       \group_end:

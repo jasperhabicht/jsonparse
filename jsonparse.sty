@@ -916,8 +916,8 @@
 \cs_set_eq:NN \__jsonparse_tex_quote: \"
 \cs_set_eq:NN \__jsonparse_tex_backslash: \\
 
-\cs_new:Npn \__jsonparse_unicode_char:w #1#2#3#4#5 {
-  \symbol{ " \str_uppercase:n {#1#2#3#4} }
+\cs_new:Npn \__jsonparse_unicode_char:w #1#2#3#4 {
+  \symbol{ " \str_uppercase:n { #1 #2 #3 #4 } }
 }
 
 \cs_new:Npn \__jsonparse_rescan:n #1 {

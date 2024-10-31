@@ -1054,6 +1054,8 @@
 
 \tl_new:N \JSONParseArrayNewline
 \tl_new:N \JSONParseArrayIndex
+\tl_new:N \JSONParseArrayKey
+\tl_new:N \JSONParseArrayValue
 
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m o m O{} O{} } {
 	\group_begin:
@@ -1129,7 +1131,7 @@
 				}
 			}
 		}
-    \int_compare:nNnT { \l__jsonparse_array_count_int } = { 1 } {
+    \int_compare:nNnT { ##1 } = { 1 } {
       \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
       \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
     }

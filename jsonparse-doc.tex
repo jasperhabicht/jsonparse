@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.9.5}
-\def\jsonparsefiledate{27 October 2024}
+\def\jsonparsefileversion{0.9.6}
+\def\jsonparsefiledate{31 October 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -204,6 +204,7 @@
 \changes{v0.9.1}{2024/09/21}{Added functions to test for valid JSON numbers.}
 \changes{v0.9.3}{2024/10/24}{Fixed a bug that prevented tabs in source from being parsed properly.}
 \changes{v0.9.5}{2024/10/27}{Streamlining of code, clarification of explanations in documentation.}
+\changes{v0.9.6}{2024/10/31}{Allowing for multiple return values when mapping over arrays.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -377,6 +378,22 @@ For example, let us assume the same JSON data structure as defined above parsed 
 \begin{itemize}
   \JSONParseArrayValuesMap{\myJSONdata}
     {array}[key_a]{myJSONitem}
+\end{itemize}
+\end{codeexamplecolumns}
+
+It is possible to make use of multiple subkeys by passing them as a comma separated list as third argument to the command. Inside the command that is called for every array item, the different keys and values can be access via commands numbered with uppercase Roman numerals such as \macro{\JSONParseArrayKeyI}, \macro{\JSONParseArrayKeyII}, \macro{\JSONParseArrayKeyIII} etc.\ and \macro{\JSONParseArrayValueI}, \macro{\JSONParseArrayValueII}, \macro{\JSONParseArrayValueIII} etc.
+
+We can extend the above example in the following way:
+
+\begin{codeexamplecolumns}
+\newcommand{\myJSONitem}{
+  \item \emph{\JSONParseArrayValueI :} 
+    \JSONParseArrayValueII
+}
+
+\begin{itemize}
+  \JSONParseArrayValuesMap{\myJSONdata}
+    {array}[key_a,key_b]{myJSONitem}
 \end{itemize}
 \end{codeexamplecolumns}
 

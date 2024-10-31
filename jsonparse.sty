@@ -1131,11 +1131,11 @@
 				}
 			}
 		}
-    \int_compare:nNnT { ##1 } = { 1 } {
+    \int_compare:nNnT {##1} = { 1 } {
       \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
       \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
     }
-		\int_compare:nNnT { ##1 } = { \l__jsonparse_array_count_int + 1 } {
+		\int_compare:nNnT {##1} = { \l__jsonparse_array_count_int + 1 } {
 			\tl_gset:Nn \JSONParseArrayNewline { }
 		}
 		\use:c {#5}

@@ -1006,7 +1006,9 @@
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
     \prop_map_inline:Nn \l__jsonparse_temp_tl {
       \str_if_eq:enT {
-        \l__jsonparse_array_sep_left_str \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str 
+        \l__jsonparse_array_sep_left_str 
+        \int_use:N \l__jsonparse_array_index_int 
+        \l__jsonparse_array_sep_right_str 
         \IfValueT {#4} {
           \l__jsonparse_child_sep_str #4
         }
@@ -1052,7 +1054,7 @@
 
 \tl_new:N \JSONParseArrayIndex 
 
-\NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m o m } {
+\NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m o m O{} O{} } {
 	\group_begin:
 	\keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
 	\__jsonparse_warning_unused_keys:
@@ -1085,15 +1087,16 @@
 			}
 		}	
 	}
+  #6
   \int_step_inline:nn { \l__jsonparse_array_count_int + 1 } {
-		\tl_set:Nn \JSONParseArrayIndex { \int_eval:n { ##1 - 1 } }
+		\tl_gset:Nn \JSONParseArrayIndex { \int_eval:n { ##1 - 1 } }
 		\int_zero:N \l__jsonparse_array_keys_index_int 
 		\clist_map_inline:nn {#4} {
 			\int_incr:N \l__jsonparse_array_keys_index_int
 			\tl_set:Ne \l__jsonparse_array_keys_index_roman_tl { 
 				\int_to_Roman:n { \l__jsonparse_array_keys_index_int } 
 			}
-			\tl_set:ce { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl } {
+			\tl_gset:ce { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl } {
 				\l__jsonparse_array_sep_left_str 
 				\int_eval:n { ##1 - 1 } 
 				\l__jsonparse_array_sep_right_str
@@ -1101,7 +1104,7 @@
 				####1
 			} 
 			\bool_if:NTF \l__jsonparse_rescan_bool {
-				\tl_set:cn { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } { 
+				\tl_gset:cn { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } { 
 					\exp_args:Ne \__jsonparse_rescan:n { 
 						\prop_item:Ne \l__jsonparse_temp_tl {
 							\l__jsonparse_array_sep_left_str 
@@ -1113,7 +1116,7 @@
 					} 
 				}
 			} {
-				\tl_set:ce { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } { 
+				\tl_gset:ce { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } { 
 					\prop_item:Ne \l__jsonparse_temp_tl {
 						\l__jsonparse_array_sep_left_str 
 						\int_eval:n { ##1 - 1 } 
@@ -1125,11 +1128,12 @@
 			}
 		}
     \int_compare:nNnT { \l__jsonparse_array_count_int } = { 1 } {
-      \tl_set_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
-      \tl_set_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
+      \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
+      \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
     }
 		\use:c {#5}
 	}
+  #7
 	\group_end:
 }
 

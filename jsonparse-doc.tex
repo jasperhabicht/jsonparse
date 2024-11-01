@@ -355,8 +355,9 @@ For example, let us assume the following JSON data structure is parsed into the 
   ]
 }
 \end{codeexample}
+\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
-Then, when using \macro{\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }}, `one, three' is typeset to the document. 
+Then, when using \macro{\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }}, `\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }' is typeset to the document. 
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. 
 
@@ -367,8 +368,6 @@ The first optional argument can be used to pass options to the command, such as 
 The command \macro{\JSONParseArrayValuesMap} takes the same first three arguments as the command \macro{\JSONParseArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its definition, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. Note that these commands are defined globally to make accessing them as easy as possible.
 
 For example, let us assume the same JSON data structure as defined above parsed into the token variable \macro{\myJSONdata}. Then, the following can be done:
-
-\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
 \begin{codeexamplecolumns}
 \newcommand{\myJSONitem}{
@@ -533,6 +532,11 @@ The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given
 |\jsonparse_filter:Nn| <token variable> {<key>}
 \end{macrodef}
 The command \macro{\jsonparse_parse_to_prop:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. 
+
+\begin{macrodef}
+|\jsonparse_array_count:NN| <token variable> <integer variable>
+\end{macrodef}
+The command \macro{\jsonparse_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
 \begin{macrodef}
 |\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}

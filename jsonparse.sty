@@ -73,8 +73,8 @@
 }
 
 \msg_new:nnn { jsonparse } { not-array-item } {
-	\msg_info_text:n { jsonparse } \iow_newline:
-	Key ~ does ~ not ~ represent ~ an ~ array ~ item: ~ #1
+  \msg_info_text:n { jsonparse } \iow_newline:
+  Key ~ does ~ not ~ represent ~ an ~ array ~ item: ~ #1
 }
 
 % ===
@@ -1007,9 +1007,9 @@
   \int_set:Nn \l__jsonparse_array_count_last_int { -1 }
   \prop_map_inline:Nn #1 {
     \str_if_eq:eVF { \tl_head:n {##1} } \l__jsonparse_array_sep_left_str {
-			\msg_error:nnn { jsonparse } { not-array-item }
-		  	{##1}
-		}
+      \msg_error:nnn { jsonparse } { not-array-item }
+        {##1}
+    }
     \int_compare:nNnF {
       \__jsonparse_get_array_index:w ##1 \q_stop
     } = { \l__jsonparse_array_count_last_int } {
@@ -1037,7 +1037,7 @@
     \tl_set:Nn \l__jsonparse_temp_tl {#2}
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
     \jsonparse_array_count:NN \l__jsonparse_temp_tl \l__jsonparse_array_count_int
-    \bool_set_true:N \l__jsonparse_prop_map_first_bool	
+    \bool_set_true:N \l__jsonparse_prop_map_first_bool
     \int_step_inline:nn { \l__jsonparse_array_count_int } {
       \bool_if:NTF \l__jsonparse_prop_map_first_bool {
         \bool_set_false:N \l__jsonparse_prop_map_first_bool
@@ -1085,7 +1085,7 @@
 \tl_new:N \JSONParseArrayValue
 
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m o m O{} O{} } {
-	\group_begin:
+  \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \tl_set:Nn \l__jsonparse_temp_tl {#2}
@@ -1210,7 +1210,7 @@
       \use:c {#5}
     }
     #7
-	\group_end:
+  \group_end:
 }
 
 % EOF

@@ -288,6 +288,8 @@
 \int_new:N \l__jsonparse_array_count_aux_int
 \seq_new:N \l__jsonparse_array_count_last_seq
 
+\str_new:N \l__jsonparse_filter_key_str
+
 \int_new:N \l__jsonparse_array_keys_index_int
 \tl_new:N \l__jsonparse_array_keys_index_roman_tl
 
@@ -790,22 +792,31 @@
   }
 }
 
-\cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
-  \prop_clear:N \l__jsonparse_temp_prop
-  \prop_map_inline:Nn #1 {
-    \str_case_e:en {
-      \tl_range:nne {##1} { 1 } { \int_eval:n { \tl_count:n {#2} + 1 } }
-    } {
-      { #2 \l__jsonparse_child_sep_str } {
-        \prop_put:Nen \l__jsonparse_temp_prop
-          { \tl_range:nen {##1} { \int_eval:n { \tl_count:n {#2} + 2 } } { -1 } } {##2}
-      }
-      { #2 \l__jsonparse_array_sep_left_str } {
-        \prop_put:Nen \l__jsonparse_temp_prop
-          { \tl_range:nen {##1} { \int_eval:n { \tl_count:n {#2} + 1 } } { -1 } } {##2}
-      }
+\cs_new:Npn \__jsonparse_filter:nn #1#2 {
+  \str_case_e:en {
+    \tl_range:nne {#1} { 1 } { \int_eval:n { 
+      \tl_count:o { \l__jsonparse_filter_key_str } + 1 
+    } }
+  } {
+    { \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str } {
+      \prop_put:Nen \l__jsonparse_temp_prop
+        { \tl_range:nen {#1} { \int_eval:n { 
+          \tl_count:o { \l__jsonparse_filter_key_str } + 2 
+        } } { -1 } } {#2}
+    }
+    { \l__jsonparse_filter_key_str \l__jsonparse_array_sep_left_str } {
+      \prop_put:Nen \l__jsonparse_temp_prop
+        { \tl_range:nen {#1} { \int_eval:n { 
+          \tl_count:o { \l__jsonparse_filter_key_str } + 1 
+        } } { -1 } } {#2}
     }
   }
+}
+
+\cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
+  \prop_clear:N \l__jsonparse_temp_prop
+  \str_set:Nn \l__jsonparse_filter_key_str {#2}
+  \prop_map_function:NN #1 \__jsonparse_filter:nn
   \prop_set_eq:NN #1 \l__jsonparse_temp_prop
 }
 
@@ -1184,6 +1195,19 @@
   \use:c { \l__jsonparse_array_map_function_str }
 }
 
+\cs_set:Npn \__jsonparse_array_map_create_cs:n #1 {
+  \int_incr:N \l__jsonparse_array_keys_index_int
+  \tl_set:Ne \l__jsonparse_array_keys_index_roman_tl {
+    \int_to_Roman:n { \l__jsonparse_array_keys_index_int }
+  }
+  \tl_if_exist:cF { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl } {
+    \tl_new:c { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl }
+  }
+  \tl_if_exist:cF { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } {
+    \tl_new:c { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl }
+  }
+}
+
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m O{} O{} } {
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
@@ -1195,18 +1219,8 @@
     \str_set:Nn \l__jsonparse_array_map_function_str {#5}
     \clist_if_empty:NF \l__jsonparse_array_map_keys_clist {
       \int_zero:N \l__jsonparse_array_keys_index_int
-      \clist_map_inline:Nn \l__jsonparse_array_map_keys_clist {
-        \int_incr:N \l__jsonparse_array_keys_index_int
-        \tl_set:Ne \l__jsonparse_array_keys_index_roman_tl {
-          \int_to_Roman:n { \l__jsonparse_array_keys_index_int }
-        }
-        \tl_if_exist:cF { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl } {
-          \tl_new:c { JSONParseArrayKey \l__jsonparse_array_keys_index_roman_tl }
-        }
-        \tl_if_exist:cF { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } {
-          \tl_new:c { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl }
-        }
-      }
+      \clist_map_function:NN \l__jsonparse_array_map_keys_clist
+        \__jsonparse_array_map_create_cs:n
     }
     #6
     \int_step_function:nN { \l__jsonparse_array_count_int } 

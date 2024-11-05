@@ -83,6 +83,7 @@
 \str_new:N \l_jsonparse_current_prop_str
 
 \tl_new:N \l__jsonparse_externalize_file_name_tl
+\tl_new:N \l__jsonparse_externalize_file_data_tl
 
 \str_new:N \l__jsonparse_child_sep_str
 \str_new:N \l__jsonparse_array_sep_left_str
@@ -917,7 +918,8 @@
         \cs_set:Npn \r { \exp_not:N \r }
         \cs_set:Npn \t { \exp_not:N \t }
         \cs_set:Npn \u { \exp_not:N \u }
-        \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \g__jsonparse_json_tl
+        \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \l__jsonparse_externalize_file_data_tl
+        \tl_gset_eq:NN \g__jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
         \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {

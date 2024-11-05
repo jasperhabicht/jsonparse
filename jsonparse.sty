@@ -234,7 +234,7 @@
 }
 
 \cs_generate_variant:Nn \file_input:n { e }
-\cs_generate_variant:Nn \tl_gset:Nn { ce }
+\cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
 \cs_generate_variant:Nn \tl_gset_rescan:Nnn { Nne }
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
@@ -1062,7 +1062,7 @@
           #1
         }
         \l__jsonparse_array_sep_right_str
-        \IfValueT { \l__jsonparse_array_values_key_str } {
+        \str_if_empty:NF \l__jsonparse_array_values_key_str {
           \l__jsonparse_child_sep_str
           \l__jsonparse_array_values_key_str
         }
@@ -1077,7 +1077,7 @@
         #1
       }
       \l__jsonparse_array_sep_right_str
-      \IfValueT { \l__jsonparse_array_values_key_str } {
+      \str_if_empty:NF \l__jsonparse_array_values_key_str {
         \l__jsonparse_child_sep_str
         \l__jsonparse_array_values_key_str
       }
@@ -1085,7 +1085,7 @@
   }
 }
 
-\NewDocumentCommand { \JSONParseArrayValues } { O{} m m o m } {
+\NewDocumentCommand { \JSONParseArrayValues } { O{} m m O{} m } {
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1147,13 +1147,7 @@
   } {
     \tl_gset:Nn \JSONParseArrayIndex {#1}
   }
-  \IfValueTF { \l__jsonparse_array_map_keys_clist } {
-    \int_zero:N \l__jsonparse_array_keys_index_int
-    \clist_map_function:NN \l__jsonparse_array_map_keys_clist 
-      \__jsonparse_array_values_map_keys:n
-    \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
-    \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
-  } {
+  \clist_if_empty:NTF \l__jsonparse_array_map_keys_clist {
     \tl_gset:Ne \JSONParseArrayKey {
       \l__jsonparse_array_sep_left_str
       \JSONParseArrayIndex
@@ -1178,11 +1172,17 @@
         }
       }
     }
+  } {
+    \int_zero:N \l__jsonparse_array_keys_index_int
+    \clist_map_function:NN \l__jsonparse_array_map_keys_clist 
+      \__jsonparse_array_values_map_keys:n
+    \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
+    \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
   }
   \use:c { \l__jsonparse_array_map_function_str }
 }
 
-\NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m o m O{} O{} } {
+\NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m O{} O{} } {
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1191,7 +1191,7 @@
     \jsonparse_array_count:NN \l__jsonparse_temp_tl \l__jsonparse_array_count_int
     \clist_set:Nn \l__jsonparse_array_map_keys_clist {#4}
     \str_set:Nn \l__jsonparse_array_map_function_str {#5}
-    \IfValueT { \l__jsonparse_array_map_keys_clist } {
+    \clist_if_empty:NF \l__jsonparse_array_map_keys_clist {
       \int_zero:N \l__jsonparse_array_keys_index_int
       \clist_map_inline:Nn \l__jsonparse_array_map_keys_clist {
         \int_incr:N \l__jsonparse_array_keys_index_int

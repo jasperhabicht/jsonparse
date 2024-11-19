@@ -240,7 +240,12 @@ This key can be set either as package option or using \macro{\JSONParseSet}. It 
 \begin{macrodef}
 |siunitx|
 \end{macrodef}
-The package can be loaded with the option \macro{siunitx}. This will add the letters e and E with category code 12 (``other'') to the list of exponent markers recognised by the \macro{siunitx} package making it possible to use the command \macro{\JSONParseExpandableValue} in combination with the macros provided by the \macro{siunitx} package.
+The package can be loaded with the option \macro{siunitx}. This will load the \macro{siunitx} package and define the command \macro{\JSONParseValueNum}.
+
+\begin{macrodef}
+|\JSONParseValueNum|[<options>]{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseValueNum} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and format it using the \macro{siunitx} package. The second argument takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The optional first argument is passed as options to the \macro{\num} command provided by the \macro{siunitx} package. 
 
 \section{General remarks of the parsing procedure}
 
@@ -322,7 +327,7 @@ The command \macro{\JSONParseKeys} is used to store all top-level keys of a pars
 \begin{macrodef}
 |\JSONParseValue|[<options>]{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
+The command \macro{\JSONParseValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The second argument takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
 
 If the JSON string \macro{{ "key" : "value" }} is parsed into the token variable \macro{\myJSONdata}, using \macro{\JSONParseValue{\myJSONdata}{key}} would extract the value associated with the key \macro{key}, which in this case is \macro{value}, and typeset it to the document.
 
@@ -344,7 +349,7 @@ For example, if the JSON string \macro{{ "key" : "value" }} has been parsed into
 \begin{macrodef}
 |\JSONParseArrayValues|[<options>]{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
-The command \macro{\JSONParseArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The first argument takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional and can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
+The command \macro{\JSONParseArrayValues} is used to select all values from an array from a parsed JSON string or JSON file. The second argument takes the token variable that holds the parsed JSON data. The first argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional and can be used to pass a subkey, i.\,e. a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
 For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
 

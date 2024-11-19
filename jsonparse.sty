@@ -1244,15 +1244,10 @@
 % ===
 
 \bool_if:NT \l__jsonparse_compat_siunitx_bool {
-  \AtBeginDocument{
-    \clist_map_inline:Nn \c__jsonparse_num_exponent_clist {
-      \tl_if_exist:NT \l_siunitx_number_input_exponent_tl {
-          \tl_put_right:Ne \l_siunitx_number_input_exponent_tl {#1}
-      }
-      \tl_if_exist:NT \l__siunitx_input_exponent_tl {
-          \tl_put_right:Ne \l__siunitx_input_exponent_tl {#1}
-      }
-    }
+  \RequirePackage { siunitx }
+  \NewDocumentCommand { \JSONParseValueNum } { O{} m m } {
+    \tl_set_rescan:Nne \l__jsonparse_temp_tl { } { \prop_item:Ne #2 {#3} }
+    \num [#1] { \l__jsonparse_temp_tl}
   }
 }
 

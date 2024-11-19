@@ -206,6 +206,7 @@
 \changes{v0.9.5}{2024/10/27}{Streamlining of code, clarification of explanations in documentation.}
 \changes{v0.9.6}{2024/10/31}{Allowing for multiple return values when mapping over arrays.}
 \changes{v0.9.7}{2024/11/05}{Streamlining of code, ensuring backward compatibility.}
+\changes{v0.9.8}{2024/11/19}{Bug fixes, adding compatibility for \titlemacro{siunitx} package.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -235,6 +236,11 @@ The package does not load any dependencies.
 The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
 
 This key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+
+\begin{macrodef}
+|siunitx|
+\end{macrodef}
+The package can be loaded with the option \macro{siunitx}. This will add the letters e and E with category code 12 (``other'') to the list of exponent markers recognised by the \macro{siunitx} package making it possible to use the command \macro{\JSONParseExpandableValue} in combination with the macros provided by the \macro{siunitx} package.
 
 \section{General remarks of the parsing procedure}
 

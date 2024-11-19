@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2024-11-05} {0.9.7}
+\ProvidesExplPackage {jsonparse} {2024-11-19} {0.9.8}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
@@ -330,13 +330,20 @@
   0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9
 }
 
-\clist_const:Ne \c__jsonparse_num_others_clist {
-  \tl_to_str:n { + } ,
-  \tl_to_str:n { - } ,
-  \tl_to_str:n { . } ,
+\clist_const:Ne \c__jsonparse_num_exponent_clist {
   \tl_to_str:n { e } ,
   \tl_to_str:n { E }
 }
+
+\clist_const:Ne \c__jsonparse_num_plus_minus_fraction_clist {
+  \tl_to_str:n { + } ,
+  \tl_to_str:n { - } ,
+  \tl_to_str:n { . }
+}
+
+\clist_concat:NNN \c__jsonparse_num_others_clist 
+  \c__jsonparse_num_exponent_clist
+  \c__jsonparse_num_plus_minus_fraction_clist
 
 \prg_new_conditional:Npnn \jsonparse_if_num:n #1 { p , T , F , TF } {
   \bool_set_true:N \l__jsonparse_num_bool
@@ -416,8 +423,10 @@
       }
     } {
       \clist_if_in:NVT \c__jsonparse_num_others_clist \l__jsonparse_num_input_last_tl {
-        \tl_set:Nn \l__jsonparse_num_remainder_tl { }
-        \bool_set_false:N \l__jsonparse_num_bool
+        \clist_if_in:NVF \c__jsonparse_num_exponent_clist \l__jsonparse_num_input_last_tl {
+          \tl_set:Nn \l__jsonparse_num_remainder_tl { }
+          \bool_set_false:N \l__jsonparse_num_bool
+        }
       }
     }
   }
@@ -1195,7 +1204,7 @@
   \use:c { \l__jsonparse_array_map_function_str }
 }
 
-\cs_set:Npn \__jsonparse_array_map_create_cs:n #1 {
+\cs_set:Npn \__jsonparse_array_map_generate_cs:n #1 {
   \int_incr:N \l__jsonparse_array_keys_index_int
   \tl_set:Ne \l__jsonparse_array_keys_index_roman_tl {
     \int_to_Roman:n { \l__jsonparse_array_keys_index_int }
@@ -1220,7 +1229,7 @@
     \clist_if_empty:NF \l__jsonparse_array_map_keys_clist {
       \int_zero:N \l__jsonparse_array_keys_index_int
       \clist_map_function:NN \l__jsonparse_array_map_keys_clist
-        \__jsonparse_array_map_create_cs:n
+        \__jsonparse_array_map_generate_cs:n
     }
     #6
     \int_step_function:nN { \l__jsonparse_array_count_int } 

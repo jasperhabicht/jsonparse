@@ -1,4 +1,4 @@
-![Version 0.9.8](https://img.shields.io/badge/version-0.9.8-blue)
+![Version 0.9.9](https://img.shields.io/badge/version-0.9.9-blue)
 
 ![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/ddfddc70-bf5f-4121-ba45-4b9128875d85)
 

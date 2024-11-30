@@ -11,15 +11,15 @@
 % This work has the LPPL maintenance status `maintained'.
 % 
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.9.7}
-\def\jsonparsefiledate{5 November 2024}
+\def\jsonparsefileversion{0.9.8}
+\def\jsonparsefiledate{30 November 2024}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
 \usepackage{AlegreyaSans}
 \usepackage{FiraMono}
 
-\usepackage{geometry, longtable, booktabs, tcolorbox, hyperref}
+\usepackage{geometry, longtable, booktabs, siunitx, tcolorbox, hyperref}
 \geometry{margin=25mm, left=45mm}
 
 \usepackage{fancyhdr}
@@ -206,7 +206,7 @@
 \changes{v0.9.5}{2024/10/27}{Streamlining of code, clarification of explanations in documentation.}
 \changes{v0.9.6}{2024/10/31}{Allowing for multiple return values when mapping over arrays.}
 \changes{v0.9.7}{2024/11/05}{Streamlining of code, ensuring backward compatibility.}
-\changes{v0.9.8}{2024/11/19}{Bug fixes, adding compatibility for \titlemacro{siunitx} package.}
+\changes{v0.9.8}{2024/11/19}{Bug fixes, adding possibility to store value in token list.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -236,16 +236,6 @@ The package does not load any dependencies.
 The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
 
 This key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
-
-\begin{macrodef}
-|siunitx|
-\end{macrodef}
-The package can be loaded with the option \macro{siunitx}. This will load the \macro{siunitx} package and define the command \macro{\JSONParseValueNum}.
-
-\begin{macrodef}
-|\JSONParseValueNum|[<options>]{<token variable>}{<key>}
-\end{macrodef}
-The command \macro{\JSONParseValueNum} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and format it using the \macro{siunitx} package. The second argument takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The optional first argument is passed as options to the \macro{\num} command provided by the \macro{siunitx} package. 
 
 \section{General remarks of the parsing procedure}
 
@@ -345,6 +335,29 @@ The command \macro{\JSONParseValue} is not expandable and can therefore not be u
 Whole objects or arrays can be output as JSON string for further use in other macros using the expandable command \macro{\JSONParseExpandableValue}. The value that is returned by this command is typically a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). This should be kept in mind if string comparisons should be made. A comparison against a token list with the default category codes used by TeX won't work, since letters will have category code 11 (``letter''), but it is possible to use \macro{\detokenize} to set the category codes of the token list in such a way that the comparison works. 
 
 For example, if the JSON string \macro{{ "key" : "value" }} has been parsed into the token variable \macro{\myJSONdata}, the command \macro{\JSONParseExpandableValue{\myJSONdata}{key}} will expand to the exact same token list as \macro{\detokenize{value}} with all characters having category code 12 (``other''). 
+
+\begin{macrodef}
+|\JSONParseSetValue|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+The expandable command \macro{\JSONParseValueSet} can be used to a select a value from the token variable that stores the parsed JSON data via a key and store this value in another token variable. 
+
+The first argument denotes the token variable where the value should be stored into. If this token variable has not yet been defined, it will be created by this command. The second argument represents the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and that stores the parsed JSON data. The third argument takes the key to select the relevant value.
+
+The token list returned by this command is a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space'').
+
+\begin{macrodef}
+|\JSONParseSetRescanValue|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+The expandable command \macro{\JSONParseSetRescanValue} works the same way and also takes the same arguments as \macro{\JSONParseSetValue} except that it rescans the return value before storing it in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default.
+
+This can, for example, be necessary when numbers stored in the JSON data in scientific format should be formatted using the \macro{siunitx} package. The rescan is needed here, because otherwise the character \macro{e} would have the wrong category code and would hence not be recognised by the formatting parser as exponent marker. Let us assume the key \macro{number} in some JSON source parsed into the token variable \macro{\myJSONnumber} represents the value \macro{-1.1e-1}, then the following could be used to format the output:
+
+\JSONParse{\myJSONnumber}{ { "number" : -1.1e-1 } }
+\begin{codeexamplecolumns}
+\JSONParseSetRescanValue{\mynumber}
+  {\myJSONnumber}{number}
+\num{\mynumber}
+\end{codeexamplecolumns}
 
 \begin{macrodef}
 |\JSONParseArrayValues|[<options>]{<token variable>}{<key>}[<subkey>]{<string>}

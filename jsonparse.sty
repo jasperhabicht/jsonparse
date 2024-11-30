@@ -10,19 +10,15 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2024-11-19} {0.9.8}
+\ProvidesExplPackage {jsonparse} {2024-11-30} {0.9.8}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \bool_new:N \l__jsonparse_debug_mode_bool
-\bool_new:N \l__jsonparse_compat_siunitx_bool
 
 \keys_define:nn { jsonparse / global } {
   debug   .bool_set:N = \l__jsonparse_debug_mode_bool ,
   debug   .default:n  = { true } ,
-  debug   .initial:n  = { false } ,
-  siunitx .bool_set:N = \l__jsonparse_compat_siunitx_bool ,
-  siunitx .default:n  = { true } ,
-  siunitx .initial:n  = { false }
+  debug   .initial:n  = { false } 
 }
 \ProcessKeyOptions [ jsonparse / global ]
 
@@ -952,10 +948,6 @@
   \group_end:
 }
 
-\NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
-  \prop_item:Ne #1 {#2}
-}
-
 \cs_set_eq:NN \__jsonparse_tex_quote: \"
 \cs_set_eq:NN \__jsonparse_tex_backslash: \\
 
@@ -1000,6 +992,24 @@
     }
     \tl_rescan:no { } { \l__jsonparse_temp_tl }
   \group_end:
+}
+
+\NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
+  \prop_item:Ne #1 {#2}
+}
+
+\NewExpandableDocumentCommand { \JSONParseSetValue } { m m m } {
+  \tl_if_exist:NF #1 {
+    \tl_new:N #1
+  }
+  \tl_set:Nne #1 { \prop_item:Ne #2 {#3} }
+}
+
+\NewExpandableDocumentCommand { \JSONParseSetRescanValue } { m m m } {
+  \tl_if_exist:NF #1 {
+    \tl_new:N #1
+  }
+  \tl_set_rescan:Nne #1 { } { \prop_item:Ne #2 {#3} }
 }
 
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {
@@ -1242,13 +1252,3 @@
 }
 
 % ===
-
-\bool_if:NT \l__jsonparse_compat_siunitx_bool {
-  \RequirePackage { siunitx }
-  \NewDocumentCommand { \JSONParseValueNum } { O{} m m } {
-    \tl_set_rescan:Nne \l__jsonparse_temp_tl { } { \prop_item:Ne #2 {#3} }
-    \num [#1] { \l__jsonparse_temp_tl}
-  }
-}
-
-% EOF

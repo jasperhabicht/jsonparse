@@ -998,14 +998,14 @@
   \prop_item:Ne #1 {#2}
 }
 
-\NewExpandableDocumentCommand { \JSONParseSetValue } { m m m } {
+\NewDocumentCommand { \JSONParseSetValue } { m m m } {
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }
   \tl_set:Nne #1 { \prop_item:Ne #2 {#3} }
 }
 
-\NewExpandableDocumentCommand { \JSONParseSetRescanValue } { m m m } {
+\NewDocumentCommand { \JSONParseSetRescanValue } { m m m } {
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }

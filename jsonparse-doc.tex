@@ -339,7 +339,7 @@ For example, if the JSON string \macro{{ "key" : "value" }} has been parsed into
 \begin{macrodef}
 |\JSONParseSetValue|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
-The expandable command \macro{\JSONParseValueSet} can be used to a select a value from the token variable that stores the parsed JSON data via a key and store this value in another token variable. 
+The command \macro{\JSONParseValueSet} can be used to a select a value from the token variable that stores the parsed JSON data via a key and store this value globally in another token variable. 
 
 The first argument denotes the token variable where the value should be stored into. If this token variable has not yet been defined, it will be created by this command. The second argument represents the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and that stores the parsed JSON data. The third argument takes the key to select the relevant value.
 
@@ -348,7 +348,7 @@ The token list returned by this command is a string variable where all character
 \begin{macrodef}
 |\JSONParseSetRescanValue|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
-The expandable command \macro{\JSONParseSetRescanValue} works the same way and also takes the same arguments as \macro{\JSONParseSetValue} except that it rescans the return value before storing it in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default.
+The command \macro{\JSONParseSetRescanValue} works the same way and also takes the same arguments as \macro{\JSONParseSetValue} except that it rescans the return value before storing it globally in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default.
 
 This can, for example, be necessary when numbers stored in the JSON data in scientific format should be formatted using the \macro{siunitx} package. The rescan is needed here, because otherwise the character \macro{e} would have the wrong category code and would hence not be recognised by the formatting parser as exponent marker. Let us assume the key \macro{number} in some JSON source parsed into the token variable \macro{\myJSONnumber} represents the value \macro{-1.1e-1}, then the following could be used to format the output:
 

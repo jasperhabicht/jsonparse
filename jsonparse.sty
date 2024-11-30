@@ -237,7 +237,7 @@
 
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
-\cs_generate_variant:Nn \tl_gset_rescan:Nnn { Nne }
+\cs_generate_variant:Nn \tl_gset_rescan:Nnn { Nno , Nne }
 \cs_generate_variant:Nn \tl_range:nnn { nne , nen }
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { NV }
@@ -245,7 +245,6 @@
 \cs_generate_variant:Nn \tl_replace_once:Nnn { Non }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
-\cs_generate_variant:Nn \tl_set_rescan:Nnn { Nne }
 \cs_generate_variant:Nn \tl_trim_spaces:n { e }
 \cs_generate_variant:Nn \str_case_e:nn { en }
 \cs_generate_variant:Nn \str_casefold:n { o }
@@ -956,44 +955,56 @@
   \symbol{ " \str_uppercase:n { #1 #2 #3 #4 } } { }
 }
 
+\cs_new:Npn \__jsonparse_rescan_setup:Nn #1#2 {
+  \cs_set:Npn \" { " }
+  \cs_set:Npn \/ { / }
+  \cs_set:Npn \\ { \c_backslash_str }
+  \cs_set:Npn \b { \l__jsonparse_backspace_str }
+  \cs_set:Npn \f { \l__jsonparse_formfeed_str }
+  \cs_set:Npn \n { \l__jsonparse_linefeed_str }
+  \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
+  \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
+  \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNN
+  \tl_set:Ne #1 {#2}
+  \cs_set_eq:NN \" \__jsonparse_tex_quote:
+  \cs_set_eq:NN \\ \__jsonparse_tex_backslash:
+  \bool_if:NT \l__jsonparse_escape_number_sign_bool {
+    \tl_replace_all:Noe #1 { \c_hash_str } { \c_backslash_str \c_hash_str }
+  }
+  \bool_if:NT \l__jsonparse_escape_dollar_sign_bool {
+    \tl_replace_all:Noe #1 { \c_dollar_str } { \c_backslash_str \c_dollar_str }
+  }
+  \bool_if:NT \l__jsonparse_escape_percent_sign_bool {
+    \tl_replace_all:Noe #1 { \c_percent_str } { \c_backslash_str \c_percent_str }
+  }
+  \bool_if:NT \l__jsonparse_escape_ampersand_bool {
+    \tl_replace_all:Noe #1 { \c_ampersand_str } { \c_backslash_str \c_ampersand_str }
+  }
+  \bool_if:NT \l__jsonparse_escape_circumflex_accent_bool {
+    \tl_replace_all:Non #1 { \c_circumflex_str } { \textasciicircum }
+  }
+  \bool_if:NT \l__jsonparse_escape_low_line_bool {
+    \tl_replace_all:Noe #1 { \c_underscore_str } { \c_backslash_str \c_underscore_str }
+  }
+  \bool_if:NT \l__jsonparse_escape_tilde_bool {
+    \tl_replace_all:Non #1 { \c_tilde_str } { \textasciitilde }
+  }
+}
+
 \cs_new:Npn \__jsonparse_rescan:n #1 {
   \group_begin:
-    \cs_set:Npn \" { " }
-    \cs_set:Npn \/ { / }
-    \cs_set:Npn \\ { \c_backslash_str }
-    \cs_set:Npn \b { \l__jsonparse_backspace_str }
-    \cs_set:Npn \f { \l__jsonparse_formfeed_str }
-    \cs_set:Npn \n { \l__jsonparse_linefeed_str }
-    \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
-    \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
-    \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNN
-    \tl_set:Ne \l__jsonparse_temp_tl {#1}
-    \cs_set_eq:NN \" \__jsonparse_tex_quote:
-    \cs_set_eq:NN \\ \__jsonparse_tex_backslash:
-    \bool_if:NT \l__jsonparse_escape_number_sign_bool {
-      \tl_replace_all:Noe \l__jsonparse_temp_tl { \c_hash_str } { \c_backslash_str \c_hash_str }
-    }
-    \bool_if:NT \l__jsonparse_escape_dollar_sign_bool {
-      \tl_replace_all:Noe \l__jsonparse_temp_tl { \c_dollar_str } { \c_backslash_str \c_dollar_str }
-    }
-    \bool_if:NT \l__jsonparse_escape_percent_sign_bool {
-      \tl_replace_all:Noe \l__jsonparse_temp_tl { \c_percent_str } { \c_backslash_str \c_percent_str }
-    }
-    \bool_if:NT \l__jsonparse_escape_ampersand_bool {
-      \tl_replace_all:Noe \l__jsonparse_temp_tl { \c_ampersand_str } { \c_backslash_str \c_ampersand_str }
-    }
-    \bool_if:NT \l__jsonparse_escape_circumflex_accent_bool {
-      \tl_replace_all:Non \l__jsonparse_temp_tl { \c_circumflex_str } { \textasciicircum }
-    }
-    \bool_if:NT \l__jsonparse_escape_low_line_bool {
-      \tl_replace_all:Noe \l__jsonparse_temp_tl { \c_underscore_str } { \c_backslash_str \c_underscore_str }
-    }
-    \bool_if:NT \l__jsonparse_escape_tilde_bool {
-      \tl_replace_all:Non \l__jsonparse_temp_tl { \c_tilde_str } { \textasciitilde }
-    }
+    \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#1}
     \tl_rescan:no { } { \l__jsonparse_temp_tl }
   \group_end:
 }
+
+\cs_new:Npn \__jsonparse_gset_rescan:Nn #1#2 {
+  \group_begin:
+    \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#2}
+    \tl_gset_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
+  \group_end:
+}
+\cs_generate_variant:Nn \__jsonparse_gset_rescan:Nn { Ne }
 
 \NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
   \prop_item:Ne #1 {#2}
@@ -1010,7 +1021,7 @@
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }
-  \tl_set_rescan:Nne #1 { } { \prop_item:Ne #2 {#3} }
+  \__jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
 }
 
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {

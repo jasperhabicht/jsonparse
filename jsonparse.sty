@@ -10,8 +10,20 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2024-12-01} {0.9.9}
+\ProvidesExplPackage {jsonparse} {2024-12-10} {0.9.10}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
+
+\msg_new:nnn { jsonparse } { old-kernel } {
+  LaTeX ~ kernel ~ too ~ old. \iow_newline:
+  The ~ jsonparse ~ package ~ does ~ not ~ support ~ this ~ LaTeX ~ version. \iow_newline: 
+  Please ~ update ~ to ~ a ~ newer ~ version. 
+}
+  
+\cs_if_exist:NF \ProcessKeyOptions {
+  \msg_critical:nn { jsonparse } { old-kernel }
+}
+
+% ===
 
 \bool_new:N \l__jsonparse_debug_mode_bool
 
@@ -271,8 +283,28 @@
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T , F , TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { Vn } { p }
 
-\prop_new:N \g_jsonparse_entries_prop
-\prop_new:N \l__jsonparse_temp_prop
+% ===
+
+\bool_new:N \l__jsonparse_compat_bool
+
+\cs_if_exist:NF \IfExplAtLeastTF {
+  \cs_new:Npn \IfExplAtLeastTF #1#2#3 { }
+  \bool_set_true:N \l__jsonparse_compat_bool
+}
+
+\IfExplAtLeastTF { 2024-12-09 } { } {
+  \bool_set_true:N \l__jsonparse_compat_bool
+}
+
+% ===
+
+\bool_if:NTF \l__jsonparse_compat_bool {
+  \prop_new:N \g_jsonparse_entries_prop
+  \prop_new:N \l__jsonparse_temp_prop
+} {
+  \prop_new_linked:N \g_jsonparse_entries_prop
+  \prop_new_linked:N \l__jsonparse_temp_prop
+}
 
 \tl_new:N \g__jsonparse_json_tl
 \tl_new:N \l__jsonparse_input_tl
@@ -832,7 +864,11 @@
 
 \NewDocumentCommand { \JSONParsePut } { m m +v } {
   \prop_if_exist:NF #1 {
-    \prop_new:N #1
+    \bool_if:NTF \l__jsonparse_compat_bool {
+      \prop_new:N #1
+    } {
+      \prop_new_linked:N #1
+    }
   }
   \prop_gput:Nnn #1 {#2} {#3}
 }
@@ -880,7 +916,11 @@
         { \l__jsonparse_externalize_file_name_tl .jsonparse }
       \file_input:e { \l__jsonparse_externalize_file_name_tl .jsonparse }
     } {
-      \prop_new:N #2
+      \bool_if:NTF \l__jsonparse_compat_bool {
+        \prop_new:N #2
+      } {
+        \prop_new_linked:N #2
+      }
       \tl_gclear:N \g__jsonparse_json_tl
       \group_begin:
         \cs_set:Npn \" { \exp_not:N \" }
@@ -925,7 +965,11 @@
         { \l__jsonparse_externalize_file_name_tl .jsonparse }
       \file_input:e { \l__jsonparse_externalize_file_name_tl .jsonparse }
     } {
-      \prop_new:N #2
+      \bool_if:NTF \l__jsonparse_compat_bool {
+        \prop_new:N #2
+      } { 
+        \prop_new_linked:N #2
+      }
       \tl_gclear:N \g__jsonparse_json_tl
       \group_begin:
         \cs_set:Npn \" { \exp_not:N \" }

@@ -1,15 +1,15 @@
-% File: jsonparse-doc.tex 
+% File: jsonparse-doc.tex
 % Copyright 2024 Jasper Habicht (mail(at)jasperhabicht.de).
-% 
+%
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License version 1.3c,
 % available at http://www.latex-project.org/lppl/.
-% 
+%
 % This file is part of the `jsonparse' package (The Work in LPPL)
 % and all files in that bundle must be distributed together.
-% 
+%
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 \documentclass[a4paper]{article}
 \def\jsonparsefileversion{0.9.10}
 \def\jsonparsefiledate{10 December 2024}
@@ -40,7 +40,7 @@
 \tcbuselibrary{listings}
 \lstdefinestyle{jsonparsedocmacro}{
     basicstyle=\small\ttfamily,
-    literate=*{<}{{{\color{black!50}\guilsinglleft}}}1 
+    literate=*{<}{{{\color{black!50}\guilsinglleft}}}1
         {>}{{{\color{black!50}\guilsinglright}}}1,
     keywords={},
     moredelim=[is][\bfseries]{|}{|},
@@ -57,13 +57,13 @@
 \int_new:N \l_jsonparse_doc_change_int
 \NewDocumentCommand{\changes}{ m m m }{
     \int_incr:N \l_jsonparse_doc_change_int
-    \prop_new:c { l_jsonparse_doc_change_ 
+    \prop_new:c { l_jsonparse_doc_change_
         \int_to_roman:n { \l_jsonparse_doc_change_int } _prop }
-    \prop_put:cnn { l_jsonparse_doc_change_ 
+    \prop_put:cnn { l_jsonparse_doc_change_
         \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { version } {#1}
-    \prop_put:cnn { l_jsonparse_doc_change_ 
+    \prop_put:cnn { l_jsonparse_doc_change_
         \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { date } {#2}
-    \prop_put:cnn { l_jsonparse_doc_change_ 
+    \prop_put:cnn { l_jsonparse_doc_change_
         \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { changes } {#3}
 }
 \NewDocumentCommand{\printchanges}{ }{
@@ -71,11 +71,11 @@
     \begin{description}
     \int_step_inline:nn { \l_jsonparse_doc_change_int } {
         \item[ 
-            \prop_item:cn { l_jsonparse_doc_change_ 
-            \int_to_roman:n { ##1 } _prop } { version } ] 
-            ( \prop_item:cn { l_jsonparse_doc_change_ 
+            \prop_item:cn { l_jsonparse_doc_change_
+            \int_to_roman:n { ##1 } _prop } { version } ]
+            ( \prop_item:cn { l_jsonparse_doc_change_
             \int_to_roman:n { ##1 } _prop } { date } ) \\
-            \prop_item:cn { l_jsonparse_doc_change_ 
+            \prop_item:cn { l_jsonparse_doc_change_
             \int_to_roman:n { ##1 } _prop } { changes }
     }
     \end{description}
@@ -123,7 +123,7 @@
     title style hook/.style={}
 }
 
-\NewTCBListing{macrodef}{ }{ 
+\NewTCBListing{macrodef}{ }{
     listing only,
     listing style={jsonparsedocmacro},
     grow to left by=2cm,
@@ -149,9 +149,9 @@
     size=tight,
     arc=1pt,
     outer arc=1pt,
-    top=0.5pt, 
+    top=0.5pt,
     bottom=0.5pt,
-    left=2pt, 
+    left=2pt,
     right=2pt,
     boxrule=0pt,
     colframe=black!10,
@@ -165,9 +165,9 @@
     size=tight,
     arc=1pt,
     outer arc=1pt,
-    top=0.5pt, 
+    top=0.5pt,
     bottom=0.5pt,
-    left=2pt, 
+    left=2pt,
     right=2pt,
     boxrule=0pt,
     colframe=black!10,
@@ -227,7 +227,7 @@ This package is still in a beta stage and not thoroughly tested. Bugs or improve
 
 \section{Loading the package}
 
-To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document. 
+To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document.
 
 The package does not load any dependencies.
 
@@ -240,15 +240,15 @@ This key can be set either as package option or using \macro{\JSONParseSet}. It 
 
 \section{General remarks of the parsing procedure}
 
-In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape''). 
+In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape'').
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}).  This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly. 
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}).  This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.
 
 Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\char"} followed by the relevant four hex digits. The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting options below in section \ref{sec:options}.
 
-It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source so that they become \macro{\\\"} and \macro{\\\\} respectively. 
+It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source so that they become \macro{\\\"} and \macro{\\\\} respectively.
 
 \begin{macrodef}
 |\x|{<token variable name>}{<key>}
@@ -256,12 +256,12 @@ It is possible to insert TeX macros to the JSON source that will eventually be p
 Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. The control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
-    \JSONParse{\myJSONdataA}{ 
-        { "a" : { "b" : "c" } } 
+    \JSONParse{\myJSONdataA}{
+        { "a" : { "b" : "c" } }
     }
 
-    \JSONParse{\myJSONdataB}{ 
-        { "d" : \x{myJSONdataA}{a} } 
+    \JSONParse{\myJSONdataB}{
+        { "d" : \x{myJSONdataA}{a} }
     }
 
     \JSONParseValue{\myJSONdataB}{d.b}
@@ -280,7 +280,7 @@ Note that the control sequence \macro{\x} is replaced by the value exactly. Ther
 |escape|={low line}
 |escape|={tilde}
 \end{macrodef}
-The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into the relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}. With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected. 
+The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into the relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}. With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected.
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
@@ -299,11 +299,11 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \begin{macrodef}
 |\JSONParse|[<options>]{<token variable>}{<JSON string>}
 \end{macrodef}
-The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The second argument takes the name of the token variable that is created by the command. The third argument takes the JSON string to be parsed. 
+The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The second argument takes the name of the token variable that is created by the command. The third argument takes the JSON string to be parsed.
 
 For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
 
-The first optional argument can be used to pass options to the command that are then applied locally. 
+The first optional argument can be used to pass options to the command that are then applied locally.
 
 \begin{macrodef}
 |\JSONParseFromFile|[<options>]{<token variable>}{<JSON file>}
@@ -326,21 +326,21 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. When the option \macro{rescan} is used, the token list is rescanned before it is typeset (which means that all category codes that may have been changed before are set to the default values). This is the default behaviour. If rescanning is not desired, pass the option \macro{rescan=false} to the command.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string. 
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string.
 
 The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
 \begin{macrodef}
 |\JSONParseExpandableValue|{<token variable>}{<key>}
 \end{macrodef}
-Whole objects or arrays can be output as JSON string for further use in other macros using the expandable command \macro{\JSONParseExpandableValue}. The value that is returned by this command is typically a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). This should be kept in mind if string comparisons should be made. A comparison against a token list with the default category codes used by TeX won't work, since letters will have category code 11 (``letter''), but it is possible to use \macro{\detokenize} to set the category codes of the token list in such a way that the comparison works. 
+Whole objects or arrays can be output as JSON string for further use in other macros using the expandable command \macro{\JSONParseExpandableValue}. The value that is returned by this command is typically a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). This should be kept in mind if string comparisons should be made. A comparison against a token list with the default category codes used by TeX won't work, since letters will have category code 11 (``letter''), but it is possible to use \macro{\detokenize} to set the category codes of the token list in such a way that the comparison works.
 
-For example, if the JSON string \macro{{ "key" : "value" }} has been parsed into the token variable \macro{\myJSONdata}, the command \macro{\JSONParseExpandableValue{\myJSONdata}{key}} will expand to the exact same token list as \macro{\detokenize{value}} with all characters having category code 12 (``other''). 
+For example, if the JSON string \macro{{ "key" : "value" }} has been parsed into the token variable \macro{\myJSONdata}, the command \macro{\JSONParseExpandableValue{\myJSONdata}{key}} will expand to the exact same token list as \macro{\detokenize{value}} with all characters having category code 12 (``other'').
 
 \begin{macrodef}
 |\JSONParseSetValue|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseValueSet} can be used to a select a value from the token variable that stores the parsed JSON data via a key and store this value globally in another token variable. 
+The command \macro{\JSONParseValueSet} can be used to a select a value from the token variable that stores the parsed JSON data via a key and store this value globally in another token variable.
 
 The first argument denotes the token variable where the value should be stored into. If this token variable has not yet been defined, it will be created by this command. The second argument represents the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and that stores the parsed JSON data. The third argument takes the key to select the relevant value.
 
@@ -383,9 +383,9 @@ For example, let us assume the following JSON data structure is parsed into the 
 \end{codeexample}
 \JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
-Then, when using \macro{\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }}, `\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }' is typeset to the document. 
+Then, when using \macro{\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }}, `\JSONParseArrayValues{\myJSONdata}{array}[key_a]{, }' is typeset to the document.
 
-The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. 
+The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally.
 
 \begin{macrodef}
 |\JSONParseArrayValuesMap|[<options>]{<token variable>}{<key>}[<subkey>]
@@ -412,7 +412,7 @@ We can extend the above example in the following way:
 
 \begin{codeexamplecolumns}
 \newcommand{\myJSONitem}{
-  \item \emph{\JSONParseArrayValueI :} 
+  \item \emph{\JSONParseArrayValueI :}
     \JSONParseArrayValueII
 }
 
@@ -422,7 +422,7 @@ We can extend the above example in the following way:
 \end{itemize}
 \end{codeexamplecolumns}
 
-The command additionally takes two optional arguments at sixth and seventh position. These arguments can be used to place code before and after the output that is generated by the command called for every array item, for example for typesetting tabular contents. 
+The command additionally takes two optional arguments at sixth and seventh position. These arguments can be used to place code before and after the output that is generated by the command called for every array item, for example for typesetting tabular contents.
 
 Typesetting the above example in a tabular way can be achieved as follows:
 
@@ -435,12 +435,12 @@ Typesetting the above example in a tabular way can be achieved as follows:
 \JSONParseArrayValuesMap{\myJSONdata}
   {array}[key_a,key_b]{myJSONitem}
   [\begin{tabular}{ c c }
-    \textbf{key a} & 
+    \textbf{key a} &
     \textbf{key b} \\ \hline]
   [\hline \end{tabular}]
 \end{codeexamplecolumns}
 
-Finally, the first optional argument of the command can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. 
+Finally, the first optional argument of the command can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally.
 
 \begin{macrodef}
 |\JSONParseArrayCount|{<token variable>}{<key>}
@@ -449,13 +449,13 @@ The command \macro{\JSONParseArrayCount} takes as first argument a token variabl
 
 \subsection{Externalising parsed JSON data}\label{sec:externalizing}
 
-Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again. 
+Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.
 
 \begin{macrodef}
 |externalize|
 |externalize|={<boolean>}
 \end{macrodef}
-With the key \macro{externalize} set (or set to true), a file will be created in the working directory that stores the externalization of the parsed JSON data. The file name gets the extension \macro{.jsonparse}. The file name is created automatically and consists of the name of the current file followed by an underscore and the name of the token variable where the JSON data is stored into. If a file with the same name and file extension already exists, an error will be issued. 
+With the key \macro{externalize} set (or set to true), a file will be created in the working directory that stores the externalization of the parsed JSON data. The file name gets the extension \macro{.jsonparse}. The file name is created automatically and consists of the name of the current file followed by an underscore and the name of the token variable where the JSON data is stored into. If a file with the same name and file extension already exists, an error will be issued.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
@@ -472,7 +472,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 The key \macro{externalize file name} sets the schema for the file name. The default schema is as follows:
 
 \begin{codeexample}
-\l_jsonparse_externalize_prefix_str \c_sys_jobname_str 
+\l_jsonparse_externalize_prefix_str \c_sys_jobname_str
     \c_underscore_str \l_jsonparse_current_prop_str
 \end{codeexample}
 
@@ -499,9 +499,9 @@ separator/|child|={<string>}
 separator/|array left|={<string>}
 separator/|array right|={<string>}
 \end{macrodef}
-With the key \macro{separator/child}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters. 
+With the key \macro{separator/child}, the separator for child objects that is used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). Changing the separator can be useful if keys in the JSON structure already use these characters.
 
-With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. Changing these separators to curly braces (\macro{{}}) is not supported due to their grouping function in TeX. 
+With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the syntax to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing the separators can be useful if keys in the JSON structure already use these characters. Changing these separators to curly braces (\macro{{}}) is not supported due to their grouping function in TeX.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
@@ -539,23 +539,23 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 If set to \macro{false}, the key \macro{check num} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
-    
+
 \subsection{L3 commands}
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string. This command does not escape the input in any way.
-  
+
 \begin{macrodef}
 |\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
 \end{macrodef}
-The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}. 
+The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}.
 
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}
 \end{macrodef}
-The command \macro{\jsonparse_parse_to_prop:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. 
+The command \macro{\jsonparse_parse_to_prop:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list.
 
 \begin{macrodef}
 |\jsonparse_array_count:NN| <token variable> <integer variable>
@@ -564,7 +564,7 @@ The command \macro{\jsonparse_array_count:NN} processes the token variable given
 
 \begin{macrodef}
 |\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
-|\jsonparse_if_num:nT| {<string>} {<true code>} 
+|\jsonparse_if_num:nT| {<string>} {<true code>}
 |\jsonparse_if_num:nF| {<string>} {<false code>}
 |\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}

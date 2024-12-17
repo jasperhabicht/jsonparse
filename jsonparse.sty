@@ -15,10 +15,10 @@
 
 \msg_new:nnn { jsonparse } { old-kernel } {
   LaTeX ~ kernel ~ too ~ old. \iow_newline:
-  The ~ jsonparse ~ package ~ does ~ not ~ support ~ this ~ LaTeX ~ version. \iow_newline: 
-  Please ~ update ~ to ~ a ~ newer ~ version. 
+  The ~ jsonparse ~ package ~ does ~ not ~ support ~ this ~ LaTeX ~ version. \iow_newline:
+  Please ~ update ~ to ~ a ~ newer ~ version.
 }
-  
+
 \cs_if_exist:NF \ProcessKeyOptions {
   \msg_critical:nn { jsonparse } { old-kernel }
 }
@@ -30,7 +30,7 @@
 \keys_define:nn { jsonparse / global } {
   debug   .bool_set:N = \l__jsonparse_debug_mode_bool ,
   debug   .default:n  = { true } ,
-  debug   .initial:n  = { false } 
+  debug   .initial:n  = { false }
 }
 \ProcessKeyOptions [ jsonparse / global ]
 
@@ -327,7 +327,7 @@
 \tl_new:N \l__jsonparse_array_keys_index_roman_tl
 
 \str_new:N \l__jsonparse_array_values_key_str
-\tl_new:N \l__jsonparse_array_values_insert_tl 
+\tl_new:N \l__jsonparse_array_values_insert_tl
 
 \clist_new:N \l__jsonparse_array_map_keys_clist
 \str_new:N \l__jsonparse_array_map_function_str
@@ -374,7 +374,7 @@
   \tl_to_str:n { E }
 }
 
-\clist_concat:NNN \c__jsonparse_num_others_clist 
+\clist_concat:NNN \c__jsonparse_num_others_clist
   \c__jsonparse_num_plus_minus_fraction_clist
   \c__jsonparse_num_exponent_clist
 
@@ -834,20 +834,20 @@
 
 \cs_new:Npn \__jsonparse_filter:nn #1#2 {
   \str_case_e:en {
-    \tl_range:nne {#1} { 1 } { \int_eval:n { 
-      \tl_count:o { \l__jsonparse_filter_key_str } + 1 
+    \tl_range:nne {#1} { 1 } { \int_eval:n {
+      \tl_count:o { \l__jsonparse_filter_key_str } + 1
     } }
   } {
     { \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str } {
       \prop_put:Nen \l__jsonparse_temp_prop
-        { \tl_range:nen {#1} { \int_eval:n { 
-          \tl_count:o { \l__jsonparse_filter_key_str } + 2 
+        { \tl_range:nen {#1} { \int_eval:n {
+          \tl_count:o { \l__jsonparse_filter_key_str } + 2
         } } { -1 } } {#2}
     }
     { \l__jsonparse_filter_key_str \l__jsonparse_array_sep_left_str } {
       \prop_put:Nen \l__jsonparse_temp_prop
-        { \tl_range:nen {#1} { \int_eval:n { 
-          \tl_count:o { \l__jsonparse_filter_key_str } + 1 
+        { \tl_range:nen {#1} { \int_eval:n {
+          \tl_count:o { \l__jsonparse_filter_key_str } + 1
         } } { -1 } } {#2}
     }
   }
@@ -967,7 +967,7 @@
     } {
       \bool_if:NTF \l__jsonparse_compat_bool {
         \prop_new:N #2
-      } { 
+      } {
         \prop_new_linked:N #2
       }
       \tl_gclear:N \g__jsonparse_json_tl
@@ -1265,7 +1265,7 @@
     }
   } {
     \int_zero:N \l__jsonparse_array_keys_index_int
-    \clist_map_function:NN \l__jsonparse_array_map_keys_clist 
+    \clist_map_function:NN \l__jsonparse_array_map_keys_clist
       \__jsonparse_array_values_map_keys:n
     \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
     \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
@@ -1301,8 +1301,8 @@
         \__jsonparse_array_map_generate_cs:n
     }
     #6
-    \int_step_function:nN { \l__jsonparse_array_count_int } 
-      \__jsonparse_array_values_map:n 
+    \int_step_function:nN { \l__jsonparse_array_count_int }
+      \__jsonparse_array_values_map:n
     #7
   \group_end:
 }

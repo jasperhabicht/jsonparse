@@ -262,6 +262,7 @@
 \cs_generate_variant:Nn \str_casefold:n { o }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { o }
 \cs_generate_variant:Nn \str_set:Nn { Ne }
+\cs_generate_variant:Nn \int_step_inline:nnn { nVn }
 \cs_generate_variant:Nn \clist_const:Nn { Ne }
 \cs_generate_variant:Nn \seq_put_right:Nn { Ne }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
@@ -1318,6 +1319,21 @@
       \__jsonparse_array_values_map:n
     #7
   \group_end:
+}
+
+\NewDocumentCommand { \JSONParseArrayMapInline } { m m m } {
+  \group_begin:
+    \tl_set_eq:NN \l__jsonparse_temp_tl #1
+    \jsonparse_filter:Nn \l__jsonparse_temp_tl {#2}
+    \jsonparse_array_count:NN \l__jsonparse_temp_tl \l__jsonparse_array_count_int
+    \bool_if:NT \l__jsonparse_zero_based_bool {
+      \int_decr:N \l__jsonparse_array_count_int
+    }
+    \exp_last_unbraced:Nf
+  \group_end:
+  \int_step_inline:nVn {  
+    \bool_if:NTF \l__jsonparse_zero_based_bool { 0 } { 1 }
+  } \l__jsonparse_array_count_int {#3}
 }
 
 % ===

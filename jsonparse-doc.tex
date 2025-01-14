@@ -453,6 +453,11 @@ The command \macro{\JSONParseArrayCount} takes as first argument a token variabl
 \end{macrodef}
 The command \macro{\JSONParseSetArrayCount} takes as second argument a token variable holding a parsed JSON string or JSON file and as third argument a key to select an array in the JSON data. It stores the number of items contained in the selected array in the token variable given in the first argument of the command.
 
+\begin{macrodef}
+|\JSONParseArrayMapInline|{<token variable>}{<key>}{<inline function>}
+\end{macrodef}
+The command \macro{\JSONParseArrayMapInline} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key to select an array in the JSON data. The third parameter can contain any code where the index of the current item is represented by \macro{#1}. 
+
 \subsection{Externalising parsed JSON data}\label{sec:externalizing}
 
 Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.
@@ -517,7 +522,7 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 \end{macrodef}
 If set (or explicitly set to \macro{true}), the key \macro{zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. 
 
 \begin{macrodef}
 replace/|true|={<string>}

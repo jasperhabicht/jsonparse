@@ -458,6 +458,18 @@ The command \macro{\JSONParseSetArrayCount} takes as second argument a token var
 \end{macrodef}
 The command \macro{\JSONParseArrayMapInline} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key to select an array in the JSON data. The third parameter can contain any code where the index of the current item is represented by \macro{#1}. 
 
+Using the above example, the mechanism could be implemented as follows:
+
+\begin{codeexamplecolumns}
+\begin{itemize}
+  \JSONParseArrayMapInline{\myJSONdata}
+    {array}{
+    \item \JSONParseValue{\myJSONdata}
+      {array[#1].key_a}
+  }
+\end{itemize}
+\end{codeexamplecolumns}
+
 \subsection{Externalising parsed JSON data}\label{sec:externalizing}
 
 Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.

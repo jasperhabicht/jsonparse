@@ -12,7 +12,7 @@
 %
 \documentclass[a4paper]{article}
 \def\jsonparsefileversion{0.9.11}
-\def\jsonparsefiledate{13 January 2025}
+\def\jsonparsefiledate{15 January 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -70,13 +70,15 @@
     \section{Changes}
     \begin{description}
     \int_step_inline:nn { \l_jsonparse_doc_change_int } {
-        \item[ 
+        \item[
             \prop_item:cn { l_jsonparse_doc_change_
-            \int_to_roman:n { ##1 } _prop } { version } ]
-            ( \prop_item:cn { l_jsonparse_doc_change_
-            \int_to_roman:n { ##1 } _prop } { date } ) \\
+            \int_to_roman:n { ##1 } _prop } { version }
+        ] (
             \prop_item:cn { l_jsonparse_doc_change_
-            \int_to_roman:n { ##1 } _prop } { changes }
+            \int_to_roman:n { ##1 } _prop } { date }
+        ) \\
+        \prop_item:cn { l_jsonparse_doc_change_
+        \int_to_roman:n { ##1 } _prop } { changes }
     }
     \end{description}
 }
@@ -206,9 +208,9 @@
 \changes{v0.9.5}{2024/10/27}{Streamlining of code, clarification of explanations in documentation.}
 \changes{v0.9.6}{2024/10/31}{Allowing for multiple return values when mapping over arrays.}
 \changes{v0.9.7}{2024/11/05}{Streamlining of code, ensuring backward compatibility.}
-\changes{v0.9.8}{2024/11/19}{Bug fixes, adding possibility to store value in token list.}
-\changes{v0.9.10}{2024/12/10}{Enhanced backward compatibility; switch to linked property lists.}
-\changes{v0.9.11}{2025/01/13}{Bug fixes.}
+\changes{v0.9.8}{2024/11/19}{Bug fixes; adding possibility to store value in token list.}
+\changes{v0.9.10}{2024/12/10}{Enhanced backward compatibility; switching to linked property lists.}
+\changes{v0.9.11}{2025/01/15}{Bug fixes; adding additional command to loop over arrays.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -302,7 +304,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \end{macrodef}
 The command \macro{\JSONParse} is used to parse a JSON string and store the parsed result in a token variable (a property list). The second argument takes the name of the token variable that is created by the command. The third argument takes the JSON string to be parsed.
 
-For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below). 
+For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below).
 
 The first optional argument can be used to pass options to the command that are then applied locally.
 
@@ -456,7 +458,7 @@ The command \macro{\JSONParseSetArrayCount} takes as second argument a token var
 \begin{macrodef}
 |\JSONParseArrayMapInline|{<token variable>}{<key>}{<inline function>}
 \end{macrodef}
-The command \macro{\JSONParseArrayMapInline} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key to select an array in the JSON data. The third parameter can contain any code where the index of the current item is represented by \macro{#1}. 
+The command \macro{\JSONParseArrayMapInline} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key to select an array in the JSON data. The third parameter can contain any code where the index of the current item is represented by \macro{#1}.
 
 Using the above example, the mechanism could be implemented as follows:
 

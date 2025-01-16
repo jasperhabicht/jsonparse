@@ -319,6 +319,8 @@ The command \macro{\JSONParseFromFile} is used to parse a JSON file and store th
 \end{macrodef}
 The command \macro{\JSONParseSetKeys} is used to return all top-level keys of a JSON object as JSON array. The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
 
+\textbf{Caution!} This command has been redefined in version 0.9.12 which affects the accepted arguments and return value. 
+
 \begin{macrodef}
 |\JSONParseSetKeys|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}

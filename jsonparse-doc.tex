@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.9.11}
-\def\jsonparsefiledate{15 January 2025}
+\def\jsonparsefileversion{0.9.12}
+\def\jsonparsefiledate{17 January 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -211,6 +211,7 @@
 \changes{v0.9.8}{2024/11/19}{Bug fixes; adding possibility to store value in token list.}
 \changes{v0.9.10}{2024/12/10}{Enhanced backward compatibility; switching to linked property lists.}
 \changes{v0.9.11}{2025/01/15}{Bug fixes; adding additional command to loop over arrays.}
+\changes{v0.9.12}{2025/01/17}{Bug fixes; adding additional commands to access arrays.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -314,9 +315,24 @@ The first optional argument can be used to pass options to the command that are 
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as third argument the path to the JSON file relative to the working directory.
 
 \begin{macrodef}
-|\JSONParseKeys|{<token variable>}{<token variable>}
+|\JSONParseKeys|{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseKeys} is used to store all top-level keys of a parsed JSON object as array into a token variable. The command takes as first argument the token variable that holds the parsed JSON data. The second argument takes the token variable that is assigned a JSON array containing the top-level keys of the object represented by the token variable in the first argument. The token variable to store the keys as array is created if it does not exist.
+The command \macro{\JSONParseSetKeys} is used to return all top-level keys of a JSON object as JSON array. The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
+
+\begin{macrodef}
+|\JSONParseSetKeys|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseSetKeys} is used to store all top-level keys of a JSON object as JSON array into a token variable. The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The first argument takes the token variable to hold the JSON array containing the top-level keys of the selected object. The token variable to store the keys as array is created if it does not exist.
+
+\begin{macrodef}
+|\JSONParseArrayItem|{<token variable>}{<index>}
+\end{macrodef}
+The command \macro{\JSONParseArrayItem} is used to return a single item from a JSON array using its index. The first argument expects a token variable that represents an JSON array as parsed JSON data. The second argument takes the index of the selected item of the array.
+
+\begin{macrodef}
+|\JSONParseSetArrayItem|{<token variable>}{<token variable>}{<index>}
+\end{macrodef}
+The command \macro{\JSONParseArrayItem} is used to store a single item from a JSON array using its index into a token variable. The second argument expects a token variable that represents an JSON array as parsed JSON data. The third argument takes the index of the selected item of the array. The first argument takes the token variable to hold the selected item from the array. The token variable to store the keys as array is created if it does not exist.
 
 \begin{macrodef}
 |\JSONParseValue|[<options>]{<token variable>}{<key>}
@@ -471,6 +487,30 @@ Using the above example, the mechanism could be implemented as follows:
   }
 \end{itemize}
 \end{codeexamplecolumns}
+
+Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseArrayItem}, keys and values can be accessed. Due to the fact that cells create scopes, we need to repeat the part of the code that selects the current key:
+
+\begin{codeexamplecolumns}
+\JSONParseArrayMapInline{\myJSONdata}
+  {array}{
+  \JSONParseSetKeys{\mykeys}{\myJSONdata}
+    {array[#1]}
+  \JSONParseSetArrayItem{\mykeya}
+    {\mykeys}{0}
+  \JSONParseSetArrayItem{\mykeyb}
+    {\mykeys}{1}
+
+  \emph{\mykeya :}
+  \JSONParseValue{\myJSONdata}
+    {array[#1].\mykeya}\par
+
+  \emph{\mykeyb :}
+  \JSONParseValue{\myJSONdata}
+    {array[#1].\mykeyb}\par\bigskip
+}
+\end{codeexamplecolumns}
+
+Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 \subsection{Externalising parsed JSON data}\label{sec:externalizing}
 

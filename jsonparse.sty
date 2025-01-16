@@ -1360,6 +1360,7 @@
 \cs_new:Npn \__jsonparse_array_map_inline:n #1 { }
 
 \NewDocumentCommand { \JSONParseArrayMapInline } { m m +m } {
+  \cs_gset:Npn \__jsonparse_array_map_inline:n ##1 {#3}
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_tl #1
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#2}
@@ -1369,7 +1370,6 @@
     }
     \exp_last_unbraced:Nf
   \group_end:
-  \cs_set:Npn \__jsonparse_array_map_inline:n ##1 {#3}
   \int_step_function:nVN {
     \bool_if:NTF \l__jsonparse_zero_based_bool { 0 } { 1 }
   } \l__jsonparse_array_count_int \__jsonparse_array_map_inline:n

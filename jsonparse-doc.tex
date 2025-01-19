@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{0.9.12}
-\def\jsonparsefiledate{17 January 2025}
+\def\jsonparsefileversion{1.0.0}
+\def\jsonparsefiledate{19 January 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -212,6 +212,7 @@
 \changes{v0.9.10}{2024/12/10}{Enhanced backward compatibility; switching to linked property lists.}
 \changes{v0.9.11}{2025/01/15}{Bug fixes; adding additional command to loop over arrays.}
 \changes{v0.9.12}{2025/01/17}{Bug fixes; adding commands to access items in arrays.}
+\changes{v1.0.0}{2025/01/19}{Streamlining of code, unification of command structure.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -288,7 +289,7 @@ The key \macro{escape} can be used to convert characters that don't require esca
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
 
 \begin{macrodef}
 |rescan|
@@ -296,7 +297,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \end{macrodef}
 The key \macro{rescan} can be used to activate and deactivate rescanning of the output. This key is active per default. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded before typesetting. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
 
 \section{Main user commands}
 
@@ -315,28 +316,6 @@ The first optional argument can be used to pass options to the command that are 
 The command \macro{\JSONParseFromFile} is used to parse a JSON file and store the parsed result in a token variable (a property list). It works the same way as \macro{\JSONParse}, but instead of a JSON string, it takes as third argument the path to the JSON file relative to the working directory.
 
 \begin{macrodef}
-|\JSONParseKeys|{<token variable>}{<key>}
-\end{macrodef}
-The command \macro{\JSONParseSetKeys} is used to return all top-level keys of a JSON object as JSON array. The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
-
-\textbf{Caution!} This command has been redefined in version 0.9.12 which affects the accepted arguments and return value. 
-
-\begin{macrodef}
-|\JSONParseSetKeys|{<token variable>}{<token variable>}{<key>}
-\end{macrodef}
-The command \macro{\JSONParseSetKeys} is used to store all top-level keys of a JSON object as JSON array into a token variable. The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The first argument takes the token variable to hold the JSON array containing the top-level keys of the selected object. The token variable to store the keys as array is created if it does not exist.
-
-\begin{macrodef}
-|\JSONParseArrayItem|{<token variable>}{<index>}
-\end{macrodef}
-The command \macro{\JSONParseArrayItem} is used to return a single item from a JSON array using its index. The first argument expects a token variable that represents an JSON array as parsed JSON data. The second argument takes the index of the selected item of the array.
-
-\begin{macrodef}
-|\JSONParseSetArrayItem|{<token variable>}{<token variable>}{<index>}
-\end{macrodef}
-The command \macro{\JSONParseArrayItem} is used to store a single item from a JSON array using its index into a token variable. The second argument expects a token variable that represents an JSON array as parsed JSON data. The third argument takes the index of the selected item of the array. The first argument takes the token variable to hold the selected item from the array. The token variable to store the keys as array is created if it does not exist.
-
-\begin{macrodef}
 |\JSONParseValue|[<options>]{<token variable>}{<key>}
 \end{macrodef}
 The command \macro{\JSONParseValue} is used to select values from the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}. The second argument takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
@@ -347,7 +326,7 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. When the option \macro{rescan} is used, the token list is rescanned before it is typeset (which means that all category codes that may have been changed before are set to the default values). This is the default behaviour. If rescanning is not desired, pass the option \macro{rescan=false} to the command.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string.
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
@@ -370,7 +349,7 @@ The token list returned by this command is a string variable where all character
 \begin{macrodef}
 |\JSONParseSetRescanValue|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseSetRescanValue} works the same way and also takes the same arguments as \macro{\JSONParseSetValue} except that it rescans the return value before storing it globally in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default.
+The command \macro{\JSONParseSetRescanValue} works the same way and also takes the same arguments as \macro{\JSONParseSetValue} except that it rescans the return value before storing it globally in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default. Option settings such as the \macro{escape} option are taken into consideration during the rescan process.
 
 This can, for example, be necessary when numbers stored in the JSON data in scientific format should be formatted using the \macro{siunitx} package. The rescan is needed here, because otherwise the character \macro{e} would have the wrong category code and would hence not be recognised by the formatting parser as exponent marker. Let us assume the key \macro{number} in some JSON source parsed into the token variable \macro{\myJSONnumber} represents the value \macro{-1.1e-1}, then the following could be used to format the output:
 
@@ -380,6 +359,18 @@ This can, for example, be necessary when numbers stored in the JSON data in scie
   {\myJSONnumber}{number}
 \num{\mynumber}
 \end{codeexamplecolumns}
+
+\begin{macrodef}
+|\JSONParseKeys|{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSON object as JSON array and return this array as string where all characters (except for spaces and tabs) have category code 12 (``other''). The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
+
+\textbf{Caution!} This command has been redefined in version 0.9.12 which affects the accepted arguments and return value.
+
+\begin{macrodef}
+|\JSONParseSetKeys|{<token variable>}{<token variable>}{<key>}
+\end{macrodef}
+The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSON object as JSON array and parse this array into a token variable (a property list). The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The first argument takes the token variable to hold the JSON array containing the top-level keys of the selected object. The token variable to store the keys as array is created if it does not exist.
 
 \begin{macrodef}
 |\JSONParseArrayValues|[<options>]{<token variable>}{<key>}[<subkey>]{<string>}
@@ -490,17 +481,17 @@ Using the above example, the mechanism could be implemented as follows:
 \end{itemize}
 \end{codeexamplecolumns}
 
-Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseArrayItem}, keys and values can be accessed. Due to the fact that cells create scopes, we need to repeat the part of the code that selects the current key:
+Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetValue}, keys and values can be accessed. Due to the fact that cells create scopes, we need to repeat the part of the code that selects the current key:
 
 \begin{codeexamplecolumns}
 \JSONParseArrayMapInline{\myJSONdata}
   {array}{
   \JSONParseSetKeys{\mykeys}{\myJSONdata}
     {array[#1]}
-  \JSONParseSetArrayItem{\mykeya}
-    {\mykeys}{0}
-  \JSONParseSetArrayItem{\mykeyb}
-    {\mykeys}{1}
+  \JSONParseSetValue{\mykeya}
+    {\mykeys}{[0]}
+  \JSONParseSetValue{\mykeyb}
+    {\mykeys}{[1]}
 
   \emph{\mykeya :}
   \JSONParseValue{\myJSONdata}
@@ -578,7 +569,7 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 \end{macrodef}
 If set (or explicitly set to \macro{true}), the key \macro{zero-based} sets the numbering of the index of array items to zero-based. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to resemble JavaScript notation.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. 
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
 replace/|true|={<string>}
@@ -598,7 +589,8 @@ replace/|horizontal tab|={<string>}
 \end{macrodef}
 These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement. These replacements take place only during typesetting.
 
-These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
+
 \begin{macrodef}
 |check num|
 |check num|={<boolean>}

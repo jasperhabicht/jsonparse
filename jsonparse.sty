@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-01-17} {0.9.12}
+\ProvidesExplPackage {jsonparse} {2025-01-19} {1.0.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -68,6 +68,16 @@
 \msg_new:nnn { jsonparse } { escape-char-not-found } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Escape ~ character ~ #1 ~ not ~ found.
+}
+
+\msg_new:nnn { jsonparse } { prop-undefined } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Property ~ list ~ undefined: ~ #1.
+}
+
+\msg_new:nnn { jsonparse } { cs-undefined } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Control ~ sequence ~ undefined: ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { unknown-key } {
@@ -310,6 +320,7 @@
 \tl_new:N \g__jsonparse_json_tl
 \tl_new:N \l__jsonparse_input_tl
 \tl_new:N \l__jsonparse_temp_tl
+\tl_new:N \l__jsonparse_keys_tl
 \tl_new:N \l__jsonparse_keys_array_tl
 \tl_new:N \l__jsonparse_prefix_tl
 \tl_new:N \l__jsonparse_key_tl
@@ -676,7 +687,11 @@
     \bool_if:NT \l__jsonparse_zero_based_bool {
       \int_decr:N \l__jsonparse_array_index_int
     }
-    \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
+    \tl_if_empty:NTF \l__jsonparse_key_tl {
+      \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_child_sep_str
+    } {
+      \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
+    }
     \tl_set:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_array_sep_left_str }
     \__jsonparse_parse_remainder:
@@ -1052,25 +1067,15 @@
 }
 \cs_generate_variant:Nn \__jsonparse_gset_rescan:Nn { Ne }
 
-\NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
-  \prop_item:Ne #1 {#2}
-}
-
-\NewDocumentCommand { \JSONParseSetValue } { m m m } {
-  \tl_if_exist:NF #1 {
-    \tl_new:N #1
+\cs_new:Npn \__jsonparse_warning_undefined_prop:N #1 {
+  \prop_if_exist:NF #1 {
+    \msg_error:nnn { jsonparse } { prop-undefined }
+      {#1}
   }
-  \tl_set:Ne #1 { \prop_item:Ne #2 {#3} }
-}
-
-\NewDocumentCommand { \JSONParseSetRescanValue } { m m m } {
-  \tl_if_exist:NF #1 {
-    \tl_new:N #1
-  }
-  \__jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
 }
 
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {
+  \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1082,7 +1087,34 @@
   \group_end:
 }
 
-\cs_new:Npn \__jsonparse_keys:n #1#2 {
+\NewExpandableDocumentCommand { \JSONParseExpandableValue } { m m } {
+  \prop_item:Ne #1 {#2}
+}
+
+\NewDocumentCommand { \JSONParseSetValue } { m m m } {
+  \__jsonparse_warning_undefined_prop:N #2
+  \tl_if_exist:NF #1 {
+    \tl_new:N #1
+  }
+  \tl_set:Ne #1 { \prop_item:Ne #2 {#3} }
+}
+
+\NewDocumentCommand { \JSONParseSetRescanValue } { m m m } {
+  \__jsonparse_warning_undefined_prop:N #2
+  \tl_if_exist:NF #1 {
+    \tl_new:N #1
+  }
+  \__jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
+}
+
+\cs_new:Npn \__jsonparse_parse_keys:NN #1#2 {
+  \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
+  \prop_map_function:NN #1 \__jsonparse_parse_keys_aux:nn
+  \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
+  \tl_set_eq:NN #2 \l__jsonparse_keys_array_tl
+}
+
+\cs_new:Npn \__jsonparse_parse_keys_aux:nn #1#2 {
   \tl_if_in:nVF {#1} \l__jsonparse_child_sep_str {
     \bool_if:NTF \l__jsonparse_prop_map_first_bool {
       \bool_set_false:N \l__jsonparse_prop_map_first_bool
@@ -1094,18 +1126,18 @@
 }
 
 \NewDocumentCommand { \JSONParseKeys } { m m } {
+  \__jsonparse_warning_undefined_prop:N #1
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_tl #1
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#2}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
-    \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
-    \prop_map_function:NN \l__jsonparse_temp_tl \__jsonparse_keys:n
-    \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
-    \tl_use:N \l__jsonparse_keys_array_tl
+    \__jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
+    \tl_use:N \l__jsonparse_keys_tl
   \group_end:
 }
 
 \NewDocumentCommand { \JSONParseSetKeys } { m m m } {
+  \__jsonparse_warning_undefined_prop:N #2
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }
@@ -1113,30 +1145,10 @@
     \tl_set_eq:NN \l__jsonparse_temp_tl #2
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
-    \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
-    \prop_map_function:NN \l__jsonparse_temp_tl \__jsonparse_keys:n
-    \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
+    \__jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
     \exp_last_unbraced:Nf
   \group_end:
-  \tl_set:NV #1 \l__jsonparse_keys_array_tl
-}
-
-\NewDocumentCommand { \JSONParseArrayItem } { m m } {
-  \group_begin:
-    \exp_args:NNe \jsonparse_parse_to_prop:Nn \l__jsonparse_temp_tl { #1 }
-    \prop_item:Nn \l__jsonparse_temp_tl { [ #2 ] }
-  \group_end:
-}
-
-\NewDocumentCommand { \JSONParseSetArrayItem } { m m m } {
-  \tl_if_exist:NF #1 {
-    \tl_new:N #1
-  }
-  \group_begin:
-    \exp_args:NNe \jsonparse_parse_to_prop:Nn \l__jsonparse_temp_tl { #2 }
-    \exp_last_unbraced:Nf
-  \group_end:
-  \tl_set:Ne #1 { \prop_item:Nn \l__jsonparse_temp_tl { [ #3 ] } }
+  \exp_args:NNe \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_keys_tl }
 }
 
 \cs_new:Npn \__jsonparse_get_array_index:w [ #1 ] #2 \q_stop {
@@ -1166,6 +1178,7 @@
 }
 
 \NewDocumentCommand { \JSONParseArrayCount } { m m } {
+  \__jsonparse_warning_undefined_prop:N #1
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_tl #1
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#2}
@@ -1175,6 +1188,7 @@
 }
 
 \NewDocumentCommand { \JSONParseSetArrayCount } { m m m } {
+  \__jsonparse_warning_undefined_prop:N #2
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }
@@ -1227,6 +1241,7 @@
 }
 
 \NewDocumentCommand { \JSONParseArrayValues } { O{} m m O{} m } {
+  \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1337,6 +1352,11 @@
 }
 
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m O{} O{} } {
+  \__jsonparse_warning_undefined_prop:N #2
+  \cs_if_exist:cF {#5} {
+    \msg_error:nne { jsonparse } { cs-undefined }
+      { \c_backslash_str #5 }
+  }
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1360,6 +1380,7 @@
 \cs_new:Npn \__jsonparse_array_map_inline:n #1 { }
 
 \NewDocumentCommand { \JSONParseArrayMapInline } { m m +m } {
+  \__jsonparse_warning_undefined_prop:N #1
   \cs_gset:Npn \__jsonparse_array_map_inline:n ##1 {#3}
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_tl #1

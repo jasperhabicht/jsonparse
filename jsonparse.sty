@@ -870,11 +870,28 @@
   }
 }
 
+\cs_new:Npn \__jsonparse_warning_undefined_prop:N #1 {
+  \prop_if_exist:NF #1 {
+    \msg_error:nnn { jsonparse } { prop-undefined }
+      {#1}
+  }
+}
+
 \cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
   \prop_clear:N \l__jsonparse_temp_prop
   \str_set:Nn \l__jsonparse_filter_key_str {#2}
   \prop_map_function:NN #1 \__jsonparse_filter:nn
   \prop_set_eq:NN #1 \l__jsonparse_temp_prop
+}
+
+\NewDocumentCommand { \JSONParseFilter } { m m m } {
+  \__jsonparse_warning_undefined_prop:N #2
+  \group_begin:
+    \tl_set_eq:NN \l__jsonparse_temp_tl #2
+    \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
+    \exp_last_unbraced:Nf
+  \group_end:
+  \tl_set:NV #1 \l__jsonparse_temp_tl
 }
 
 % ===
@@ -1067,13 +1084,6 @@
 }
 \cs_generate_variant:Nn \__jsonparse_gset_rescan:Nn { Ne }
 
-\cs_new:Npn \__jsonparse_warning_undefined_prop:N #1 {
-  \prop_if_exist:NF #1 {
-    \msg_error:nnn { jsonparse } { prop-undefined }
-      {#1}
-  }
-}
-
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {
   \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
@@ -1107,14 +1117,7 @@
   \__jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
 }
 
-\cs_new:Npn \__jsonparse_parse_keys:NN #1#2 {
-  \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
-  \prop_map_function:NN #1 \__jsonparse_parse_keys_aux:nn
-  \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
-  \tl_set_eq:NN #2 \l__jsonparse_keys_array_tl
-}
-
-\cs_new:Npn \__jsonparse_parse_keys_aux:nn #1#2 {
+\cs_new:Npn \__jsonparse_parse_keys:nn #1#2 {
   \tl_if_in:nVF {#1} \l__jsonparse_child_sep_str {
     \bool_if:NTF \l__jsonparse_prop_map_first_bool {
       \bool_set_false:N \l__jsonparse_prop_map_first_bool
@@ -1125,13 +1128,20 @@
   }
 }
 
+\cs_new:Npn \jsonparse_parse_keys:NN #1#2 {
+  \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
+  \prop_map_function:NN #1 \__jsonparse_parse_keys:nn
+  \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
+  \tl_set_eq:NN #2 \l__jsonparse_keys_array_tl
+}
+
 \NewDocumentCommand { \JSONParseKeys } { m m } {
   \__jsonparse_warning_undefined_prop:N #1
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_tl #1
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#2}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
-    \__jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
+    \jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
     \tl_use:N \l__jsonparse_keys_tl
   \group_end:
 }
@@ -1145,7 +1155,7 @@
     \tl_set_eq:NN \l__jsonparse_temp_tl #2
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
-    \__jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
+    \jsonparse_parse_keys:NN \l__jsonparse_temp_tl \l__jsonparse_keys_tl
     \exp_last_unbraced:Nf
   \group_end:
   \exp_args:NNe \jsonparse_parse_to_prop:Nn #1 { \l__jsonparse_keys_tl }

@@ -289,7 +289,7 @@ The key \macro{escape} can be used to convert characters that don't require esca
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
 
 \begin{macrodef}
 |rescan|
@@ -297,7 +297,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \end{macrodef}
 The key \macro{rescan} can be used to activate and deactivate rescanning of the output. This key is active per default. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded before typesetting. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
 
 \section{Main user commands}
 
@@ -589,7 +589,7 @@ replace/|horizontal tab|={<string>}
 \end{macrodef}
 These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement. These replacements take place only during typesetting.
 
-These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayItem}, \macro{\JSONParseArrayValues} as well as to the command \macro{\JSONParseArrayValuesMap}.
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayValues} and \macro{\JSONParseArrayValuesMap}.
 
 \begin{macrodef}
 |check num|

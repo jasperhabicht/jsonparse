@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-01-20} {1.0.0}
+\ProvidesExplPackage {jsonparse} {2025-01-21} {1.0.1}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -556,6 +556,17 @@
 
 % ===
 
+\cs_new_protected:Npn \jsonparse_parse:n #1 {
+  \tl_set:Ne \l__jsonparse_input_tl { \tl_trim_spaces:e {#1} }
+  \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:o { \l__jsonparse_input_tl } :w } {
+    \l__jsonparse_input_tl \q_stop
+  } {
+    % other
+    \exp_last_unbraced:No
+      \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop
+  }
+}
+
 \cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \bool_if:NT \l__jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {
@@ -570,17 +581,6 @@
     \msg_log:nne { jsonparse } { debug-info } {
       JSON ~ parsing ~ done. \iow_newline:
     }
-  }
-}
-
-\cs_new_protected:Npn \jsonparse_parse:n #1 {
-  \tl_set:Ne \l__jsonparse_input_tl { \tl_trim_spaces:e {#1} }
-  \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:o { \l__jsonparse_input_tl } :w } {
-    \l__jsonparse_input_tl \q_stop
-  } {
-    % other
-    \exp_last_unbraced:No
-      \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop
   }
 }
 
@@ -1128,7 +1128,7 @@
   }
 }
 
-\cs_new:Npn \jsonparse_parse_keys:NN #1#2 {
+\cs_new_protected:Npn \jsonparse_parse_keys:NN #1#2 {
   \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
   \prop_map_function:NN #1 \__jsonparse_parse_keys:nn
   \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }

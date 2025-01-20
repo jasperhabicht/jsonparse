@@ -73,11 +73,12 @@
         \int_step_inline:nn { \l_jsonparse_doc_change_int } {
             \item[
                 \prop_item:cn { l_jsonparse_doc_change_
-                \int_to_roman:n { ##1 } _prop } { version }
-            ] (
-                \prop_item:cn { l_jsonparse_doc_change_
-                \int_to_roman:n { ##1 } _prop } { date }
-            ) \quad
+                \int_to_roman:n { ##1 } _prop } { version } ~
+                \normalfont{ (
+                    \prop_item:cn { l_jsonparse_doc_change_
+                    \int_to_roman:n { ##1 } _prop } { date }
+                ) }
+            ]
             \prop_item:cn { l_jsonparse_doc_change_
             \int_to_roman:n { ##1 } _prop } { changes }
         }
@@ -211,7 +212,7 @@
 \changes{v0.9.7}{2024/11/05}{Streamlining of code, ensuring backward compatibility.}
 \changes{v0.9.8}{2024/11/19}{Bug fixes; adding possibility to store value in token list.}
 \changes{v0.9.10}{2024/12/10}{Enhanced backward compatibility; switching to linked property lists.}
-\changes{v0.9.11}{2025/01/15}{Bug fixes; adding additional command to loop over arrays.}
+\changes{v0.9.11}{2025/01/15}{Bug fixes; adding additional command to loop through arrays.}
 \changes{v0.9.12}{2025/01/17}{Bug fixes; adding commands to access items in arrays.}
 \changes{v1.0.0}{2025/01/20}{Streamlining of code, unification of command structure.}
 \changes{v1.0.1}{2025/01/21}{Fixes in documentation. Added user command for filtering.}
@@ -621,12 +622,12 @@ The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given
 \begin{macrodef}
 |\jsonparse_parse_keys:NN| <token variable> <string variable>
 \end{macrodef}
-The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
+The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{child sep}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
   
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}
 \end{macrodef}
-The command \macro{\jsonparse_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list.
+The command \macro{\jsonparse_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. If the second argument matches the pseudo key \macro{.} (or the string defined using the key \macro{child sep}) excactly, the complete property list except for this key is returned.
 
 \begin{macrodef}
 |\jsonparse_array_count:NN| <token variable> <integer variable>

@@ -880,7 +880,12 @@
 \cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
   \prop_clear:N \l__jsonparse_temp_prop
   \str_set:Nn \l__jsonparse_filter_key_str {#2}
-  \prop_map_function:NN #1 \__jsonparse_filter:nn
+  \str_if_eq:NNTF \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str {
+    \prop_set_eq:NN \l__jsonparse_temp_prop #1
+    \prop_remove:Ne \l__jsonparse_temp_prop { \l__jsonparse_child_sep_str }
+  } {
+    \prop_map_function:NN #1 \__jsonparse_filter:nn
+  }
   \prop_set_eq:NN #1 \l__jsonparse_temp_prop
 }
 

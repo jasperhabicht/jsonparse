@@ -1035,8 +1035,58 @@
 \cs_new_eq:NN \__jsonparse_tex_quote: \"
 \cs_new_eq:NN \__jsonparse_tex_backslash: \\
 
-\cs_new_protected:Npn \__jsonparse_unicode_char:NNNN #1#2#3#4 {
-  \exp_last_unbraced:Ne \tex_char:D { " \str_uppercase:n { #1 #2 #3 #4 } } \scan_stop:
+\cs_new:Npn \jsonparse_unicode_combine_surrogates:nn #1#2 {
+  \int_eval:n { ( #1 - "D800 ) * "0400 + ( #2 - "DC00 ) + "10000 }
+}
+
+\prg_new_conditional:Npnn \jsonparse_unicode_if_low_surrogate:n #1 { p , T , F , TF } {
+  \int_compare:nNnTF {#1} > { "D7FF } {
+    \int_compare:nNnTF {#1} < { "DC00 } {
+      \prg_return_true:
+    } {
+      \prg_return_false:
+    }
+  } {
+    \prg_return_false:
+  }
+}
+
+\prg_new_conditional:Npnn \jsonparse_unicode_if_high_surrogate:n #1 { p , T , F , TF } {
+  \int_compare:nNnTF {#1} > { "DBFF } {
+    \int_compare:nNnTF {#1} < { "E000 } {
+      \prg_return_true:
+    } {
+      \prg_return_false:
+    }
+  } {
+    \prg_return_false:
+  }
+}
+
+\cs_set:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
+  \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
+  \cs_if_eq:NNTF #5 \u {
+    \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 } 
+  } {
+    #5
+  }
+}
+
+\cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
+  \tl_if_empty:nTF {#1} {
+    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
+    } {
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2#3#4#5 } } { 10 }
+    }
+  } {
+    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
+      \codepoint_generate:nn {
+        \exp_args:Nne \jsonparse_unicode_combine_surrogates:nn {#1} { " \str_uppercase:n { #2#3#4#5 } }
+      } { 10 }
+    } {
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2 #3 #4 #5 } } { 10 }
+    }
+  }
 }
 
 \cs_new_protected:Npn \__jsonparse_rescan_setup:Nn #1#2 {
@@ -1048,7 +1098,7 @@
   \cs_set:Npn \n { \l__jsonparse_linefeed_str }
   \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
   \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
-  \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNN
+  \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNNN
   \tl_set:Ne #1 {#2}
   \cs_set_eq:NN \" \__jsonparse_tex_quote:
   \cs_set_eq:NN \\ \__jsonparse_tex_backslash:

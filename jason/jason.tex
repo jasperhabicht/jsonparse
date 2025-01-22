@@ -27,7 +27,7 @@
 \draw_begin:
 
 % sky
-\cs_new:Npn \__jsonparse_jason_path_i: {
+\cs_new_protected:Npn \__jsonparse_jason_path_i: {
   \draw_path_moveto:n { 433.418 , 221.836 }
   \draw_path_curveto:nnn { 433.418 , 335.695 } { 341.117 , 428 } { 227.254 , 428 }
   \draw_path_curveto:nnn { 113.391 , 428 } { 21.086 , 335.695 } { 21.086 , 221.836 }
@@ -37,7 +37,7 @@
 }
 
 % head
-\cs_new:Npn \__jsonparse_jason_path_ii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_ii: {
   \draw_path_moveto:n { 406.586 , 385.5 }
   \draw_path_curveto:nnn { 406.586 , 385.5 } { 396.254 , 373.168 } { 370.586 , 298.836 }
   \draw_path_curveto:nnn { 344.922 , 224.5 } { 332.254 , 185.168 } { 321.918 , 158.836 }
@@ -61,7 +61,7 @@
 }
 
 % mane
-\cs_new:Npn \__jsonparse_jason_path_iii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_iii: {
   \draw_path_moveto:n { 453.754 , 303.168 }
   \draw_path_curveto:nnn { 453.754 , 303.168 } { 444.086 , 288.336 } { 432.086 , 282.168 }
   \draw_path_curveto:nnn { 420.676 , 276.305 } { 407.586 , 275 } { 407.586 , 275 }
@@ -85,7 +85,7 @@
 }
 
 % bangs
-\cs_new:Npn \__jsonparse_jason_path_iv: {
+\cs_new_protected:Npn \__jsonparse_jason_path_iv: {
   \draw_path_moveto:n { 255.586 , 71 }
   \draw_path_curveto:nnn { 244.922 , 61.336 } { 233.754 , 60.168 } { 224.918 , 59.836 }
   \draw_path_curveto:nnn { 209.812 , 59.266 } { 199.918 , 33.168 } { 199.918 , 33.168 }
@@ -110,7 +110,7 @@
 }
 
 % muzzle
-\cs_new:Npn \__jsonparse_jason_path_v: {
+\cs_new_protected:Npn \__jsonparse_jason_path_v: {
   \draw_path_moveto:n { 108.738 , 351.707 }
   \draw_path_curveto:nnn { 117.086 , 341.312 } { 128.648 , 326.078 } { 131.504 , 318.086 }
   \draw_path_curveto:nnn { 139.004 , 297.086 } { 130.254 , 287.336 } { 125.504 , 280.086 }
@@ -128,7 +128,7 @@
 }
 
 % head outline
-\cs_new:Npn \__jsonparse_jason_path_vi: {
+\cs_new_protected:Npn \__jsonparse_jason_path_vi: {
   \draw_path_moveto:n { 108.738 , 351.707 }
   \draw_path_curveto:nnn { 122.176 , 342.695 } { 136.945 , 331.641 } { 155.254 , 324.586 }
   \draw_path_curveto:nnn { 179.297 , 315.316 } { 219.527 , 312.707 } { 241.223 , 302.762 }
@@ -153,7 +153,7 @@
 }
 
 % ear
-\cs_new:Npn \__jsonparse_jason_path_vii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_vii: {
   \draw_path_moveto:n { 177.586 , 74.5 }
   \draw_path_curveto:nnn { 177.586 , 74.5 } { 177.086 , 69.336 } { 167.418 , 59.336 }
   \draw_path_curveto:nnn { 165.707 , 57.562 } { 163.84 , 56.199 } { 161.93 , 55.145 }
@@ -174,7 +174,7 @@
 }
 
 % eye
-\cs_new:Npn \__jsonparse_jason_path_viii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_viii: {
   \draw_path_moveto:n { 230.922 , 186.793 }
   \draw_path_curveto:nnn { 230.922 , 196.391 } { 222.188 , 204.168 } { 211.422 , 204.168 }
   \draw_path_curveto:nnn { 200.648 , 204.168 } { 191.922 , 196.391 } { 191.922 , 186.793 }
@@ -184,7 +184,7 @@
 }
 
 % pupil
-\cs_new:Npn \__jsonparse_jason_path_ix: {
+\cs_new_protected:Npn \__jsonparse_jason_path_ix: {
   \draw_path_moveto:n { 217.922 , 188.836 }
   \draw_path_curveto:nnn { 217.922 , 192.699 } { 214.375 , 195.836 } { 210.004 , 195.836 }
   \draw_path_curveto:nnn { 205.633 , 195.836 } { 202.086 , 192.699 } { 202.086 , 188.836 }
@@ -194,7 +194,7 @@
 }
 
 % nostril
-\cs_new:Npn \__jsonparse_jason_path_x: {
+\cs_new_protected:Npn \__jsonparse_jason_path_x: {
   \draw_path_moveto:n { 68.77 , 289.297 }
   \draw_path_curveto:nnn { 68.77 , 289.297 } { 71.215 , 285.078 } { 74.879 , 280.211 }
   \draw_path_curveto:nnn { 79.305 , 274.324 } { 87.262 , 269.184 } { 91.254 , 268.836 }
@@ -205,7 +205,7 @@
 }
 
 % mouth
-\cs_new:Npn \__jsonparse_jason_path_xi: {
+\cs_new_protected:Npn \__jsonparse_jason_path_xi: {
   \draw_path_moveto:n { 27.488 , 319.328 }
   \draw_path_curveto:nnn { 26.766 , 323.887 } { 26.395 , 330.605 } { 29.504 , 334.336 }
   \draw_path_curveto:nnn { 34.504 , 340.336 } { 44.004 , 349.336 } { 65.504 , 336.336 }
@@ -216,14 +216,14 @@
 }
 
 % mouth outline
-\cs_new:Npn \__jsonparse_jason_path_xii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_xii: {
   \draw_path_moveto:n { 17.652 , 318.48 }
   \draw_path_curveto:nnn { 19.613 , 318.891 } { 21.801 , 319.188 } { 24.254 , 319.336 }
   \draw_path_curveto:nnn { 25.383 , 319.402 } { 26.453 , 319.395 } { 27.488 , 319.328 }
 }
 
 % teeth
-\cs_new:Npn \__jsonparse_jason_path_xiii: {
+\cs_new_protected:Npn \__jsonparse_jason_path_xiii: {
   \draw_path_moveto:n { 96.598 , 304.234 }
   \draw_path_curveto:nnn { 80.379 , 312.863 } { 52.5 , 327.137 } { 44.855 , 327.496 }
   \draw_path_curveto:nnn { 37.57 , 327.84 } { 31.289 , 322.75 } { 27.891 , 319.293 }

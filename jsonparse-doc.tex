@@ -216,6 +216,7 @@
 \changes{v0.9.12}{2025/01/17}{Bug fixes; adding commands to access items in arrays.}
 \changes{v1.0.0}{2025/01/20}{Streamlining of code, unification of command structure.}
 \changes{v1.0.1}{2025/01/21}{Fixes in documentation. Added user command for filtering.}
+\changes{v1.0.2}{2025/01/22}{Support for Unicode surrogate pairs.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -254,7 +255,11 @@ In general, the package will read and store the JSON source and data as string, 
 
 JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}).  This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.
 
-Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12). The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\char"} followed by the relevant four hex digits. The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting options below in section \ref{sec:options}.
+Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12).
+
+The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\codepoint_generate:nn} that creates the character represented by the relevant four hex digits with category code 12 (``other''). If two escape sequences \macro{\u} wit four hex digits each follow each other and the together represent a Unicode surrogate pair, this surrogate pair is converted into the relevant Unicode codepoint.
+
+The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting options below in section \ref{sec:options}.
 
 It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source so that they become \macro{\\\"} and \macro{\\\\} respectively.
 

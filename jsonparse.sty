@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-01-21} {1.0.1}
+\ProvidesExplPackage {jsonparse} {2025-01-22} {1.0.2}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -879,7 +879,7 @@
 
 \cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
   \prop_clear:N \l__jsonparse_temp_prop
-  \str_set:Nn \l__jsonparse_filter_key_str {#2}
+  \str_set:Ne \l__jsonparse_filter_key_str {#2}
   \str_if_eq:NNTF \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str {
     \prop_set_eq:NN \l__jsonparse_temp_prop #1
     \prop_remove:Ne \l__jsonparse_temp_prop { \l__jsonparse_child_sep_str }
@@ -1263,7 +1263,7 @@
     \tl_set_eq:NN \l__jsonparse_temp_tl #2
     \jsonparse_filter:Nn \l__jsonparse_temp_tl {#3}
     \jsonparse_array_count:NN \l__jsonparse_temp_tl \l__jsonparse_array_count_int
-    \str_set:Nn \l__jsonparse_array_values_key_str {#4}
+    \str_set:Ne \l__jsonparse_array_values_key_str {#4}
     \tl_set:Nn \l__jsonparse_array_values_insert_tl {#5}
     \bool_set_true:N \l__jsonparse_prop_map_first_bool
     \int_step_function:nN { \l__jsonparse_array_count_int }

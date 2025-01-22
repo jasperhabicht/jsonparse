@@ -1035,10 +1035,8 @@
 \cs_new_eq:NN \__jsonparse_tex_quote: \"
 \cs_new_eq:NN \__jsonparse_tex_backslash: \\
 
-\cs_new_eq:NN \__jsonparse_tex_symbol:w \symbol
-
-\cs_new:Npn \__jsonparse_unicode_char:NNNN #1#2#3#4 {
-  \__jsonparse_tex_symbol:w { " \str_uppercase:n { #1 #2 #3 #4 } } { }
+\cs_new_protected:Npn \__jsonparse_unicode_char:NNNN #1#2#3#4 {
+  \exp_last_unbraced:Ne \tex_char:D { " \str_uppercase:n { #1 #2 #3 #4 } } \scan_stop:
 }
 
 \cs_new_protected:Npn \__jsonparse_rescan_setup:Nn #1#2 {

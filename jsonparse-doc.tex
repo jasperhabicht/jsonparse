@@ -409,7 +409,7 @@ The first optional argument can be used to pass options to the command, such as 
 
 \begin{macrodef}
 |\JSONParseArrayValuesMap|[<options>]{<token variable>}{<key>}[<subkey>]
-    {<command name>}[<before code>][<after code>]
+  {<command name>}[<before code>][<after code>]
 \end{macrodef}
 The command \macro{\JSONParseArrayValuesMap} takes the same first three arguments as the command \macro{\JSONParseArrayValues} and works in a similar way. However, instead of a string that is added between the array items, it takes a command name as fourth argument. This command can be defined beforehand and will be called for every array item. Inside its definition, the commands \macro{\JSONParseArrayIndex}, \macro{\JSONParseArrayKey} and \macro{\JSONParseArrayValue} can be used which are updated for each item and output the index, the key and the value of the current item respectively. Note that these commands are defined globally to make accessing them as easy as possible.
 
@@ -539,7 +539,7 @@ The key \macro{externalize file name} sets the schema for the file name. The def
 
 \begin{codeexample}
 \l_jsonparse_externalize_prefix_str \c_sys_jobname_str
-    \c_underscore_str \l_jsonparse_current_prop_str
+  \c_underscore_str \l_jsonparse_current_prop_str
 \end{codeexample}
 
 The token variable \macro{\l_jsonparse_externalize_prefix_str} contains the prefix that is set using the key \macro{externalize prefix}. \macro{\c_sys_jobname_str} holds the name of the current file (the current job name), \macro{\c_underscore_str} is an underscore and the token variable \macro{\l_jsonparse_current_prop_str} contains the name of the property list where the relevant JSON data is stored into.
@@ -641,6 +641,29 @@ The command \macro{\jsonparse_array_count:NN} processes the token variable given
 |\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}
 The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
+
+\begin{macrodef}
+|\jsonparse_unicode_if_high_surrogate:nTF| {<codepoint>}
+  {<true code>} {<false code>}
+|\jsonparse_unicode_if_high_surrogate:nT| {<codepoint>} {<true code>}
+|\jsonparse_unicode_if_high_surrogate:nF| {<codepoint>} {<false code>}
+|\jsonparse_unicode_if_high_surrogate_p:n| {<codepoint>}
+\end{macrodef}
+The command \macro{\jsonparse_unicode_if_high_surrogate:nTF} can be used to check whether a codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"D800} and \macro{"DBFF} which means that it is the first part of a surrogate pair (a high surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_high_surrogate_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
+  
+\begin{macrodef}
+|\jsonparse_unicode_if_low_surrogate:nTF| {<codepoint>}
+  {<true code>} {<false code>}
+|\jsonparse_unicode_if_low_surrogate:nT| {<codepoint>} {<true code>}
+|\jsonparse_unicode_if_low_surrogate:nF| {<codepoint>} {<false code>}
+|\jsonparse_unicode_if_low_surrogate_p:n| {<codepoint>}
+\end{macrodef}
+The command \macro{\jsonparse_unicode_if_low_surrogate:nTF} can be used to check whether a codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"DC00} and \macro{"DFFF} which means that it is the last part of a surrogate pair (a low surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_low_surrogate_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
+
+\begin{macrodef}
+|\jsonparse_unicode_combine_surrogates:nn| {<codepoint>} {<codepoint>}
+\end{macrodef}
+The command \macro{\jsonparse_unicode_combine_surrogates:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
 
 % =====
 

@@ -1035,11 +1035,7 @@
 \cs_new_eq:NN \__jsonparse_tex_quote: \"
 \cs_new_eq:NN \__jsonparse_tex_backslash: \\
 
-\cs_new:Npn \jsonparse_unicode_combine_surrogates:nn #1#2 {
-  \int_eval:n { ( #1 - "D800 ) * "0400 + ( #2 - "DC00 ) + "10000 }
-}
-
-\prg_new_conditional:Npnn \jsonparse_unicode_if_low_surrogate:n #1 { p , T , F , TF } {
+\prg_new_conditional:Npnn \jsonparse_unicode_if_high_surrogate:n #1 { p , T , F , TF } {
   \int_compare:nNnTF {#1} > { "D7FF } {
     \int_compare:nNnTF {#1} < { "DC00 } {
       \prg_return_true:
@@ -1051,7 +1047,7 @@
   }
 }
 
-\prg_new_conditional:Npnn \jsonparse_unicode_if_high_surrogate:n #1 { p , T , F , TF } {
+\prg_new_conditional:Npnn \jsonparse_unicode_if_low_surrogate:n #1 { p , T , F , TF } {
   \int_compare:nNnTF {#1} > { "DBFF } {
     \int_compare:nNnTF {#1} < { "E000 } {
       \prg_return_true:
@@ -1063,7 +1059,11 @@
   }
 }
 
-\cs_set:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
+\cs_new:Npn \jsonparse_unicode_combine_surrogates:nn #1#2 {
+  \int_eval:n { ( #1 - "D800 ) * "0400 + ( #2 - "DC00 ) + "10000 }
+}
+
+\cs_new:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
   \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
   \cs_if_eq:NNTF #5 \u {
     \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 } 
@@ -1074,17 +1074,17 @@
 
 \cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {
-    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
+    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
     } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2#3#4#5 } } { 10 }
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2#3#4#5 } } { 12 }
     }
   } {
-    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
+    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
       \codepoint_generate:nn {
         \exp_args:Nne \jsonparse_unicode_combine_surrogates:nn {#1} { " \str_uppercase:n { #2#3#4#5 } }
-      } { 10 }
+      } { 12 }
     } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2 #3 #4 #5 } } { 10 }
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2 #3 #4 #5 } } { 12 }
     }
   }
 }

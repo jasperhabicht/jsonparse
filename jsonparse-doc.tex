@@ -257,7 +257,7 @@ JSON strings cannot contain the two characters \macro{"} and \macro{\}. These tw
 
 Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e. a backslash with category code 12).
 
-The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\codepoint_generate:nn} that creates the character represented by the relevant four hex digits with category code 12 (``other''). If two escape sequences \macro{\u} wit four hex digits each follow each other and the together represent a Unicode surrogate pair, this surrogate pair is converted into the relevant Unicode codepoint.
+The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\codepoint_generate:nn} that creates the character represented by the relevant four hex digits with category code 12 (``other''). If two escape sequences \macro{\u} wit four hex digits each follow each other and together represent a Unicode surrogate pair, this surrogate pair is converted into the relevant Unicode codepoint.
 
 The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting options below in section \ref{sec:options}.
 
@@ -280,7 +280,7 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
     \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
-Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command. 
+Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
 
 \begin{macrodef}
 |escape|={all}
@@ -352,7 +352,7 @@ The command \macro{\JSONParseSetValue} can be used to a select a value from the 
 
 The first argument denotes the token variable where the value should be stored into. If this token variable has not yet been defined, it will be created by this command. The second argument represents the token variable (property list) that has been created using the commands \macro{\JSONParse} or \macro{\JSONParseFromFile} and that stores the parsed JSON data. The third argument takes the key to select the relevant value.
 
-The token list returned by this command is a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). 
+The token list returned by this command is a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space'').
 
 \begin{macrodef}
 |\JSONParseSetRescanValue|{<token variable>}{<token variable>}{<key>}
@@ -371,9 +371,7 @@ This can, for example, be necessary when numbers stored in the JSON data in scie
 \begin{macrodef}
 |\JSONParseKeys|{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSON object as JSON array and return this array as string where all characters (except for spaces and tabs) have category code 12 (``other''). The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
-
-\textbf{Caution!} This command has been redefined in version 0.9.12 which affects the accepted arguments and return value.
+The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSON object as JSON array and return this array as string where all characters (except for spaces and tabs) have category code 12 (``other''). The first argument of the command takes the token variable that holds the parsed JSON data. The second argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
 
 \begin{macrodef}
 |\JSONParseSetKeys|{<token variable>}{<token variable>}{<key>}
@@ -383,7 +381,7 @@ The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSO
 \begin{macrodef}
 |\JSONParseFilter|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
-The command \macro{\JSONParseFilter} is used to select a part (such as an object or an array) of a JSON object or JSON array and parse this into a token variable (a property list). The first argument denotes the token variable where the value should be stored into. The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. 
+The command \macro{\JSONParseFilter} is used to select a part (such as an object or an array) of a JSON object or JSON array and parse this into a token variable (a property list). The first argument denotes the token variable where the value should be stored into. The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
 
 \begin{macrodef}
 |\JSONParseArrayValues|[<options>]{<token variable>}{<key>}[<subkey>]{<string>}
@@ -628,7 +626,7 @@ The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given
 |\jsonparse_parse_keys:NN| <token variable> <string variable>
 \end{macrodef}
 The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{child sep}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
-  
+
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}
 \end{macrodef}
@@ -643,9 +641,8 @@ The command \macro{\jsonparse_array_count:NN} processes the token variable given
 |\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num:nT| {<string>} {<true code>}
 |\jsonparse_if_num:nF| {<string>} {<false code>}
-|\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}
-The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
+The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly.
 
 \begin{macrodef}
 |\jsonparse_unicode_if_high_surrogate:nTF| {<codepoint>}
@@ -655,7 +652,9 @@ The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSO
 |\jsonparse_unicode_if_high_surrogate_p:n| {<codepoint>}
 \end{macrodef}
 The command \macro{\jsonparse_unicode_if_high_surrogate:nTF} can be used to check whether a codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"D800} and \macro{"DBFF} which means that it is the first part of a surrogate pair (a high surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_high_surrogate_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
-  
+
+This conditional function is fully expandable.
+
 \begin{macrodef}
 |\jsonparse_unicode_if_low_surrogate:nTF| {<codepoint>}
   {<true code>} {<false code>}
@@ -665,10 +664,14 @@ The command \macro{\jsonparse_unicode_if_high_surrogate:nTF} can be used to chec
 \end{macrodef}
 The command \macro{\jsonparse_unicode_if_low_surrogate:nTF} can be used to check whether a codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"DC00} and \macro{"DFFF} which means that it is the last part of a surrogate pair (a low surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_low_surrogate_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
 
+This conditional function is fully expandable.
+
 \begin{macrodef}
-|\jsonparse_unicode_combine_surrogates:nn| {<codepoint>} {<codepoint>}
+|\jsonparse_unicode_join_surrogate_pair:nn| {<codepoint>} {<codepoint>}
 \end{macrodef}
-The command \macro{\jsonparse_unicode_combine_surrogates:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
+The command \macro{\jsonparse_unicode_join_surrogate_pair:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
+
+This conditional function is fully expandable.
 
 % =====
 

@@ -392,7 +392,7 @@
   \c__jsonparse_num_plus_minus_fraction_clist
   \c__jsonparse_num_exponent_clist
 
-\prg_new_conditional:Npnn \jsonparse_if_num:n #1 { p , T , F , TF } {
+\prg_new_protected_conditional:Npnn \jsonparse_if_num:n #1 { T , F , TF } {
   \bool_set_true:N \l__jsonparse_num_bool
   \bool_set_false:N \l__jsonparse_num_zero_seen_bool
   \bool_set_false:N \l__jsonparse_num_plus_minus_seen_bool
@@ -773,7 +773,7 @@
           }
         }
       } {
-        % not a valid JSON fp
+        % not a valid JSON number
         \msg_error:nnoo { jsonparse } { parsing-error }
           { \l__jsonparse_key_tl } {#1}
       }
@@ -1059,14 +1059,14 @@
   }
 }
 
-\cs_new:Npn \jsonparse_unicode_combine_surrogates:nn #1#2 {
+\cs_new:Npn \jsonparse_unicode_convert_surrogate_pair:nn #1#2 {
   \int_eval:n { ( #1 - "D800 ) * "0400 + ( #2 - "DC00 ) + "10000 }
 }
 
 \cs_new:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
   \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
   \cs_if_eq:NNTF #5 \u {
-    \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 } 
+    \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 }
   } {
     #5
   }
@@ -1074,17 +1074,16 @@
 
 \cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {
-    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
-    } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2#3#4#5 } } { 12 }
+    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nF { " \str_uppercase:n {#2#3#4#5} } {
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }
     }
   } {
-    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n { #2#3#4#5 } } {
+    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n {#2#3#4#5} } {
       \codepoint_generate:nn {
-        \exp_args:Nne \jsonparse_unicode_combine_surrogates:nn {#1} { " \str_uppercase:n { #2#3#4#5 } }
+        \exp_args:Nne \jsonparse_unicode_convert_surrogate_pair:nn {#1} { " \str_uppercase:n {#2#3#4#5} }
       } { 12 }
     } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n { #2 #3 #4 #5 } } { 12 }
+      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }
     }
   }
 }
@@ -1115,13 +1114,13 @@
     \tl_replace_all:Noe #1 { \c_ampersand_str } { \c_backslash_str \c_ampersand_str }
   }
   \bool_if:NT \l__jsonparse_escape_circumflex_accent_bool {
-    \tl_replace_all:Non #1 { \c_circumflex_str } { \textasciicircum }
+    \tl_replace_all:Non #1 { \c_circumflex_str } { \codepoint_generate:nn { "5E } { 12 } }
   }
   \bool_if:NT \l__jsonparse_escape_low_line_bool {
     \tl_replace_all:Noe #1 { \c_underscore_str } { \c_backslash_str \c_underscore_str }
   }
   \bool_if:NT \l__jsonparse_escape_tilde_bool {
-    \tl_replace_all:Non #1 { \c_tilde_str } { \textasciitilde }
+    \tl_replace_all:Non #1 { \c_tilde_str } { \codepoint_generate:nn { "7E } { 12 } }
   }
 }
 

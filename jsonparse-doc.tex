@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.0.2}
-\def\jsonparsefiledate{23 January 2025}
+\def\jsonparsefileversion{1.0.3}
+\def\jsonparsefiledate{26 January 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -217,6 +217,7 @@
 \changes{v1.0.0}{2025/01/20}{Streamlining of code, unification of command structure.}
 \changes{v1.0.1}{2025/01/21}{Fixes in documentation. Added user command for filtering.}
 \changes{v1.0.2}{2025/01/23}{Support for Unicode surrogate pairs.}
+\changes{v1.0.3}{2025/01/26}{Test for valid JSON numbers expandable.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -641,8 +642,11 @@ The command \macro{\jsonparse_array_count:NN} processes the token variable given
 |\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num:nT| {<string>} {<true code>}
 |\jsonparse_if_num:nF| {<string>} {<false code>}
+|\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}
-The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly.
+The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants \macro{\jsonparse_if_num:nT} and \macro{\jsonparse_if_num:nF} work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e. \macro{\c_true_bool} or \macro{\c_false_bool}).
+
+This conditional function is fully expandable.
 
 \begin{macrodef}
 |\jsonparse_unicode_if_high_surrogate:nTF| {<codepoint>}

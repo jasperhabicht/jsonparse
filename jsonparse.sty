@@ -387,7 +387,7 @@
     \__jsonparse_parse_num:w { \tl_to_str:e { \tl_trim_spaces:n {#1} } } \q_stop
 }
 
-\cs_new:cpn { __jsonparse_parse_num:w } #1#2 \q_stop {
+\cs_new:Npn \__jsonparse_parse_num:w #1#2 \q_stop {
   \cs_if_exist_use:cTF { __jsonparse_parse_num_first_ #1 :w } {
     #2 \q_stop
   } {

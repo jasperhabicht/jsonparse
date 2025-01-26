@@ -368,8 +368,8 @@
   1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9
 }
 
-\clist_const:Nn \c__jsonparse_num_digits_clist {
-  0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9
+\clist_const:Ne \c__jsonparse_num_digits_clist {
+  0 , \c__jsonparse_num_nonzero_digits_clist
 }
 
 \clist_const:Ne \c__jsonparse_num_exponent_clist {

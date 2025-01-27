@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-01-26} {1.0.3}
+\ProvidesExplPackage {jsonparse} {2025-01-29} {1.1.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1313,7 +1313,7 @@
   }
 }
 
-\NewDocumentCommand { \JSONParseArrayValues } { O{} m m O{} m } {
+\NewDocumentCommand { \JSONParseArrayUse } { O{} m m O{} m } {
   \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
     \keys_set_known:nn { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
@@ -1328,6 +1328,7 @@
       \__jsonparse_array_values:n
   \group_end:
 }
+\cs_set_eq:NN \JSONParseArrayValues \JSONParseArrayUse
 
 \tl_new:N \JSONParseArrayIndex
 \tl_new:N \JSONParseArrayKey
@@ -1424,7 +1425,7 @@
   }
 }
 
-\NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m O{} O{} } {
+\NewDocumentCommand { \JSONParseArrayMap } { O{} m m O{} m O{} O{} } {
   \__jsonparse_warning_undefined_prop:N #2
   \cs_if_exist:cF {#5} {
     \msg_error:nne { jsonparse } { cs-undefined }
@@ -1449,6 +1450,7 @@
     #7
   \group_end:
 }
+\cs_set_eq:NN \JSONParseArrayValuesMap \JSONParseArrayMap
 
 \cs_new:Npn \__jsonparse_array_map_inline:n #1 { }
 

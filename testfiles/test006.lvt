@@ -4,11 +4,21 @@
 
 \begin{document}
 
+\JSONParseSet{
+  replace={
+    backspace={<<DL>>},
+    formfeed={<<FF>>},
+    linefeed={<<LF>>},
+    carriage return={<<CR>>},
+    horizontal tab={<<HT>>}
+  }
+}
+
 \JSONParse{\myJSONdataX}{ { "a" : "ab\bcd\fef" , "b" : "ab\ncd\ref" , "c" : "ab\tcd" } }
 
-\JSONParseSetValue[replace={backspace={<<DL>>}, formfeed={<<FF>>}}]{\myJSONvalueA}{\myJSONdataX}{a}
-\JSONParseSetValue[replace={linefeed={<<LF>>}, carriage return={<<CR>>}}]{\myJSONvalueB}{\myJSONdataX}{b}
-\JSONParseSetValue[replace={horizontal tab={<<HT>>}}]{\myJSONvalueC}{\myJSONdataX}{c}
+\JSONParseSetRescanValue{\myJSONvalueA}{\myJSONdataX}{a}
+\JSONParseSetRescanValue{\myJSONvalueB}{\myJSONdataX}{b}
+\JSONParseSetRescanValue{\myJSONvalueC}{\myJSONdataX}{c}
 
 \ExplSyntaxOn
 

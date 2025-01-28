@@ -168,13 +168,13 @@
   check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
   check ~ num                 .default:n  = { true } ,
   check ~ num                 .initial:n  = { true } ,
-  replace                     .code:n     = { \keys_set:nn { jsonparse / parse / replace } {#1} } ,
-  replace / true              .str_set:N  = \l__jsonparse_true_str ,
-  replace / true              .initial:n  = { true } ,
-  replace / false             .str_set:N  = \l__jsonparse_false_str ,
-  replace / false             .initial:n  = { false } ,
-  replace / null              .str_set:N  = \l__jsonparse_null_str ,
-  replace / null              .initial:n  = { null }
+  keyword                     .code:n     = { \keys_set:nn { jsonparse / parse / keyword } {#1} } ,
+  keyword / true              .str_set:N  = \l__jsonparse_true_str ,
+  keyword / true              .initial:n  = { true } ,
+  keyword / false             .str_set:N  = \l__jsonparse_false_str ,
+  keyword / false             .initial:n  = { false } ,
+  keyword / null              .str_set:N  = \l__jsonparse_null_str ,
+  keyword / null              .initial:n  = { null }
 }
 
 \keys_define:nn { jsonparse / typeset } {

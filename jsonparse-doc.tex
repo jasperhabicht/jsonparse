@@ -261,7 +261,7 @@ Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \ma
 
 The escape sequence \macro{\u} followed by a hex value consisting of four digits eventually expands to \macro{\codepoint_generate:nn} that creates the character represented by the relevant four hex digits with category code 12 (``other''). If two escape sequences \macro{\u} with four hex digits each follow each other and together represent a Unicode surrogate pair, this surrogate pair is converted into the relevant Unicode codepoint.
 
-The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replacement} key. See more on setting options below in section \ref{sec:options}.
+The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \macro{\t} eventually expand to token variables of which the contents can be set using the relevant \macro{replace} key. See more on setting options below in section \ref{sec:options}.
 
 It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source so that they become \macro{\\\"} and \macro{\\\\} respectively.
 
@@ -299,7 +299,7 @@ The key \macro{escape} can be used to convert characters that don't require esca
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 
 \begin{macrodef}
 |rescan|
@@ -307,7 +307,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \end{macrodef}
 The key \macro{rescan} can be used to activate and deactivate rescanning of the output. This key is active per default. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded before typesetting. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
 
-This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMap}.
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 
 \section{Main user commands}
 
@@ -599,11 +599,11 @@ If set (or explicitly set to \macro{true}), the key \macro{zero-based} sets the 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
-replace/|true|={<string>}
-replace/|false|={<string>}
-replace/|null|={<string>}
+keyword/|true|={<string>}
+keyword/|false|={<string>}
+keyword/|null|={<string>}
 \end{macrodef}
-With the keys \macro{replace/true}, \macro{replace/false} and \macro{replace/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement. These replacements take place already during parsing.
+With the keys \macro{keyword/true}, \macro{keyword/false} and \macro{keyword/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement. These replacements take place already during parsing.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
@@ -616,7 +616,7 @@ replace/|horizontal tab|={<string>}
 \end{macrodef}
 These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space. Only strings can be used as replacement. These replacements take place only during typesetting.
 
-These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMap}.
+These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 
 \begin{macrodef}
 |check num|

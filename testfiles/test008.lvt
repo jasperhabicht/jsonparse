@@ -40,7 +40,7 @@
 
 \ExplSyntaxOff
 
-\JSONParseSet{replace={true={YES}, false={NO}, null={ZERO}}}
+\JSONParseSet{keyword={true={YES}, false={NO}, null={ZERO}}}
 
 \JSONParse{\myJSONdataX}{ { "a" : true , "b" : false , "c" : null } }
 

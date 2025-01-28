@@ -1,0 +1,27 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\JSONParse[externalize]{\myJSONdataE}{
+  { "a" : 1 }
+}
+
+\START
+
+\ExplSyntaxOn
+
+\TEST { externalize } {
+  \file_if_exist:nTF { test009_myJSONdataE.jsonparse } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\ExplSyntaxOff
+
+\END
+
+\end{document}

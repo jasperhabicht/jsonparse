@@ -1,0 +1,41 @@
+\ttfamily
+\JSONParse{\myJSONdataX}{ 
+  { 
+    "b" : [ 1.2 , -2.6 , 0.8 ] , 
+    "a" : [ "foo\/ba\\emph{r\"b}az\\foo" , "f\\\"oo" , "bar\\\\baz" ]
+  }
+}
+% \JSONParseValue{\myJSONdataX}{a[0]}
+
+\textcolor{red}{+ foo\/ba\\emph\{r\"b\}az\\foo + f\\\"oo + bar\\\\baz +}
+
++ \JSONParseValue[rescan=false]{\myJSONdataX}{a[0]} + \JSONParseValue[rescan=false]{\myJSONdataX}{a[1]} + \JSONParseValue[rescan=false]{\myJSONdataX}{a[2]} +
+
+\bigskip
+
+\newcommand{\foo}{*foo}
+\textcolor{red}{foo/ba\emph{r"b}az\foo}
+\JSONParseValue{\myJSONdataX}{a[0]}
+
+\textcolor{red}{f\"oo}
+\JSONParseValue{\myJSONdataX}{a[1]}
+
+\textcolor{red}{bar\\baz}
+\JSONParseValue{\myJSONdataX}{a[2]}
+
+\bigskip
+
+\textcolor{red}{foo/ba\emph{r"b}az\foo, f\"oo, bar\\baz}
+\JSONParseArrayUse{\myJSONdataX}{a}{, }
+
+{\color{red}
+\begin{enumerate}
+\item 0: [0] -- foo/ba\emph{r"b}az\foo
+\item 1: [1] -- f\"oo
+\item 2: [2] -- bar\\baz
+\end{enumerate}
+}
+
+\begin{enumerate}
+  \JSONParseArrayMapFunction{\myJSONdataX}{a}{\useJSONvalue}
+\end{enumerate}

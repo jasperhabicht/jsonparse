@@ -7,8 +7,6 @@
 *.synctex.gz
 *.zip
 
-build.lua
-
 build/*
 jsonparse/*
-testfiles/*
+testfiles-custom/*

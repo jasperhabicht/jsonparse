@@ -1,0 +1,79 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+Parsing JSON ...
+(obj begin)
+(key) A:
+(tru) true
+(key) B:
+(fal) false
+(key) C:
+(nul) null
+(key) .:
+(obj) { "A" : true , "B" : false , "C" : null }
+(obj end)
+JSON parsing done.
+============================================================
+Parsing JSON ...
+(obj begin)
+(arr begin)
+(obj begin)
+(key) A[0].foo:
+(str) bar
+(key) A[0].a:
+(num) 1 
+(key) A[0]:
+(obj) { "foo" : "bar" , "a" : 1 }
+(obj end)
+(key) A[1]:
+(str) 1.23
+(key) A[2]:
+(nul) null
+(key) A:
+(arr) [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ]
+(arr end)
+(key) B:
+(str) baz
+(key) .:
+(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" }
+(obj end)
+JSON parsing done.
+============================================================
+TEST 1: parsing, from string
+============================================================
+TRUE
+TRUE
+TRUE
+============================================================
+(test-1.json)
+Parsing JSON ...
+(obj begin)
+(arr begin)
+(obj begin)
+(key) A[0].foo:
+(str) bar
+(key) A[0].a:
+(num) 1 
+(key) A[0]:
+(obj) { "foo" : "bar" , "a" : 1 }
+(obj end)
+(key) A[1]:
+(str) 1.23
+(key) A[2]:
+(nul) null
+(key) A:
+(arr) [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ]
+(arr end)
+(key) B:
+(str) baz
+(key) .:
+(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" }
+(obj end)
+JSON parsing done.
+============================================================
+TEST 2: parsing, from file
+============================================================
+TRUE
+TRUE
+TRUE
+============================================================

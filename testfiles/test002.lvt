@@ -1,0 +1,73 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\START
+
+\BEGINTEST{parsing Unicode: from string}
+
+\JSONParse{\myJSONdataA}{ { "A" : [ { "😀" : "😎" , "a" : "中" } , "🛹" , "🚗" ] , "B" : "日" } }
+
+\ExplSyntaxOn
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataA}{A[1].😀}
+  } { 
+      \codepoint_generate:nn { "1F60E } { 12 }
+  } { \TRUE } { \FALSE }
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataA}{A[2]}
+  } { 
+      \codepoint_generate:nn { "1F6F9 } { 12 }
+  } { \TRUE } { \FALSE }
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataA}{B}
+  } { 
+      \codepoint_generate:nn { "65E5 } { 12 }
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\BEGINTEST{parsing Unicode: from file}
+
+\OMIT
+\begin{filecontents}[noheader,force]{test-2.json}
+  { "A" : [ { "😀" : "😎" , "a" : "中"} , "🛹" , "🚗" ] , "B" : "日" }
+\end{filecontents}
+\TIMO
+
+\JSONParseFromFile{\myJSONdataB}{test-2.json}
+
+\ExplSyntaxOn
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataB}{A[1].😀}
+  } { 
+      \codepoint_generate:nn { "1F60E } { 12 }
+  } { \TRUE } { \FALSE }
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataB}{A[2]}
+  } { 
+      \codepoint_generate:nn { "1F6F9 } { 12 }
+  } { \TRUE } { \FALSE }
+
+  \str_if_eq:eeTF {
+      \JSONParseExpandableValue{\myJSONdataB}{B}
+  } { 
+      \codepoint_generate:nn { "65E5 } { 12 }
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\END
+
+\end{document}

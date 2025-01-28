@@ -1,0 +1,16 @@
+name: Test jsonparse using l3build
+
+on: [push, pull_request]
+
+jobs:
+  l3build-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prepare TeX Live
+      uses: teatimeguest/setup-texlive-action@v3
+      with:
+        update-all-packages: true
+    - name: Test jsonparse using l3build
+      run: |
+        l3build check --debug --halt-on-error --show-log-on-error

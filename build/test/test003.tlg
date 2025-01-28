@@ -1,0 +1,168 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: arrays: array count
+============================================================
+TRUE
+============================================================
+============================================================
+TEST 2: arrays: array use
+============================================================
+> \box...=
+\hbox(6.44444+1.94444)x38.3334
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 4
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 5
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 8
+! OK.
+<argument> \l_jsonparse_test_box 
+l. ...  \box_show:N \l_jsonparse_test_box
+> \box...=
+\hbox(6.94444+1.94444)x38.88895
+.\OT1/cmr/m/n/10 a
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 b
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 c
+.\OT1/cmr/m/n/10 ,
+.\glue 3.33333 plus 2.08331 minus 0.88889
+.\OT1/cmr/m/n/10 d
+! OK.
+<argument> \l_jsonparse_test_box 
+l. ...  \box_show:N \l_jsonparse_test_box
+============================================================
+============================================================
+TEST 3: arrays: array map function
+============================================================
+> \box...=
+\hbox(7.5+2.5)x185.55597
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 0
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 0
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 2
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 1
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 1
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 4
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 5
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 3
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 3
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 8
+! OK.
+<argument> \l_jsonparse_test_box 
+l. ...  \box_show:N \l_jsonparse_test_box
+> \box...=
+\hbox(7.5+2.5)x185.55597
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 0
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 0
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 2
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 1
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 1
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 4
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 5
+.\glue 3.33333 plus 1.66666 minus 1.11111
+.\OT1/cmr/m/n/10 3
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 [
+.\OT1/cmr/m/n/10 3
+.\OT1/cmr/m/n/10 ]
+.\OT1/cmr/m/n/10 .
+.\OT1/cmr/m/n/10 y
+.\OT1/cmr/m/n/10 :
+.\glue 4.44444 plus 3.33331 minus 0.55556
+.\OT1/cmr/m/n/10 8
+! OK.
+<argument> \l_jsonparse_test_box 
+l. ...  \box_show:N \l_jsonparse_test_box
+============================================================
+============================================================
+TEST 4: arrays: array map inline
+============================================================
+> \box...=
+\hbox(6.44444+0.0)x31.1112
+.\OT1/cmr/m/n/10 1
+.\OT1/cmr/m/n/10 :
+.\OT1/cmr/m/n/10 2
+.\OT1/cmr/m/n/10 :
+.\OT1/cmr/m/n/10 3
+.\OT1/cmr/m/n/10 :
+.\OT1/cmr/m/n/10 4
+.\OT1/cmr/m/n/10 :
+! OK.
+<argument> \l_jsonparse_test_box 
+l. ...  \box_show:N \l_jsonparse_test_box
+============================================================

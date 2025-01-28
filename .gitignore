@@ -9,5 +9,6 @@
 
 build.lua
 
+build/*
 jsonparse/*
 testfiles/*

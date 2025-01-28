@@ -11,7 +11,7 @@ jobs:
     - name: Install TeX Live
       uses: zauguin/install-texlive@v3
       with:
-        package_file: .github/tl_packages.txt
+        package_file: .github/tl-packages.txt
     - name: Run l3build
       run: |
         l3build check -q -H --show-log-on-error

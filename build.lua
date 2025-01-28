@@ -2,7 +2,7 @@ module       = "jsonparse"
 
 sourcefiles  = {"jsonparse.sty"}
 
--- checkconfigs = {"build", "build-unicode"}
+checkconfigs = {"build", "build-unicode"}
 
 checkengines = {"pdftex"}
 asciiengines = {}

@@ -4,34 +4,28 @@
 
 \begin{document}
 
-\JSONParseSet{
-  replace={
-    backspace={<<DL>>},
-    formfeed={<<FF>>},
-    linefeed={<<LF>>},
-    carriage return={<<CR>>},
-    horizontal tab={<<HT>>}
-  }
-}
-
 \JSONParse{\myJSONdataX}{ { "a" : "ab\bcd\fef" , "b" : "ab\ncd\ref" , "c" : "ab\tcd" } }
+
+\JSONParseSetValue[replace={backspace={<<DL>>}, formfeed={<<FF>>}}]{\myJSONvalueA}{\myJSONdataX}{a}
+\JSONParseSetValue[replace={linefeed={<<LF>>}, carriage return={<<CR>>}}]{\myJSONvalueB}{\myJSONdataX}{b}
+\JSONParseSetValue[replace={horizontal tab={<<HT>>}}]{\myJSONvalueC}{\myJSONdataX}{c}
 
 \ExplSyntaxOn
 
 \TEST { parsing , ~ custom ~ replacements } {
-  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{a} } { ab<<DL>>cd<<FF>>ef } {
+  \str_if_eq:enTF { \myJSONvalueA } { ab<<DL>>cd<<FF>>ef } {
     \TRUE
   } {
     \FALSE
   }
 
-  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{b} } { ab<<LF>>cd<<CR>>ef } {
+  \str_if_eq:enTF { \myJSONvalueB } { ab<<LF>>cd<<CR>>ef } {
     \TRUE
   } {
     \FALSE
   }
 
-  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{c} } { ab<<HT>>cd } {
+  \str_if_eq:enTF { \myJSONvalueC } { ab<<HT>>cd } {
     \TRUE
   } {
     \FALSE

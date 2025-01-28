@@ -1,0 +1,65 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\START
+
+\ExplSyntaxOn
+
+\JSONParseSet{separator={array left={<<}, array right={>>}}}
+
+\JSONParse{\myJSONdataV}{ { "a" : [ 1, 2, 3 ] } }
+\JSONParseSetValue{\myJSONvalueV}{\myJSONdataV}{a<<0>>}
+
+\TEST { parsing , ~ custom ~ array ~ separators } {
+  \str_if_eq:enTF { \myJSONvalueV } { 1 } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\JSONParseSet{separator={child={++}}}
+
+\JSONParse{\myJSONdataW}{ { "a" : { "b" : 1 } } }
+\JSONParseSetValue{\myJSONvalueW}{\myJSONdataW}{a++b}
+
+\TEST { parsing , ~ custom ~ child ~ separator } {
+  \str_if_eq:enTF { \myJSONvalueW } { 1 } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\JSONParseSet{replace={true={YES}, false={NO}, null={ZERO}}}
+
+\JSONParse{\myJSONdataX}{ { "a" : true , "b" : false , "c" : null } }
+
+\TEST { parsing , ~ custom ~ replacements } {
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{a} } { YES } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{b} } { NO } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{c} } { ZERO } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\ExplSyntaxOff
+
+\END
+
+\end{document}

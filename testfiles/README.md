@@ -9,6 +9,6 @@
 | `test005` | Parsing of nested JSON strings via `\x` |
 | `test006` | ~~Parsing of replacements for JSON escape sequences~~  |
 | `test007` | Parsing of JSON escape sequences for Unicode (`\u`) including conversion of surrogate pairs |
-| `test008` | ~~Parsing of custom selectors for arrays and children~~  |
+| `test008` | Parsing of custom separators for arrays and children; parsing of custom replacements for boolean and null values |
 | `test100` | Validation of JSON numbers |
 | `test200` | Checking for high and low surrogate |

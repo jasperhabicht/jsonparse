@@ -4,10 +4,6 @@
 
 \begin{document}
 
-\ExplSyntaxOn
-\box_new:N \l_jsonparse_test_box
-\ExplSyntaxOff
-
 \START
 
 \SEPARATOR

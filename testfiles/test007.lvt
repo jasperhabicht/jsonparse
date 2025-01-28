@@ -4,10 +4,6 @@
 
 \begin{document}
 
-\START
-
-\BEGINTEST{parsing Unicode: from JSON Unicode}
-
 \JSONParse{\myJSONdata}{ 
   { 
     "a" : "ab\u0063d" ,
@@ -15,6 +11,10 @@
     "c" : "ab\u65e5d" 
   } 
 }
+
+\START
+
+\BEGINTEST{parsing Unicode: from JSON Unicode}
 
 \ExplSyntaxOn
 

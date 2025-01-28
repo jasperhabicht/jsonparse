@@ -1059,6 +1059,7 @@
     \prg_return_false:
   }
 }
+\prg_generate_conditional_variant:Nnn \jsonparse_unicode_if_high_surrogate:n { e } { p , T , F , TF }
 
 \prg_new_conditional:Npnn \jsonparse_unicode_if_low_surrogate:n #1 { p , T , F , TF } {
   \int_compare:nNnTF {#1} > { "DBFF } {
@@ -1071,10 +1072,12 @@
     \prg_return_false:
   }
 }
+\prg_generate_conditional_variant:Nnn \jsonparse_unicode_if_low_surrogate:n { e } { p , T , F , TF }
 
 \cs_new:Npn \jsonparse_unicode_convert_surrogate_pair:nn #1#2 {
   \int_eval:n { ( #1 - "D800 ) * "0400 + ( #2 - "DC00 ) + "10000 }
 }
+\cs_generate_variant:Nn \jsonparse_unicode_convert_surrogate_pair:nn { ee }
 
 \cs_new:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
   \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
@@ -1087,13 +1090,14 @@
 
 \cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {
-    \exp_args:Ne \jsonparse_unicode_if_high_surrogate:nF { " \str_uppercase:n {#2#3#4#5} } {
+    \jsonparse_unicode_if_high_surrogate:eF { " \str_uppercase:n {#2#3#4#5} } {
       \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }
     }
   } {
-    \exp_args:Ne \jsonparse_unicode_if_low_surrogate:nTF { " \str_uppercase:n {#2#3#4#5} } {
+    \jsonparse_unicode_if_low_surrogate:eTF { " \str_uppercase:n {#2#3#4#5} } {
       \codepoint_generate:nn {
-        \exp_args:Nne \jsonparse_unicode_convert_surrogate_pair:nn {#1} { " \str_uppercase:n {#2#3#4#5} }
+        \jsonparse_unicode_convert_surrogate_pair:ee 
+          { \str_uppercase:n {#1} } { " \str_uppercase:n {#2#3#4#5} }
       } { 12 }
     } {
       \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }

@@ -1,0 +1,46 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+\ExplSyntaxOn
+
+\START
+
+\OMIT
+
+  \cs_new:Npn \jsonparse_check_if_high_surrogate:n #1 {
+    \jsonparse_unicode_if_high_surrogate:nTF { #1 } {
+        \TRUE 
+    } {
+        \FALSE
+    } 
+  }
+
+  \cs_new:Npn \jsonparse_check_if_low_surrogate:n #1 {
+    \jsonparse_unicode_if_low_surrogate:nTF { #1 } {
+        \TRUE 
+    } {
+        \FALSE
+    } 
+  }
+
+\TIMO
+
+\TEST { jsonparse_if_high_surrogate , ~ check ~ values } {
+  \clist_map_function:nN {
+    "0010 , "D7FF , "D800 , "DBFF , "DC00 , "DFFF , "E000 , "F000
+  } \jsonparse_check_if_high_surrogate:n
+}
+
+\TEST { jsonparse_if_low_surrogate , ~ check ~ values } {
+  \clist_map_function:nN {
+    "0010 , "D7FF , "D800 , "DBFF , "DC00 , "DFFF , "E000 , "F000
+  } \jsonparse_check_if_low_surrogate:n
+}
+
+\ExplSyntaxOff
+
+\END
+
+\end{document}

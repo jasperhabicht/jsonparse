@@ -10,7 +10,7 @@ jobs:
     - name: Prepare TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        packages: l3build
+        package_file: .github/tl_packages
         update-all-packages: true
     - name: Test jsonparse using l3build
       run: |

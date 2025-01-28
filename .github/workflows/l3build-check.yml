@@ -6,12 +6,12 @@ jobs:
   l3build-check:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Prepare TeX Live
-      uses: teatimeguest/setup-texlive-action@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install TeX Live
+      uses: zauguin/install-texlive@v3
       with:
-        package_file: .github/tl_packages
-        update-all-packages: true
-    - name: Test jsonparse using l3build
+        package_file: .github/tl_packages.txt
+    - name: Run l3build
       run: |
-        l3build check --debug --halt-on-error --show-log-on-error
+        l3build check -q -H --show-log-on-error

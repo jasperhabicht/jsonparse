@@ -1,1 +1,5 @@
 l3build
+latex-bin
+luatex
+pdftex
+xetex

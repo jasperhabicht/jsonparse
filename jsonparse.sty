@@ -238,7 +238,7 @@
   rescan                      .initial:n  = { true } ,
   rescan                      .groups:n   = { output } ,
   code ~ before               .tl_set:N   = \l__jsonparse_map_before_tl ,
-  code ~ after                .tl_set:N   = \l__jsonparse_map_after_tl 
+  code ~ after                .tl_set:N   = \l__jsonparse_map_after_tl
 }
 
 \cs_new_protected:Npn \__jsonparse_warning_unused_keys: {
@@ -1466,7 +1466,7 @@
 
 \NewDocumentCommand { \JSONParseArrayValuesMap } { O{} m m O{} m O{} O{} } {
   \cs_set_eq:Nc \__jsonparse_array_map_function_cs_compat: {#5}
-  \JSONParseArrayMapFunction [ #1 , code ~ before = {#6} , code ~ after = {#7} ] 
+  \JSONParseArrayMapFunction [ #1 , code ~ before = {#6} , code ~ after = {#7} ]
     {#2} {#3} [#4] { \__jsonparse_array_map_function_cs_compat: }
 }
 % ===

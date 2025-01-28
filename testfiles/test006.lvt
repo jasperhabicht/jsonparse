@@ -4,6 +4,8 @@
 
 \begin{document}
 
+\START
+
 \JSONParseSet{
   replace={
     backspace={<<DL>>},
@@ -22,7 +24,7 @@
 
 \ExplSyntaxOn
 
-\TEST { parsing , ~ custom ~ replacements } {
+\TEST { parsing , ~ custom ~ keyword ~ replacements } {
   \str_if_eq:enTF { \myJSONvalueA } { ab<<DL>>cd<<FF>>ef } {
     \TRUE
   } {

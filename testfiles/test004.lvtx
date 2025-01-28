@@ -39,3 +39,28 @@
 \begin{enumerate}
   \JSONParseArrayMapFunction{\myJSONdataX}{a}{\useJSONvalue}
 \end{enumerate}
+
+
+
+% escaping sequences in nested situation
+\JSONParse{\myJSONdataY}{ { "a" : "foo\\emph{bar}baz" , "b" : { "one" : "foo\\emph{bar}baz" , "two" : "f\\\"oo" , "three" : "f\\%oo"} } }
+
+\textcolor{red}{+ foo\\emph\{bar\}baz +}
++ \JSONParseValue[rescan=false]{\myJSONdataY}{a} +
+
+\textcolor{red}{foo\emph{bar}baz}
+\JSONParseValue{\myJSONdataY}{a}
+
+\JSONParse{\myJSONdataZ}{ \x{myJSONdataY}{b} }
+
+\textcolor{red}{+ foo\\emph\{bar\}baz + f\\\"oo +}
++ \JSONParseValue[rescan=false]{\myJSONdataZ}{one} + \JSONParseValue[rescan=false]{\myJSONdataZ}{two} +
+
+\textcolor{red}{foo\emph{bar}baz}
+\JSONParseValue{\myJSONdataZ}{one}
+
+\textcolor{red}{f\"oo}
+\JSONParseValue{\myJSONdataZ}{two}
+
+\textcolor{red}{f\%oo}
+\JSONParseValue{\myJSONdataZ}{three}

@@ -1,0 +1,45 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\JSONParseSet{
+  replace={
+    backspace={<<DL>>},
+    formfeed={<<FF>>},
+    linefeed={<<LF>>},
+    carriage return={<<CR>>},
+    horizontal tab={<<HT>>}
+  }
+}
+
+\JSONParse{\myJSONdataX}{ { "a" : "ab\bcd\fef" , "b" : "ab\ncd\ref" , "c" : "ab\tcd" } }
+
+\ExplSyntaxOn
+
+\TEST { parsing , ~ custom ~ replacements } {
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{a} } { ab<<DL>>cd<<FF>>ef } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{b} } { ab<<LF>>cd<<CR>>ef } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataX}{c} } { ab<<HT>>cd } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\ExplSyntaxOff
+
+\END
+
+\end{document}

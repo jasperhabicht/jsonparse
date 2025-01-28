@@ -18,21 +18,30 @@
 
 \ExplSyntaxOn
 
+  \OMIT
   \JSONParseSetRescanValue{\myJSONa}{\myJSONdata}{a}
+  \TIMO 
+
   \str_if_eq:enTF {
       \myJSONa
   } { 
       abcd
   } { \TRUE } { \FALSE }
 
+  \OMIT
   \JSONParseSetRescanValue{\myJSONb}{\myJSONdata}{b}
+  \TIMO 
+
   \str_if_eq:eeTF {
       \myJSONb
   } { 
       ab \codepoint_generate:nn { "1F60E } { 12 } d
   } { \TRUE } { \FALSE }
 
+  \OMIT
   \JSONParseSetRescanValue{\myJSONc}{\myJSONdata}{c}
+  \TIMO 
+
   \str_if_eq:eeTF {
       \myJSONc
   } { 

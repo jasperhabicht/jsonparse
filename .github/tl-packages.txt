@@ -5,4 +5,5 @@ luatex
 pdftex
 xetex
 
+amsmath
 tools

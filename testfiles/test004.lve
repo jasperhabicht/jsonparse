@@ -1,8 +1,6 @@
 \documentclass{article} 
 \usepackage[T1]{fontenc}
 \input{regression-test} 
-\usepackage{amsmath}
-
 \usepackage{jsonparse} 
 
 \begin{document}

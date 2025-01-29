@@ -13,11 +13,15 @@
 
 \BEGINTEST{arrays: array count}
 
+\ExplSyntaxOn
+
   \int_compare:nNnTF { 4 } = { 4 } {
     \TRUE
   } {
     \FALSE
   }
+
+\ExplSyntaxOff
 
 \ENDTEST
 

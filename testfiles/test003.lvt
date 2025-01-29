@@ -2,8 +2,6 @@
 \input{regression-test} 
 \usepackage{jsonparse} 
 
-\errorcontextlines=20
-
 \begin{document}
 
 \ExplSyntaxOn
@@ -49,8 +47,12 @@
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\JSONdataC}{data}[y]{, ~ } }
   \box_show:N \l_jsonparse_test_box
 
+  \OMIT \box_use:N \l_jsonparse_test_box \TIMO
+
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\JSONdataC}{items}{, ~ } }
   \box_show:N \l_jsonparse_test_box
+
+  \OMIT \box_use:N \l_jsonparse_test_box \TIMO
 
 \ExplSyntaxOff
 
@@ -68,8 +70,12 @@
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayMapFunction{\JSONdataC}{data}[y]{\useJSONvalue} }
   \box_show:N \l_jsonparse_test_box
 
+  \OMIT \box_use:N \l_jsonparse_test_box \TIMO
+
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayValuesMap{\JSONdataC}{data}[y]{useJSONvalue} }
   \box_show:N \l_jsonparse_test_box
+
+  \OMIT \box_use:N \l_jsonparse_test_box \TIMO
 
 \ExplSyntaxOff
 
@@ -86,6 +92,8 @@
     }
   }
   \box_show:N \l_jsonparse_test_box
+
+  \OMIT \box_use:N \l_jsonparse_test_box \TIMO
 
 \ExplSyntaxOff
 

@@ -1,0 +1,111 @@
+\documentclass{article} 
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\ExplSyntaxOn
+\box_new:N \l_jsonparse_test_box
+\ExplSyntaxOff
+
+\START
+
+\JSONParse{\myJSONdataX}{ 
+  { 
+    "a" : [ "foo\/ba\\emph{r\"b}az\\foo" , "f\\\"oo" , "bar\\\\baz" ]
+  }
+}
+
+\newcommand{\foo}{*foo*}
+
+\BEGINTEST{escape sequences}
+
+\ExplSyntaxOn
+
+  % + foo\/ba\\emph\{r\"b\}az\\foo + f\\\"oo + bar\\\\baz +
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + \JSONParseValue[rescan=false]{\myJSONdataX}{a[0]} + \JSONParseValue[rescan=false]{\myJSONdataX}{a[1]} + \JSONParseValue[rescan=false]{\myJSONdataX}{a[2]} +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  % + foo/ba\emph{r"b}az\foo + f\"oo + bar\\baz +
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + \JSONParseValue{\myJSONdataX}{a[0]} + \JSONParseValue{\myJSONdataX}{a[1]} + \JSONParseValue{\myJSONdataX}{a[2]} +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{escape sequences: arrays}
+
+\newcommand{\useJSONvalue}{
+  \JSONParseArrayKey : \JSONParseArrayValue ::
+}
+
+\ExplSyntaxOn
+
+  % foo/ba\emph{r"b}az\foo, f\"oo, bar\\baz
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    \JSONParseArrayUse{\myJSONdataX}{a}{, }
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    \JSONParseArrayUse{\myJSONdataX}{a}{, }
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  % [0] : foo/ba\emph{r"b}az\foo :: [1] : f\"oo :: [2] : bar\\baz ::
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    \JSONParseArrayMapFunction{\myJSONdataX}{a}{\useJSONvalue}
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{escape sequences: nesting}
+
+\JSONParse{\myJSONdataY}{ { "a" : "foo\\emph{bar}baz" , "b" : { "one" : "foo\\emph{bar}baz" , "two" : "f\\\"oo" , "three" : "f\\%oo"} } }
+
+\ExplSyntaxOn
+
+  % foo\\emph\{bar\}baz + foo\emph{bar}baz
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    \JSONParseValue[rescan=false]{\myJSONdataY}{a} + \JSONParseValue{\myJSONdataY}{a}
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \JSONParse{\myJSONdataZ}{ \x{myJSONdataY}{b} }
+
+  % + foo\\emph\{bar\}baz + f\\\"oo +
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + \JSONParseValue[rescan=false]{\myJSONdataZ}{one} + \JSONParseValue[rescan=false]{\myJSONdataZ}{two} +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  % foo\emph{bar}baz + f\"oo + f\%oo
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    \JSONParseValue{\myJSONdataZ}{one} + \JSONParseValue{\myJSONdataZ}{two} + \JSONParseValue{\myJSONdataZ}{three}
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\END
+
+\end{document}

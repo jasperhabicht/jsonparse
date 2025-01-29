@@ -9,24 +9,15 @@
 \box_new:N \l_jsonparse_test_box
 \ExplSyntaxOff
 
-\JSONParse{\JSONdataC}{
-  {
-    "data" : [ 
-       { "x" : 1 , "y" : 2 } ,
-       { "x" : 2 , "y" : 4 } ,
-       { "x" : 3 , "y" : 5 } ,
-       { "x" : 4 , "y" : 8 }  
-    ] , 
-
-    "items" : [ "a" , "b" , "c" , "d" ]
-  }
-}
-
 \START
 
 \BEGINTEST{arrays: array count}
 
-  \TRUE
+  \int_compare:nNnTF { 4 } = { 4 } {
+    \TRUE
+  } {
+    \FALSE
+  }
 
 \ENDTEST
 

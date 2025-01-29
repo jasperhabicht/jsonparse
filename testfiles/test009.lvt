@@ -13,8 +13,30 @@
 
 \ExplSyntaxOn
 
-\TEST { externalize } {
+\TEST { externalize: ~ create ~ file } {
   \file_if_exist:nTF { test009_myJSONdataE.jsonparse } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\str_new:N \l_jsonparse_test_a_str
+\str_new:N \l_jsonparse_test_b_str
+
+\TEST { externalize: ~ check ~ file } {
+  \file_get:nnNTF { test009_myJSONdataE.jsonparse } { \cctab_select:N \c_str_cctab } \l_jsonparse_test_a_str {
+    \TRUE
+  } {
+    \FALSE
+  }
+
+  \str_set:Nn \l_jsonparse_test_b_str {
+    \JSONParsePut ~ {\myJSONdataE ~ }{a}{1 ~ } 
+    \JSONParsePut ~ {\myJSONdataE ~ }{.}{{ ~ "a" ~ : ~ 1 ~ }} 
+  }
+
+  \tl_if_eq:NNTF { \l_jsonparse_test_a_str } { \l_jsonparse_test_b_str } {
     \TRUE
   } {
     \FALSE

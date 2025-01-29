@@ -692,11 +692,11 @@ The variants \macro{\jsonparse_unicode_if_low_surrogate_p:eTF} etc.\ are predefi
 This conditional function is fully expandable.
 
 \begin{macrodef}
-|\jsonparse_unicode_join_surrogate_pair:nn| {<codepoint>} {<codepoint>}
+|\jsonparse_unicode_convert_surrogate_pair:nn| {<codepoint>} {<codepoint>}
 \end{macrodef}
-The command \macro{\jsonparse_unicode_join_surrogate_pair:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
+The command \macro{\jsonparse_unicode_convert_surrogate_pair:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
 
-The variant \macro{\jsonparse_unicode_join_surrogate_pair:ee} is predefined for this command.
+The variant \macro{\jsonparse_unicode_convert_surrogate_pair:ee} is predefined.
 
 This function is fully expandable.
 

@@ -40,6 +40,16 @@
   } \jsonparse_check_if_low_surrogate:n
 }
 
+\TEST { jsonparse_unicode_convert_surrogate_pair } {
+  \int_compare:nNnTF {
+    \jsonparse_unicode_convert_surrogate_pair:nn { "D83D } { "DE00 }
+  } = { "1F600 } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
 \ExplSyntaxOff
 
 \END

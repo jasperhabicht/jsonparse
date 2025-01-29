@@ -136,9 +136,10 @@
     enhanced,
     overlay={
       \IfBooleanT{#1}{
-        \fill[black!50, shift={([xshift=-10pt]frame.east)}] (90:5pt)
+        \fill[black!50, shift={([xshift=-10pt, yshift=-15pt]frame.north east)}] 
+          (90:3.75pt)
           \foreach \i in {1,...,4} {
-            -- ({90+360/5*\i*2}:5pt)
+            -- ({90+360/5*\i*2}:3.75pt)
           } -- cycle;
       }
     }

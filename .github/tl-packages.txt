@@ -4,3 +4,4 @@ latex-bin
 luatex
 pdftex
 xetex
+tex

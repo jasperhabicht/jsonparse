@@ -240,7 +240,7 @@ The package has been tested, but not exhaustively. The author is grateful for re
 
 To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document.
 
-The package does not load any dependencies.
+The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaTeX or XeLaTeX.
 
 \begin{macrodef}
 |debug|
@@ -252,6 +252,8 @@ This key can be set either as package option or using \macro{\JSONParseSet}. It 
 \section{General remarks of the parsing procedure}
 
 In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape'').
+
+During parsing, the package identifies JSON objects, arrays, strings, numbers, boolean values and null values from the JSON data. It stores all these values together with the relevant keys in a property list. Once the parsing process is done, every value can be retrieved from the property list by calling the relevant key. The package ignores whitespace in the JSON data. The JSON data should be an object or an array. In general, the package accepts any valid JSON data.
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 

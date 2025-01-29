@@ -37,7 +37,7 @@
 }
 \makeatother
 
-\tcbuselibrary{listings}
+\tcbuselibrary{skins,listings}
 \lstdefinestyle{jsonparsedocmacro}{
     basicstyle=\small\ttfamily,
     literate=*{<}{{{\color{black!50}\guilsinglleft}}}1
@@ -127,12 +127,21 @@
     title style hook/.style={}
 }
 
-\NewTCBListing{macrodef}{ }{
+\NewTCBListing{macrodef}{ s }{
     listing only,
     listing style={jsonparsedocmacro},
     grow to left by=2cm,
     boxrule=0pt,
-    after={\par\smallskip\noindent}
+    after={\par\smallskip\noindent},
+    enhanced,
+    overlay={
+      \IfBooleanT{#1}{
+        \fill[black!50, shift={([xshift=-10pt]frame.east)}] (90:5pt)
+          \foreach \i in {1,...,4} {
+            -- ({90+360/5*\i*2}:5pt)
+          } -- cycle;
+      }
+    }
 }
 
 \NewTCBListing{codeexample}{ }{
@@ -342,7 +351,7 @@ When a key is associated with an object or array, the whole object or array is o
 
 The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
-\begin{macrodef}
+\begin{macrodef}*
 |\JSONParseExpandableValue|{<token variable>}{<key>}
 \end{macrodef}
 Whole objects or arrays can be output as JSON string for further use in other macros using the expandable command \macro{\JSONParseExpandableValue}. The value that is returned by this command is typically a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). This should be kept in mind if string comparisons should be made. A comparison against a token list with the default category codes used by TeX won't work, since letters will have category code 11 (``letter''), but it is possible to use \macro{\detokenize} to set the category codes of the token list in such a way that the comparison works.
@@ -534,7 +543,7 @@ Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetVal
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
-\subsection{Externalising parsed JSON data}\label{sec:externalizing}
+\subsection{Externalizing parsed JSON data}\label{sec:externalizing}
 
 Parsing large JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.
 
@@ -624,7 +633,7 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 |check num|
 |check num|={<boolean>}
 \end{macrodef}
-If set to \macro{false}, the key \macro{check num} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed.
+If set to \macro{false}, the key \macro{check num} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed if many numbers are to be parsed.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
@@ -655,7 +664,7 @@ The command \macro{\jsonparse_filter:Nn} processes the token variable given as t
 \end{macrodef}
 The command \macro{\jsonparse_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
-\begin{macrodef}
+\begin{macrodef}*
 |\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num:nT| {<string>} {<true code>}
 |\jsonparse_if_num:nF| {<string>} {<false code>}
@@ -665,7 +674,7 @@ The command \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSO
 
 This conditional function is fully expandable.
 
-\begin{macrodef}
+\begin{macrodef}*
 |\jsonparse_unicode_if_high_surrogate:nTF| {<codepoint>}
   {<true code>} {<false code>}
 |\jsonparse_unicode_if_high_surrogate:nT| {<codepoint>} {<true code>}
@@ -678,7 +687,7 @@ The variants \macro{\jsonparse_unicode_if_high_surrogate:eTF} etc.\ are predefin
 
 This conditional function is fully expandable.
 
-\begin{macrodef}
+\begin{macrodef}*
 |\jsonparse_unicode_if_low_surrogate:nTF| {<codepoint>}
   {<true code>} {<false code>}
 |\jsonparse_unicode_if_low_surrogate:nT| {<codepoint>} {<true code>}
@@ -691,7 +700,7 @@ The variants \macro{\jsonparse_unicode_if_low_surrogate_p:eTF} etc.\ are predefi
 
 This conditional function is fully expandable.
 
-\begin{macrodef}
+\begin{macrodef}*
 |\jsonparse_unicode_convert_surrogate_pair:nn| {<codepoint>} {<codepoint>}
 \end{macrodef}
 The command \macro{\jsonparse_unicode_convert_surrogate_pair:nn} coverts a surrogate pair to the relevant codepoint. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.

@@ -1,4 +1,5 @@
 \documentclass{article} 
+\usepackage[T1]{fontenc}
 \input{regression-test} 
 \usepackage{jsonparse} 
 
@@ -50,11 +51,6 @@
 \ExplSyntaxOn
 
   % foo/ba\emph{r"b}az\foo, f\"oo, bar\\baz
-
-  \hbox_set:Nn \l_jsonparse_test_box { 
-    \JSONParseArrayUse{\myJSONdataX}{a}{, }
-  }
-  \box_show:N \l_jsonparse_test_box
 
   \hbox_set:Nn \l_jsonparse_test_box { 
     \JSONParseArrayUse{\myJSONdataX}{a}{, }

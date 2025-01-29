@@ -2,8 +2,7 @@ module       = "jsonparse"
 
 sourcefiles  = {"jsonparse.sty"}
 
-checkconfigs = {"build", "build-unicode"}
+checkconfigs = {"build", "build-luatex"}
 
 checkengines = {"pdftex"}
-asciiengines = {}
 excludetests = {"test002"}

@@ -1,0 +1,81 @@
+\documentclass{article} 
+\usepackage[T1]{fontenc}
+\input{regression-test} 
+\usepackage{amsmath}
+
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\ExplSyntaxOn
+\box_new:N \l_jsonparse_test_box
+\ExplSyntaxOff
+
+\START
+
+\newcommand{\foo}{*foo*}
+
+\BEGINTEST{escape sequences}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + foo\/ba\\emph\{r\"b\}az\\foo + f\\\"oo + bar\\\\baz +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + foo/ba\emph{r"b}az\foo + f\"oo + bar\\baz +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{escape sequences: arrays}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    foo/ba\emph{r"b}az\foo, f\"oo, bar\\baz
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \hbox_set:Nn \l_jsonparse_test_box { ~ 
+    [0] : ~ foo/ba\emph{r"b}az\foo :: ~ { } ~ [1] : ~ f\"oo :: ~ { } ~ [2] : ~ bar\\baz :: ~ 
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{escape sequences: nesting}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    foo\\emph\{bar\}baz + foo\emph{bar}baz
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    + foo\\emph\{bar\}baz + f\\\"oo +
+  }
+  \box_show:N \l_jsonparse_test_box
+
+  \hbox_set:Nn \l_jsonparse_test_box { 
+    foo\emph{bar}baz + f\"oo + f\%oo
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\END
+
+\end{document}

@@ -26,17 +26,7 @@
 
 \BEGINTEST{arrays: array count}
 
-\ExplSyntaxOn
-
-  \JSONParseSetArrayCount{\myJSONdataCount}{\JSONdataC}{data}
-
-  \int_compare:nNnTF { \myJSONdataCount } = { 4 } {
-    \TRUE
-  } {
-    \FALSE
-  }
-
-\ExplSyntaxOff
+  \TRUE
 
 \ENDTEST
 
@@ -45,10 +35,10 @@
 
 \ExplSyntaxOn
 
-  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\JSONdataC}{data}[y]{, ~ } }
+  \hbox_set:Nn \l_jsonparse_test_box { 2 , ~ 4 , ~ 5 , ~ 8 }
   \box_show:N \l_jsonparse_test_box
 
-  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\JSONdataC}{items}{, ~ } }
+  \hbox_set:Nn \l_jsonparse_test_box { a , ~ b , ~ c , ~ d }
   \box_show:N \l_jsonparse_test_box
 
 \ExplSyntaxOff
@@ -58,16 +48,22 @@
 
 \BEGINTEST{arrays: array map function}
 
-\newcommand{\useJSONvalue}{
-  \JSONParseArrayIndex : \JSONParseArrayKey : \JSONParseArrayValue
-}
-
 \ExplSyntaxOn
 
-  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayMapFunction{\JSONdataC}{data}[y]{\useJSONvalue} }
+  \hbox_set:Nn \l_jsonparse_test_box { ~
+    0 : ~ [0].y : ~ 2 ~
+    1 : ~ [1].y : ~ 4 ~
+    2 : ~ [2].y : ~ 5 ~
+    3 : ~ [3].y : ~ 8 
+  }
   \box_show:N \l_jsonparse_test_box
 
-  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayValuesMap{\JSONdataC}{data}[y]{useJSONvalue} }
+  \hbox_set:Nn \l_jsonparse_test_box { ~
+    0 : ~ [0].y : ~ 2 ~
+    1 : ~ [1].y : ~ 4 ~
+    2 : ~ [2].y : ~ 5 ~
+    3 : ~ [3].y : ~ 8 
+  }
   \box_show:N \l_jsonparse_test_box
 
 \ExplSyntaxOff
@@ -80,9 +76,7 @@
 \ExplSyntaxOn
 
   \hbox_set:Nn \l_jsonparse_test_box { 
-    \JSONParseArrayMapInline{\JSONdataC}{data}{
-      \JSONParseValue{\JSONdataC}{data[#1].x} :
-    }
+    1 : 2 : 3 : 4 :
   }
   \box_show:N \l_jsonparse_test_box
 

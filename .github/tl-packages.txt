@@ -5,5 +5,5 @@ luatex
 pdftex
 xetex
 
-amsmath
 tools
+cm-super

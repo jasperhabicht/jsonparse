@@ -27,6 +27,25 @@
 
 \ExplSyntaxOff
 
+
+\JSONParseSet{
+  zero-based=false
+}
+
+\JSONParse{\theJSONdataC}{ { "a" : [ "b" , "c" , "d" ] } }
+
+\ExplSyntaxOn
+
+\TEST { parsing , ~ not ~ zero-based } {
+  \str_if_eq:enTF { \JSONParseExpandableValue{\theJSONdataC}{a[2]} } { c } {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\ExplSyntaxOff
+
 \END
 
 \end{document}

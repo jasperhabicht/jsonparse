@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-01-29} {1.1.0}
+\ProvidesExplPackage {jsonparse} {2025-01-30} {1.1.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1096,7 +1096,7 @@
   } {
     \jsonparse_unicode_if_low_surrogate:eTF { " \str_uppercase:n {#2#3#4#5} } {
       \codepoint_generate:nn {
-        \jsonparse_unicode_convert_surrogate_pair:ee 
+        \jsonparse_unicode_convert_surrogate_pair:ee
           { \str_uppercase:n {#1} } { " \str_uppercase:n {#2#3#4#5} }
       } { 12 }
     } {

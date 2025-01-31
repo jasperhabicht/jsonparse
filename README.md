@@ -1,5 +1,4 @@
 ![Version 1.1.1](https://img.shields.io/badge/version-1.1.1-blue)
-![l3build check](https://github.com/github/docs/actions/workflows/l3build-check.yaml/badge.svg)
 
 ![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/ddfddc70-bf5f-4121-ba45-4b9128875d85)
 

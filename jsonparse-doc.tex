@@ -508,9 +508,9 @@ Finally, the first optional argument of the command can be used to pass options 
 For reasons of backward compatibility, the command \macro{\JSONParseArrayValuesMap} is defined as alias of \macro{\JSONParseArrayMapFunction}.
 
 \begin{macrodef}
-|\JSONParseArrayMapInline|{<token variable>}{<key>}{<inline function>}
+|\JSONParseArrayMapInline|[<options>]{<token variable>}{<key>}{<inline function>}
 \end{macrodef}
-The command \macro{\JSONParseArrayMapInline} takes as first argument a token variable holding a parsed JSON string or JSON file and as second argument a key to select an array in the JSON data. The third parameter can contain any code where the index of the current item is represented by \macro{#1}.
+The command \macro{\JSONParseArrayMapInline} takes as first mandatory argument a token variable holding a parsed JSON string or JSON file and as second mandatory argument a key to select an array in the JSON data. The last argument can contain any code where the index of the current item is represented by \macro{#1}.
 
 Using the above example, the mechanism could be implemented as follows:
 
@@ -549,19 +549,19 @@ Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetVal
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 \begin{macrodef}
-|store in|={<code>}
+|store in|={<token variable>}
 \end{macrodef}
 
-The command \macro{\JSONParseArrayMapInline} accepts the key \macro{store in} which takes a token list into which the result of the mapped inline function should be stored. It is important to note that the inline function needs to be fully expandable in order to be able to be stored in the given token list. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
+The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
 
-Storing the result of the mapped inline function can be helpful if JSON data should be reformatted in order to feed the reformatted data to plotting functions. An example for a use case with PGFplots is shown below. In this example, the token variable \macro{\myJSONplotdata} contains the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }}.
+Storing the result of the mapped inline function can be helpful if JSON data should be reformatted for use in a plotting functions. An example for a use case with PGFplots is shown below. In this example, the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }} was stored in the token variable \macro{\myJSONplotdata}.
 
 \JSONParse{\myJSONplotdata}{ { "data": [ [0,0], [1,-1], [2,1] ] } }
 \pgfplotsset{width=5.25cm}
 
 \begin{codeexamplecolumns}
 \JSONParseArrayMapInline
-[store in={\myJSONcoords}]
+[store in={\myJSONplotcoords}]
   {\myJSONplotdata}{data}{
     (
     \JSONParseExpandableValue
@@ -575,36 +575,10 @@ Storing the result of the mapped inline function can be helpful if JSON data sho
 \begin{tikzpicture}
   \begin{axis}
     \addplot coordinates 
-      {\myJSONcoords};
+      {\myJSONplotcoords};
   \end{axis}
 \end{tikzpicture}
 \end{codeexamplecolumns}
-
-\iffalse
-\begin{codeexamplecolumns}
-\JSONParse{\myJSONplotdata}{ 
-  { "data": [ [1,1], [2,1] ] } 
-}
-
-\JSONParseArrayMapInline
-  [store in={\myJSONcoords}]
-  {\myJSONplotdata}{data}{
-    (
-    \JSONParseExpandableValue
-      {\myJSONdata}{data[#1][0]}
-    ,
-    \JSONParseExpandableValue
-      {\myJSONdata}{data[#1][1]}
-    )
-}
-
-\begin{tikzpicture}
-\begin{axis}
-\addplot coordinates {\myJSONcoords};
-\end{axis}
-\end{tikzpicture}
-\end{codeexamplecolumns}
-\fi
 
 \subsection{Externalizing parsed JSON data}\label{sec:externalizing}
 

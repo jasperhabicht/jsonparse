@@ -12,7 +12,7 @@
 %
 \documentclass[a4paper]{article}
 \def\jsonparsefileversion{1.1.1}
-\def\jsonparsefiledate{30 January 2025}
+\def\jsonparsefiledate{3 February 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -21,6 +21,9 @@
 
 \usepackage{geometry, longtable, booktabs, siunitx, tcolorbox, hyperref}
 \geometry{margin=25mm, left=45mm}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -229,6 +232,7 @@
 \changes{v1.0.2}{2025/01/23}{Support for Unicode surrogate pairs.}
 \changes{v1.0.3}{2025/01/26}{Test for valid JSON numbers expandable.}
 \changes{v1.1.0}{2025/01/30}{Unified names of user functions; renaming key for keywords.}
+\changes{v1.1.1}{2025/02/03}{Added option to store result of mapped inline function.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -544,6 +548,64 @@ Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetVal
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
+\begin{macrodef}
+|store in|={<code>}
+\end{macrodef}
+
+The command \macro{\JSONParseArrayMapInline} accepts the key \macro{store in} which takes a token list into which the result of the mapped inline function should be stored. It is important to note that the inline function needs to be fully expandable in order to be able to be stored in the given token list. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
+
+Storing the result of the mapped inline function can be helpful if JSON data should be reformatted in order to feed the reformatted data to plotting functions. An example for a use case with PGFplots is shown below. In this example, the token variable \macro{\myJSONplotdata} contains the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }}.
+
+\JSONParse{\myJSONplotdata}{ { "data": [ [0,0], [1,-1], [2,1] ] } }
+\pgfplotsset{width=5.25cm}
+
+\begin{codeexamplecolumns}
+\JSONParseArrayMapInline
+[store in={\myJSONcoords}]
+  {\myJSONplotdata}{data}{
+    (
+    \JSONParseExpandableValue
+      {\myJSONplotdata}{data[#1][0]}
+    ,
+    \JSONParseExpandableValue
+      {\myJSONplotdata}{data[#1][1]}
+    )
+}
+
+\begin{tikzpicture}
+  \begin{axis}
+    \addplot coordinates 
+      {\myJSONcoords};
+  \end{axis}
+\end{tikzpicture}
+\end{codeexamplecolumns}
+
+\iffalse
+\begin{codeexamplecolumns}
+\JSONParse{\myJSONplotdata}{ 
+  { "data": [ [1,1], [2,1] ] } 
+}
+
+\JSONParseArrayMapInline
+  [store in={\myJSONcoords}]
+  {\myJSONplotdata}{data}{
+    (
+    \JSONParseExpandableValue
+      {\myJSONdata}{data[#1][0]}
+    ,
+    \JSONParseExpandableValue
+      {\myJSONdata}{data[#1][1]}
+    )
+}
+
+\begin{tikzpicture}
+\begin{axis}
+\addplot coordinates {\myJSONcoords};
+\end{axis}
+\end{tikzpicture}
+\end{codeexamplecolumns}
+\fi
+
 \subsection{Externalizing parsed JSON data}\label{sec:externalizing}
 
 Parsing large and complex JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.
@@ -628,7 +690,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 
 \subsubsection{Keys affecting the typesetting}
 
-Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}. Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction}.
+Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}. Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction}. Information about the key \macro{store in} can be found above in the description to the command \macro{\JSONParseArrayMapInline}.
 
 \begin{macrodef}
 keyword/|true|={<string>}

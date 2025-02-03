@@ -2,7 +2,7 @@ module       = "jsonparse"
 
 sourcefiles  = {"jsonparse.sty"}
 
-checkconfigs = {"build", "build-pdftex"}
+checkconfigs = {"build", "build-luatex"}
 
-checkengines = {"luatex"}
-includetests = {"test002", "test007"}
+checkengines = {"pdftex"}
+excludetests = {"test002"}

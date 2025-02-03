@@ -9,18 +9,20 @@
 
 \BEGINTEST{parsing Unicode: from string}
 
+\OMIT
 \JSONParse{\myJSONdataA}{ { "A" : [ { "😀" : "😎" , "a" : "中" } , "🛹" , "🚗" ] , "B" : "日" } }
+\TIMO
 
 \ExplSyntaxOn
 
   \str_if_eq:eeTF {
-      \JSONParseExpandableValue{\myJSONdataA}{A[1].😀}
+      \JSONParseExpandableValue{\myJSONdataA}{A[0].😀}
   } { 
       \codepoint_generate:nn { "1F60E } { 12 }
   } { \TRUE } { \FALSE }
 
   \str_if_eq:eeTF {
-      \JSONParseExpandableValue{\myJSONdataA}{A[2]}
+      \JSONParseExpandableValue{\myJSONdataA}{A[1]}
   } { 
       \codepoint_generate:nn { "1F6F9 } { 12 }
   } { \TRUE } { \FALSE }
@@ -48,13 +50,13 @@
 \ExplSyntaxOn
 
   \str_if_eq:eeTF {
-      \JSONParseExpandableValue{\myJSONdataB}{A[1].😀}
+      \JSONParseExpandableValue{\myJSONdataB}{A[0].😀}
   } { 
       \codepoint_generate:nn { "1F60E } { 12 }
   } { \TRUE } { \FALSE }
 
   \str_if_eq:eeTF {
-      \JSONParseExpandableValue{\myJSONdataB}{A[2]}
+      \JSONParseExpandableValue{\myJSONdataB}{A[1]}
   } { 
       \codepoint_generate:nn { "1F6F9 } { 12 }
   } { \TRUE } { \FALSE }

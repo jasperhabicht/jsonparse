@@ -3,5 +3,5 @@ module       = "jsonparse"
 sourcefiles  = {"jsonparse.sty"}
 
 checkengines = {"pdftex"}
-includetests = {*}
+includetests = {"*"}
 excludetests = {"test002"}

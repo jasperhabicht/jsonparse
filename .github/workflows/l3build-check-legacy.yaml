@@ -1,4 +1,4 @@
-name: Test jsonparse using l3build
+name: Test jsonparse using l3build (TeXLive 2024)
 
 on: [push, pull_request]
 
@@ -8,10 +8,10 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Install TeX Live
+    - name: Install TeX Live (2024)
       uses: zauguin/install-texlive@v3
       with:
-        version: 2024
+        version: 2023
         package_file: .github/tl-packages.txt
     - name: Run l3build check
       run: |

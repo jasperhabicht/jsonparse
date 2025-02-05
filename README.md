@@ -4,15 +4,21 @@
 
 # The `jsonparse` package
 
-The `jsonparse` package provides a handy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
+The `jsonparse` package provides a handy way to read in JSON data from files 
+or strings in LaTeX documents, parse the data and store it in a user-defined 
+token variable. The package allows accessing the stored data via a 
+JavaScript-flavored syntax.
 
-Using the commands `\JSONParseFromFile` or `\JSONParse`, JSON data can be stored in a token variable. Using the command `\JSONParseValue`, entries can be extracted from the stored data.
+Using the commands `\JSONParseFromFile` or `\JSONParse`, JSON data can be 
+stored in a token variable. Using the command `\JSONParseValue`, entries can 
+be extracted from the stored data.
 
 ---
 
-Let's assume a file with the name `example.json` is stored in the working directory with the following contents:
+Let's assume a file with the name `example.json` is stored in the working 
+directory with the following contents:
 
-```
+```json
 {
   "givenName": "Joe",
   "familyName": "Public",
@@ -42,14 +48,22 @@ Let's assume a file with the name `example.json` is stored in the working direct
 }
 ```
 
-We can store it in the token variable `\myJSONdata` using the command `\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command `\JSONParseValue{\myJSONdata}{contactPoint[0].telephone}` would then result in the output `+1 (555) 555-1234` (indices are zero-based per default). 
+We can store it in the token variable `\myJSONdata` using the command 
+`\JSONParseFromFile{\myJSONdata}{example.json}`. Calling the command 
+`\JSONParseValue{\myJSONdata}{contactPoint[0].telephone}` would then result in 
+the output `+1 (555) 555-1234` (indices are zero-based per default). The 
+package allows for parsing JSON data inline as well.
 
-The package also offers several commands for looping through arrays and accessing individual elements, for example to typeset them in tabular form. 
+The package also offers several commands for looping through arrays and 
+accessing individual elements, for example to typeset them in tabular form or 
+to plot their values using packages such as PGFPlots. 
 
-The package also provides a few helper commands such as to validate a JSON number or to convert Unicode surrogate pairs to the relevant Unicode codepoint.
+The package also provides a few helper commands such as to validate a JSON 
+number or to convert Unicode surrogate pairs to the relevant Unicode codepoint.
 
 ---
 
-This package including all files is subject to the LPPL 1.3c license. Copyright 2024&ndash;2025 Jasper Habicht (mail(at)jasperhabicht.de).
+This package including all files is subject to the LPPL 1.3c license. 
+Copyright 2024&ndash;2025 Jasper Habicht (mail(at)jasperhabicht.de).
 
 Jason, the JSON parsing horse: Copyright 2024&ndash;2025 Hannah Klöber.

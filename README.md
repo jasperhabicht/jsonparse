@@ -56,7 +56,23 @@ package allows for parsing JSON data inline as well.
 
 The package also offers several commands for looping through arrays and 
 accessing individual elements, for example to typeset them in tabular form or 
-to plot their values using packages such as PGFPlots. 
+to plot their values using packages such as PGFPlots.
+
+Adding commas between the items of the children array can be done with:
+```tex
+\JSONParseArrayValues{\myJSONdata}{children}{, }
+```
+
+A tabular listing the contact points of above JSON file can be created with:
+```tex
+\begin{tabular}{cc}
+\textbf{Contact Type} & \textbf{Telephone} \\
+\JSONParseArrayMapInline{\myJSONdata}{contactPoint}{%
+  \JSONParseValue{\myJSONdata}{contactPoint[#1].contactType} & 
+  \JSONParseValue{\myJSONdata}{contactPoint[#1].telephone} \\
+}
+\end{tabular}
+```
 
 The package also provides a few helper commands such as to validate a JSON 
 number or to convert Unicode surrogate pairs to the relevant Unicode codepoint.

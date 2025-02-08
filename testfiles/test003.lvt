@@ -50,6 +50,14 @@
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\JSONdataC}{items}{, ~ } }
   \box_show:N \l_jsonparse_test_box
 
+  \JSONParseArrayUse[store ~ in=\JSONvaluesA]{\JSONdataC}{items}{, ~ }
+
+  \str_if_eq:onTF { \JSONvaluesA } { a , ~ b , ~ c , ~ d } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
 \ExplSyntaxOff
 
 \ENDTEST
@@ -85,11 +93,11 @@
   }
   \box_show:N \l_jsonparse_test_box
 
-  \JSONParseArrayMapInline[store ~ in={\JSONvalues}]{\JSONdataC}{data}{
+  \JSONParseArrayMapInline[store ~ in={\JSONvaluesB}]{\JSONdataC}{data}{
     \JSONParseExpandableValue{\JSONdataC}{data[#1].x} :
   }
 
-  \str_if_eq:onTF { \JSONvalues } { 1 ~ : 2 ~ : 3 ~ : 4 ~ : } {
+  \str_if_eq:onTF { \JSONvaluesB } { 1 ~ : 2 ~ : 3 ~ : 4 ~ : } {
     \TRUE
   } {
     \FALSE

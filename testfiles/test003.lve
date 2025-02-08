@@ -36,6 +36,12 @@
   \hbox_set:Nn \l_jsonparse_test_box { a , ~ b , ~ c , ~ d }
   \box_show:N \l_jsonparse_test_box
 
+  \str_if_eq:onTF { a , ~ b , ~ c , ~ d } { a , ~ b , ~ c , ~ d } {
+    \TRUE
+  } {
+    \FALSE
+  }
+
 \ExplSyntaxOff
 
 \ENDTEST

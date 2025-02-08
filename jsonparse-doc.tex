@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.1.1}
-\def\jsonparsefiledate{3 February 2025}
+\def\jsonparsefileversion{1.1.2}
+\def\jsonparsefiledate{8 February 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -233,6 +233,7 @@
 \changes{v1.0.3}{2025/01/26}{Test for valid JSON numbers expandable.}
 \changes{v1.1.0}{2025/01/30}{Unified names of user functions; renaming key for keywords.}
 \changes{v1.1.1}{2025/02/03}{Added option to store result of mapped inline function.}
+\changes{v1.1.2}{2025/02/08}{Added option to store result of array function.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -441,6 +442,12 @@ The first optional argument can be used to pass options to the command, such as 
 For reasons of backward compatibility , the command \macro{\JSONParseArrayValues} is defined as alias of \macro{\JSONParseArrayUse}.
 
 \begin{macrodef}
+|store in|={<token variable>}
+\end{macrodef}
+
+The command \macro{\JSONParseArrayUse} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the command should be stored.
+
+\begin{macrodef}
 |\JSONParseArrayMapFunction|[<options>]{<token variable>}{<key>}[<subkey>]
   {<command>}
 \end{macrodef}
@@ -548,10 +555,6 @@ Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetVal
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
-\begin{macrodef}
-|store in|={<token variable>}
-\end{macrodef}
-
 The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
 
 Storing the result of the mapped inline function can be helpful if JSON data should be reformatted for use in a plotting functions. An example for a use case with PGFplots is shown below. In this example, the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }} was stored in the token variable \macro{\myJSONplotdata}.
@@ -574,7 +577,7 @@ Storing the result of the mapped inline function can be helpful if JSON data sho
 
 \begin{tikzpicture}
   \begin{axis}
-    \addplot coordinates 
+    \addplot coordinates
       {\myJSONplotcoords};
   \end{axis}
 \end{tikzpicture}
@@ -625,7 +628,7 @@ The package provides a set of keys that can be set to change the separators used
 \begin{macrodef}
 |\JSONParseSet|{<options>}
 \end{macrodef}
-The command \macro{\JSONParseSet} can be used to specify options via key-value pairs (separated by commas). Keys that are presented here as a subkey (i.\,e.\ preceded by another key and a slash such as \macro{key/subkey}) can also be set using the syntax \macro{key={subkey}} and multiple subkeys belonging to one key can be combined using commas as separator. Several user commands allow to pass keys directly which are then applied locally. 
+The command \macro{\JSONParseSet} can be used to specify options via key-value pairs (separated by commas). Keys that are presented here as a subkey (i.\,e.\ preceded by another key and a slash such as \macro{key/subkey}) can also be set using the syntax \macro{key={subkey}} and multiple subkeys belonging to one key can be combined using commas as separator. Several user commands allow to pass keys directly which are then applied locally.
 
 Not every key takes effect in every situation. Some keys affect the parsing procedure and thus need to be set before parsing. Some keys affect the typeset result and some keys only affect the typeset result when used in combination with specific commands.
 
@@ -638,7 +641,7 @@ separator/|child|={<string>}
 separator/|array left|={<string>}
 separator/|array right|={<string>}
 \end{macrodef}
-With the key \macro{separator/child}, the separator for child objects that is used in the key to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}). 
+With the key \macro{separator/child}, the separator for child objects that is used in the key to select a specific value in the JSON data structure can be changed. Per default, the child separator is a dot (\macro{.}).
 
 With the keys \macro{separator/array left} and \macro{separator/array right}, the separators for arrays that are used in the key to select a specific value in the JSON data structure can be changed. Per default, the separators are square brackets (\macro{[} and \macro{]}). Changing these separators to curly braces (\macro{{}}) is not supported due to their grouping function in TeX.
 
@@ -650,7 +653,7 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 |zero-based|
 |zero-based|={<boolean>}
 \end{macrodef}
-If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the index of array items starts with zero. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to match JavaScript notation. This setting affects indexing already during parsing. 
+If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the index of array items starts with zero. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to match JavaScript notation. This setting affects indexing already during parsing.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, this key only takes effect when set before parsing.
 

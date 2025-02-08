@@ -44,13 +44,6 @@
   Parsing ~ error ~ at ~ key ~ `#1` ~ with ~ value ~ `#2`.
 }
 
-\msg_new:nnn { jsonparse } { nested-non-expandable } {
-  \msg_error_text:n { jsonparse } \iow_newline:
-  Non-expandable ~ commands ~ such ~ as ~ \token_to_str:N \JSONParseValue \c_space_tl
-  not ~ allowed ~ in ~ inline ~ function. \iow_newline:
-  Use ~ \token_to_str:N \JSONParseExpandableValue \c_space_tl instead.
-}
-
 \msg_new:nnn { jsonparse } { file-not-found } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ find ~ file ~ #1.
@@ -1519,12 +1512,6 @@
 }
 % ===
 
-\cs_new:Npn \__jsonparse_warning_function_expandable: {
-  \str_if_in:eeT { \tl_to_str:o { \__jsonparse_array_map_inline_code:n { } } }
-    { \c_backslash_str JSONParseValue }
-    { \msg_error:nn { jsonparse } { nested-non-expandable } }
-}
-
 \cs_new:Npn \__jsonparse_array_map_inline_code:n #1 { }
 
 \cs_new:Npn \__jsonparse_array_map_inline:nn #1#2 {
@@ -1553,7 +1540,6 @@
       \int_decr:N \l__jsonparse_array_count_int
     }
     \tl_if_empty:NF \g__jsonparse_array_map_store_in_tl {
-      \__jsonparse_warning_function_expandable:
       \exp_last_unbraced:No \tl_if_exist:NF \g__jsonparse_array_map_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \g__jsonparse_array_map_store_in_tl
       }

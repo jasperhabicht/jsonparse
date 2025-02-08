@@ -445,7 +445,19 @@ For reasons of backward compatibility , the command \macro{\JSONParseArrayValues
 |store in|={<token variable>}
 \end{macrodef}
 
-The command \macro{\JSONParseArrayUse} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the command should be stored.
+The command \macro{\JSONParseArrayUse} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the command should be stored. Storing the result of the mapped inline function can be helpful if JSON data should be reformatted for use in another function.
+
+\begin{codeexamplecolumns}
+\JSONParseArrayUse[store in=\myJSONitems]
+  {\myJSONdata}{array}[key_a]{,}
+
+\begin{tikzpicture}
+  \foreach \x [count=\i] in \myJSONitems {
+    \fill[blue] (\i,0) circle[radius=2pt]
+      node[above=5pt, black] {\x};
+  }
+\end{tikzpicture}
+\end{codeexamplecolumns}
 
 \begin{macrodef}
 |\JSONParseArrayMapFunction|[<options>]{<token variable>}{<key>}[<subkey>]

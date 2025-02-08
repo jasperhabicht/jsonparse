@@ -270,7 +270,7 @@
   \cs_new:Npn \str_foldcase:n { \str_casefold:n }
 }
 
-\exp_args_generate:n { NVoV }
+\exp_args_generate:n { NeoV }
 
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
@@ -1526,8 +1526,8 @@
 
 \cs_new:Npn \__jsonparse_array_map_inline_code:n #1 { }
 
-\cs_new:Npn \__jsonparse_array_map_inline:Nnn #1#2#3 {
-  \tl_if_empty:NT #1 {
+\cs_new:Npn \__jsonparse_array_map_inline:nnn #1#2#3 {
+  \bool_if:nT {#1} {
     \__jsonparse_array_map_inline_aux:nn {#2} {#3}
   }
 }
@@ -1561,9 +1561,9 @@
           \l__jsonparse_array_count_int
       }
     }
-    \exp_args:NNVoV
+    \exp_args:NNeoV
   \group_end:
-  \__jsonparse_array_map_inline:Nnn \l__jsonparse_array_map_store_in_tl
+  \__jsonparse_array_map_inline:nnn { \tl_if_empty_p:N \l__jsonparse_array_map_store_in_tl }
     { \l__jsonparse_zero_based_bool } \l__jsonparse_array_count_int
 }
 

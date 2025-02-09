@@ -296,6 +296,7 @@
 \cs_generate_variant:Nn \keys_set_known:nnN { noN }
 \cs_generate_variant:Nn \iow_now:Nn { Ne }
 \cs_generate_variant:Nn \iow_open:Nn { Ne }
+\cs_generate_variant:Nn \codepoint_generate:nn { en }
 \cs_generate_variant:Nn \msg_error:nnn { nno }
 \cs_generate_variant:Nn \msg_error:nnnn { nnoo }
 \cs_generate_variant:Nn \msg_info:nnn { nne }
@@ -593,6 +594,7 @@
       \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop
   }
 }
+\cs_generate_variant:Nn \jsonparse_parse:Nn { o }
 
 \cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -610,6 +612,7 @@
     }
   }
 }
+\cs_generate_variant:Nn \jsonparse_parse_to_prop:Nn { Ne }
 
 % ===
 
@@ -872,7 +875,7 @@
     \tl_remove_once:Nn \l__jsonparse_remainder_tl { , }
   }
   \tl_if_empty:NF \l__jsonparse_remainder_tl {
-    \exp_args:No \jsonparse_parse:n { \l__jsonparse_remainder_tl }
+    \jsonparse_parse:o { \l__jsonparse_remainder_tl }
   }
 }
 
@@ -1001,7 +1004,7 @@
         \__jsonparse_nested_construct_cs:Noo \x \c_left_brace_str \c_right_brace_str
         \tl_set:Nn \obeyedline { ~ }
         \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#3}
-        \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl }
+        \jsonparse_parse_to_prop:Ne #2 { \g__jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
@@ -1049,7 +1052,7 @@
         \cs_set:Npn \u { \exp_not:N \u }
         \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \l__jsonparse_externalize_file_data_tl
         \tl_gset_eq:NN \g__jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
-        \exp_args:NNe \jsonparse_parse_to_prop:Nn #2 { \g__jsonparse_json_tl }
+        \jsonparse_parse_to_prop:Ne #2 { \g__jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
@@ -1104,7 +1107,7 @@
 \cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {
     \jsonparse_unicode_if_high_surrogate:eF { " \str_uppercase:n {#2#3#4#5} } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }
+      \codepoint_generate:en { " \str_uppercase:n {#2#3#4#5} } { 12 }
     }
   } {
     \jsonparse_unicode_if_low_surrogate:eTF { " \str_uppercase:n {#2#3#4#5} } {
@@ -1113,7 +1116,7 @@
           { \str_uppercase:n {#1} } { " \str_uppercase:n {#2#3#4#5} }
       } { 12 }
     } {
-      \exp_args:Ne \codepoint_generate:nn { " \str_uppercase:n {#2#3#4#5} } { 12 }
+      \codepoint_generate:en { " \str_uppercase:n {#2#3#4#5} } { 12 }
     }
   }
 }
@@ -1154,22 +1157,41 @@
   }
 }
 
-\cs_new_protected:Npn \__jsonparse_rescan:n #1 {
+\cs_new_protected:Npn \jsonparse_rescan:n #1 {
   \group_begin:
     \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#1}
     \tl_rescan:no { } { \l__jsonparse_temp_tl }
   \group_end:
 }
+\cs_generate_variant:Nn \jsonparse_rescan:n { e }
 
-\cs_new_protected:Npn \__jsonparse_gset_rescan:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_set_rescan:Nn #1#2 {
+  \group_begin:
+    \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#2}
+    \tl_set_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
+  \group_end:
+}
+\cs_generate_variant:Nn \jsonparse_set_rescan:Nn { Ne }
+
+\cs_new_protected:Npn \jsonparse_gset_rescan:Nn #1#2 {
   \group_begin:
     \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#2}
     \tl_gset_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
   \group_end:
 }
-\cs_generate_variant:Nn \__jsonparse_gset_rescan:Nn { Ne }
+\cs_generate_variant:Nn \jsonparse_gset_rescan:Nn { Ne }
 
-\cs_new_protected:Npn \__jsonparse_gput_right_rescan:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_put_right_rescan:Nn #1#2 {
+  \group_begin:
+    \tl_set_eq:NN \l__jsonparse_temp_copy_tl #1
+    \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#2}
+    \tl_set_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
+    \tl_put_left:NV #1 \l__jsonparse_temp_copy_tl
+  \group_end:
+}
+\cs_generate_variant:Nn \jsonparse_put_right_rescan:Nn { Ne }
+
+\cs_new_protected:Npn \jsonparse_gput_right_rescan:Nn #1#2 {
   \group_begin:
     \tl_set_eq:NN \l__jsonparse_temp_copy_tl #1
     \__jsonparse_rescan_setup:Nn \l__jsonparse_temp_tl {#2}
@@ -1177,6 +1199,7 @@
     \tl_gput_left:NV #1 \l__jsonparse_temp_copy_tl
   \group_end:
 }
+\cs_generate_variant:Nn \jsonparse_gput_right_rescan:Nn { Ne }
 
 \NewDocumentCommand { \JSONParseValue } { O{} m m } {
   \__jsonparse_warning_undefined_prop:N #2
@@ -1184,7 +1207,7 @@
     \keys_set_known:nnN { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \bool_if:NTF \l__jsonparse_rescan_bool {
-      \exp_args:Ne \__jsonparse_rescan:n { \prop_item:Ne #2 {#3} }
+      \jsonparse_rescan:e { \prop_item:Ne #2 {#3} }
     } {
       \prop_item:Ne #2 {#3}
     }
@@ -1208,7 +1231,7 @@
   \tl_if_exist:NF #1 {
     \tl_new:N #1
   }
-  \__jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
+  \jsonparse_gset_rescan:Ne #1 { \prop_item:Ne #2 {#3} }
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_keys:nn #1#2 {
@@ -1318,13 +1341,13 @@
   }
   \bool_if:NTF \l__jsonparse_rescan_bool {
     \tl_if_empty:NTF \l__jsonparse_array_map_store_in_tl {
-      \exp_args:Ne \__jsonparse_rescan:n {
+      \jsonparse_rescan:e {
         \prop_item:Ne \l__jsonparse_temp_copy_prop {
           \__jsonparse_array_use_index:n {#1}
         }
       }
     } {
-      \exp_last_unbraced:No \__jsonparse_gput_right_rescan:Nn \l__jsonparse_array_map_store_in_tl { 
+      \exp_last_unbraced:No \jsonparse_gput_right_rescan:Ne \l__jsonparse_array_map_store_in_tl { 
         \prop_item:Ne \l__jsonparse_temp_copy_prop {
           \__jsonparse_array_use_index:n {#1}
         }
@@ -1403,7 +1426,7 @@
   }
   \bool_if:NTF \l__jsonparse_rescan_bool {
     \tl_gset:cn { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } {
-      \exp_args:Ne \__jsonparse_rescan:n {
+      \jsonparse_rescan:e {
         \prop_item:Ne \l__jsonparse_temp_copy_prop {
           \l__jsonparse_array_sep_left_str
           \JSONParseArrayIndex
@@ -1442,7 +1465,7 @@
     }
     \bool_if:NTF \l__jsonparse_rescan_bool {
       \tl_gset:Nn \JSONParseArrayValue {
-        \exp_args:Ne \__jsonparse_rescan:n {
+        \jsonparse_rescan:e {
           \prop_item:Ne \l__jsonparse_temp_copy_prop {
             \l__jsonparse_array_sep_left_str
             \JSONParseArrayIndex

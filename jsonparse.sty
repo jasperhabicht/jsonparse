@@ -594,7 +594,7 @@
       \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop
   }
 }
-\cs_generate_variant:Nn \jsonparse_parse:n { o }
+\cs_generate_variant:Nn \jsonparse_parse:n { e , o }
 
 \cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -1335,7 +1335,7 @@
     \tl_if_empty:NTF \l__jsonparse_array_map_store_in_tl {
       \l__jsonparse_array_values_sep_tl
     } {
-      \exp_last_unbraced:No \tl_gput_right:NV \l__jsonparse_array_map_store_in_tl 
+      \exp_last_unbraced:No \tl_gput_right:NV \l__jsonparse_array_map_store_in_tl
         \l__jsonparse_array_values_sep_tl
     }
   }
@@ -1347,7 +1347,7 @@
         }
       }
     } {
-      \exp_last_unbraced:No \jsonparse_gput_right_rescan:Ne \l__jsonparse_array_map_store_in_tl { 
+      \exp_last_unbraced:No \jsonparse_gput_right_rescan:Ne \l__jsonparse_array_map_store_in_tl {
         \prop_item:Ne \l__jsonparse_temp_copy_prop {
           \__jsonparse_array_use_index:n {#1}
         }

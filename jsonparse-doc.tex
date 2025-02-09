@@ -328,6 +328,10 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 
 \section{Main user commands}
 
+The first part of this section describes the basic commands for parsing JSON data and retrieving values from parsed JSON data. The second part of this section describes the various commands for handling arrays provided by this package.
+
+\subsection{Basic parsing commands}
+
 \begin{macrodef}
 |\JSONParse|[<options>]{<token variable>}{<JSON string>}
 \end{macrodef}
@@ -401,6 +405,15 @@ The command \macro{\JSONParseSetKeys} is used to get all top-level keys of a JSO
 |\JSONParseFilter|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
 The command \macro{\JSONParseFilter} is used to select a part (such as an object or an array) of a JSON object or JSON array and parse this into a token variable (a property list). The first argument denotes the token variable where the value should be stored into. The second argument of the command takes the token variable that holds the parsed JSON data. The third argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax.
+
+\subsection{Commands for handling arrays}
+
+The package offers a variety of commands that can be used to process JSON arrays. Three commands are provided to loop through arrays, \macro{\JSONParseArrayUse}, \macro{\JSONParseArrayMapFunction} and \macro{\JSONParseArrayMapInline} which offer different functionality for different use cases. All three commands are implemented in a unique way and it should not be expected that what works with one of these commands also works with another. The commands differ in various respects, for example:
+
+\begin{itemize}
+  \item With \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapInline}, it is possible to store the result in a token list for later use via the option key \macro{store in}, but such is not possible with \macro{\JSONParseArrayMapFunction}.
+  \item It is possible to store non-expandable commands (such as \macro{\emph} or \macro{\textbf}) in a token list using \macro{\JSONParseArrayUse}, but not using \macro{\JSONParseArrayMapInline}.
+\end{itemize}
 
 \begin{macrodef}
 |\JSONParseArrayCount|{<token variable>}{<key>}
@@ -679,9 +692,9 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 
 \subsubsection{Keys affecting the typesetting}
 
-Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}. 
+Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}.
 
-Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction}. 
+Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction}.
 
 Information about the key \macro{store in} can be found above in the description to the commands \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapInline}.
 
@@ -711,18 +724,65 @@ The following commands are provided for defining user functions by package autho
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
+|\jsonparse_parse:o| {<JSON string>}
+|\jsonparse_parse:e| {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string. This command does not escape the input in any way.
 
+The variants \macro{\jsonparse_parse:o} and \macro{\jsonparse_parse:e} are predefined for this command.
+
 \begin{macrodef}
 |\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
+|\jsonparse_parse_to_prop:Ne| <token variable> {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}.
+
+The variant \macro{\jsonparse_parse_to_prop:Ne} is predefined for this command.
 
 \begin{macrodef}
 |\jsonparse_parse_keys:NN| <token variable> <string variable>
 \end{macrodef}
 The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{child sep}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
+
+\begin{macrodef}
+|\jsonparse_rescan:n| {<JSON value>}
+|\jsonparse_rescan:e| {<JSON value>}
+\end{macrodef}
+The command \macro{\jsonparse_rescan:n} rescans the JSON value given in the argument. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
+
+The variant \macro{\jsonparse_rescan:e} is predefined for this command.
+
+\begin{macrodef}
+|\jsonparse_set_rescan:Nn| <token variable> {<JSON value>}
+|\jsonparse_set_rescan:Ne| <token variable> {<JSON value>}
+\end{macrodef}
+The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result in the token variable specified in the second argument.
+
+The variant \macro{\jsonparse_set_rescan:Ne} is predefined for this command.
+
+\begin{macrodef}
+|\jsonparse_gset_rescan:Nn| <token variable> {<JSON value>}
+|\jsonparse_gset_rescan:Ne| <token variable> {<JSON value>}
+\end{macrodef}
+The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the second argument.
+
+The variant \macro{\jsonparse_set_rescan:Ne} is predefined for this command.
+
+\begin{macrodef}
+|\jsonparse_put_right_rescan:Nn| <token variable> {<JSON value>}
+|\jsonparse_put_right_rescan:Ne| <token variable> {<JSON value>}
+\end{macrodef}
+The command \macro{\jsonparse_put_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result to the end of the token variable specified in the second argument.
+
+The variant \macro{\jsonparse_put_right_rescan:Ne} is predefined for this command.
+
+\begin{macrodef}
+|\jsonparse_gput_right_rescan:Nn| <token variable> {<JSON value>}
+|\jsonparse_gput_right_rescan:Ne| <token variable> {<JSON value>}
+\end{macrodef}
+The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result globally to the end of the token variable specified in the second argument.
+
+The variant \macro{\jsonparse_gput_right_rescan:Ne} is predefined for this command.
 
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}

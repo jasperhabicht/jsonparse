@@ -47,6 +47,7 @@
         {>}{{{\color{black!50}\guilsinglright}}}1,
     keywords={},
     moredelim=[is][\bfseries]{|}{|},
+    moredelim=[is][\bfseries\itshape]{?}{?},
     moredelim=[is][\color{black!50}]{!}{!},
 }
 \lstdefinestyle{jsonparsedoccodeexample}{
@@ -127,16 +128,20 @@
     outer arc=2.5pt,
     colframe=black!10,
     colback=black!10,
-    title style hook/.style={}
+    title style hook/.style={},
+    optional hypertarget/.code={
+      \IfValueT{#1}{\pgfkeysalso{hypertarget=#1}}
+    }
 }
 
-\NewTCBListing{macrodef}{ s }{
+\NewTCBListing{macrodef}{ s o }{
     listing only,
     listing style={jsonparsedocmacro},
     grow to left by=2cm,
     boxrule=0pt,
     after={\par\smallskip\noindent},
     enhanced,
+    optional hypertarget={#2},
     overlay={
       \IfBooleanT{#1}{
         \fill[black!50, shift={([xshift={-10pt}, yshift={-10pt-0.5em}]frame.north east)}]
@@ -425,7 +430,7 @@ The command \macro{\JSONParseArrayCount} takes as first argument a token variabl
 \end{macrodef}
 The command \macro{\JSONParseSetArrayCount} takes as second argument a token variable holding a parsed JSON string or JSON file and as third argument a key to select an array in the JSON data. It stores the number of items contained in the selected array in the token variable given in the first argument of the command.
 
-\begin{macrodef}
+\begin{macrodef}[macro:arrayuse]
 |\JSONParseArrayUse|[<options>]{<token variable>}{<key>}[<subkey>]{<string>}
 \end{macrodef}
 The command \macro{\JSONParseArrayUse} is used to select all values from an array from a parsed JSON string or JSON file. The second argument takes the token variable that holds the parsed JSON data. The first argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional and can be used to pass a subkey, i.\,e.\ a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
@@ -472,7 +477,7 @@ The command \macro{\JSONParseArrayUse} accepts as option set in the optional arg
 \end{tikzpicture}
 \end{codeexamplecolumns}
 
-\begin{macrodef}
+\begin{macrodef}[macro:arraymapfunction]
 |\JSONParseArrayMapFunction|[<options>]{<token variable>}{<key>}[<subkey>]
   {<command>}
 \end{macrodef}
@@ -580,7 +585,7 @@ Making use of the commands \macro{\JSONParseSetKeys} and \macro{\JSONParseSetVal
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
-The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
+The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
 
 Storing the result of the mapped inline function can be helpful if JSON data should be reformatted for use in a plotting functions. An example for a use case with PGFplots is shown below. In this example, the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }} was stored in the token variable \macro{\myJSONplotdata}.
 
@@ -608,7 +613,7 @@ Storing the result of the mapped inline function can be helpful if JSON data sho
 \end{tikzpicture}
 \end{codeexamplecolumns}
 
-\subsection{Externalizing parsed JSON data}\label{sec:externalizing}
+\section{Externalizing parsed JSON data}\label{sec:externalizing}
 
 Parsing large and complex JSON files can take quite a while. In order to speed up follow-up compilation runs, this package provides a way to store parsed JSON data for future use. Once a file for externalization has been created, the package will try to load the data from this file instead of parsing the JSON data again.
 
@@ -646,7 +651,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 \end{macrodef}
 The command \macro{\JSONParsePut} is used by the externalization procedure to re-read already parsed JSON data to the main file. It just adds a key-value pair to the property list (where the value part is read as string). Hence, it can also be used to append more entries to an already existing property list containing parsed JSON data.
 
-\subsection{Changing separators, output and other options}\label{sec:options}
+\section{Changing parsing and typesetting behavior via option keys}\label{sec:options}
 
 The package provides a set of keys that can be set to change the separators used to select the relevant value in the JSON structure, the output that is generated from the JSON data as well as other things.
 
@@ -657,7 +662,7 @@ The command \macro{\JSONParseSet} can be used to specify options via key-value p
 
 Not every key takes effect in every situation. Some keys affect the parsing procedure and thus need to be set before parsing. Some keys affect the typeset result and some keys only affect the typeset result when used in combination with specific commands.
 
-\subsubsection{Keys affecting the parsing procedure}
+\subsection{Keys affecting the parsing procedure}
 
 Information about the key \macro{externalize} as well as about the related keys \macro{externalize prefix} and \macro{externalize file name} can be found above in section \ref{sec:externalizing}.
 
@@ -690,13 +695,15 @@ If set to \macro{false}, the key \macro{check num} omits an internal check of nu
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
-\subsubsection{Keys affecting the typesetting}
+\subsection{Keys affecting the typesetting}
 
-Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}.
+Some keys that change the typesetting behavior are explained in other parts of this documentation.
 
-Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction}.
-
-Information about the key \macro{store in} can be found above in the description to the commands \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapInline}.
+\begin{itemize}
+\item Information about the keys \macro{escape} and \macro{rescan} can be found above in section \ref{sec:escaping}.
+\item Information about the key \macro{store in} can be found above in the description to the commands \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapInline} \hyperlink{macro:arrayuse}{above}.
+\item Information about the keys \macro{code before} and \macro{code after} can be found above in the description to the command \macro{\JSONParseArrayMapFunction} \hyperlink{macro:arraymapfunction}{above}.
+\end{itemize}
 
 \begin{macrodef}
 keyword/|true|={<string>}
@@ -718,9 +725,9 @@ These keys can be used to set the replacement text for the JSON escape sequences
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 
-\subsection{L3 commands}
+\section{L3 commands}
 
-The following commands are provided for defining user functions by package authors.
+The following commands are provided for defining user functions by package authors. For the conditional functions described above, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics.
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
@@ -729,15 +736,11 @@ The following commands are provided for defining user functions by package autho
 \end{macrodef}
 The command \macro{\jsonparse_parse:n} takes as argument a JSON string and populates the token variable (property list) \macro{\g_jsonparse_entries_prop} with key-value pairs representing all elements of the JSON data structure represented by this string. This command does not escape the input in any way.
 
-The variants \macro{\jsonparse_parse:o} and \macro{\jsonparse_parse:e} are predefined for this command.
-
 \begin{macrodef}
 |\jsonparse_parse_to_prop:Nn| <token variable> {<JSON string>}
 |\jsonparse_parse_to_prop:Ne| <token variable> {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_parse_to_prop:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}.
-
-The variant \macro{\jsonparse_parse_to_prop:Ne} is predefined for this command.
 
 \begin{macrodef}
 |\jsonparse_parse_keys:NN| <token variable> <string variable>
@@ -750,15 +753,11 @@ The command \macro{\jsonparse_parse_keys:NN} processes the token variable given 
 \end{macrodef}
 The command \macro{\jsonparse_rescan:n} rescans the JSON value given in the argument. Rescanning converts all tokens to their default category codes and TeX control sequences are expanded. Further, during the rescanning process, JSON escape sequences are replaced and characters that don't require escaping in JSON but in TeX are replaced by the relevant TeX escape sequences.
 
-The variant \macro{\jsonparse_rescan:e} is predefined for this command.
-
 \begin{macrodef}
 |\jsonparse_set_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_set_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
 The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result in the token variable specified in the second argument.
-
-The variant \macro{\jsonparse_set_rescan:Ne} is predefined for this command.
 
 \begin{macrodef}
 |\jsonparse_gset_rescan:Nn| <token variable> {<JSON value>}
@@ -766,23 +765,17 @@ The variant \macro{\jsonparse_set_rescan:Ne} is predefined for this command.
 \end{macrodef}
 The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the second argument.
 
-The variant \macro{\jsonparse_set_rescan:Ne} is predefined for this command.
-
 \begin{macrodef}
 |\jsonparse_put_right_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_put_right_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
 The command \macro{\jsonparse_put_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result to the end of the token variable specified in the second argument.
 
-The variant \macro{\jsonparse_put_right_rescan:Ne} is predefined for this command.
-
 \begin{macrodef}
 |\jsonparse_gput_right_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_gput_right_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
 The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result globally to the end of the token variable specified in the second argument.
-
-The variant \macro{\jsonparse_gput_right_rescan:Ne} is predefined for this command.
 
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}
@@ -795,41 +788,36 @@ The command \macro{\jsonparse_filter:Nn} processes the token variable given as t
 The command \macro{\jsonparse_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
 \begin{macrodef}*
-|\jsonparse_if_num:nTF| {<string>} {<true code>} {<false code>}
-|\jsonparse_if_num:nT| {<string>} {<true code>}
-|\jsonparse_if_num:nF| {<string>} {<false code>}
+|\jsonparse_if_num:n|?TF? {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num_p:n| {<string>}
 \end{macrodef}
 The expandable conditional function \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
 
 \begin{macrodef}*
-|\jsonparse_unicode_if_high_surrogate:nTF| {<codepoint>}
+|\jsonparse_unicode_if_high_surrogate:n|?TF? {<codepoint>}
   {<true code>} {<false code>}
-|\jsonparse_unicode_if_high_surrogate:nT| {<codepoint>} {<true code>}
-|\jsonparse_unicode_if_high_surrogate:nF| {<codepoint>} {<false code>}
+|\jsonparse_unicode_if_high_surrogate:e|?TF? {<codepoint>}
+  {<true code>} {<false code>}
 |\jsonparse_unicode_if_high_surrogate_p:n| {<codepoint>}
+|\jsonparse_unicode_if_high_surrogate_p:e| {<codepoint>}
 \end{macrodef}
-The expandable conditional function \macro{\jsonparse_unicode_if_high_surrogate:nTF} checks whether the codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"D800} and \macro{"DBFF} which means that it is the first part of a surrogate pair (a high surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_high_surrogate_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
-
-The variants \macro{\jsonparse_unicode_if_high_surrogate:eTF} etc.\ are predefined for this conditional function.
+The expandable conditional function \macro{\jsonparse_unicode_if_high_surrogate:nTF} checks whether the codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"D800} and \macro{"DBFF} which means that it is the first part of a surrogate pair (a high surrogate). The conditional function executes the true or false code depending on the evaluation. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_high_surrogate_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
 
 \begin{macrodef}*
-|\jsonparse_unicode_if_low_surrogate:nTF| {<codepoint>}
+|\jsonparse_unicode_if_low_surrogate:n|?TF? {<codepoint>}
   {<true code>} {<false code>}
-|\jsonparse_unicode_if_low_surrogate:nT| {<codepoint>} {<true code>}
-|\jsonparse_unicode_if_low_surrogate:nF| {<codepoint>} {<false code>}
+|\jsonparse_unicode_if_low_surrogate:e|?TF? {<codepoint>}
+  {<true code>} {<false code>}
 |\jsonparse_unicode_if_low_surrogate_p:n| {<codepoint>}
+|\jsonparse_unicode_if_low_surrogate_p:e| {<codepoint>}
 \end{macrodef}
-The expandable conditional function \macro{\jsonparse_unicode_if_low_surrogate:nTF} checks whether the codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"DC00} and \macro{"DFFF} which means that it is the last part of a surrogate pair (a low surrogate). The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_low_surrogate_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
-
-The variants \macro{\jsonparse_unicode_if_low_surrogate_p:eTF} etc.\ are predefined for this conditional function.
+The expandable conditional function \macro{\jsonparse_unicode_if_low_surrogate:nTF} checks whether the codepoint entered as argument (an integer that can be hexadecimal if preceded by \macro{"}) is in the range of \macro{"DC00} and \macro{"DFFF} which means that it is the last part of a surrogate pair (a low surrogate). The conditional function executes the true or false code depending on the evaluation. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_unicode_if_low_surrogate_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
 
 \begin{macrodef}*
 |\jsonparse_unicode_convert_surrogate_pair:nn| {<codepoint>} {<codepoint>}
+|\jsonparse_unicode_convert_surrogate_pair:ee| {<codepoint>} {<codepoint>}
 \end{macrodef}
 The expandable command \macro{\jsonparse_unicode_convert_surrogate_pair:nn} converts a surrogate pair to the relevant Unicode codepoint. The returned value is an integer. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
-
-The variant \macro{\jsonparse_unicode_convert_surrogate_pair:ee} is predefined.
 
 % =====
 

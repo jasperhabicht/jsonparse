@@ -36,7 +36,18 @@
     \JSONParsePut ~ {\myJSONdataE ~ }{.}{{ ~ "a" ~ : ~ 1 ~ }} 
   }
 
-  \tl_if_eq:NNTF { \l_jsonparse_test_a_str } { \l_jsonparse_test_b_str } {
+  \tl_if_eq:NNTF \l_jsonparse_test_a_str \l_jsonparse_test_b_str {
+    \TRUE
+  } {
+    \FALSE
+  }
+}
+
+\JSONParsePut{\myJSONdataE}{b}{foo} 
+
+\TEST { externalize: ~ put } {
+  
+  \str_if_eq:enTF { \JSONParseExpandableValue{\myJSONdataE}{b} } { foo } {
     \TRUE
   } {
     \FALSE

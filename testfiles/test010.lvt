@@ -1,0 +1,63 @@
+\documentclass{article} 
+\usepackage[T1]{fontenc}
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\ExplSyntaxOn
+\box_new:N \l_jsonparse_test_box
+\ExplSyntaxOff
+
+\JSONParse{\JSONdataD}{
+  {
+    "data" : [ 
+       { "x" : 1 , "y" : 2 } ,
+       { "x" : 2 , "y" : 4 } ,
+       { "x" : 3 , "y" : 5 } ,
+       { "x" : 4 , "y" : 8 }  
+    ] 
+  }
+}
+
+\START
+
+\BEGINTEST{keys}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseKeys{\JSONdataD}{data} }
+  \box_show:N \l_jsonparse_test_box
+
+  \JSONParseSetKeys{\JSONdataKeys}{\JSONdataD}{data[0]}
+
+  \str_if_eq:enTF {
+      \JSONParseExpandableValue{\JSONdataKeys}{[0]}
+  } { 
+      x
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{filter}
+
+\ExplSyntaxOn
+
+  \JSONParseFilter{\JSONdataE}{\JSONdataD}{data[0]}
+ 
+  \str_if_eq:enTF {
+      \JSONParseExpandableValue{\JSONdataE}{x}
+  } { 
+      1 ~
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\END
+
+\end{document}

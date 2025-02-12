@@ -1,0 +1,48 @@
+\documentclass{article} 
+\usepackage[T1]{fontenc}
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\ExplSyntaxOn
+\box_new:N \l_jsonparse_test_box
+\ExplSyntaxOff
+
+\START
+
+\BEGINTEST{keys}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box { [ "[0]" , "[1]" , "[2]" , "[3]" ] }
+  \box_show:N \l_jsonparse_test_box
+
+  \str_if_eq:enTF {
+      x
+  } { 
+      x
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+
+\BEGINTEST{filter}
+
+\ExplSyntaxOn
+ 
+  \str_if_eq:enTF {
+      1 ~
+  } { 
+      1 ~
+  } { \TRUE } { \FALSE }
+
+\ExplSyntaxOff
+
+\ENDTEST
+
+\END
+
+\end{document}

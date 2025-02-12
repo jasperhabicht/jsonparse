@@ -1,6 +1,6 @@
 # Test files
 
-The following tests are performed upon Push or Pull-Request. The first column depicts the name of the `.lvt` file. All tests are compared against `.tlg` files, except for `testßß3` and `testß04` which are compared against `.vle` files. Most tests are tested with PDFTeX while some tests (involving Unicode) are performed using LuaTeX.
+The following tests are performed upon Push or Pull-Request. The first column depicts the name of the `.lvt` file. All tests are compared against `.tlg` files, except for `testßß3`, `testß04` and  `testß10` which are compared against `.vle` files. Most tests are tested with PDFTeX while some tests (involving Unicode) are performed using LuaTeX.
 
 | Test file | Compared against | PDFTeX | LuaTeX | Tests performed |
 | :---      | :---             | :---:  | :---:  | :---            |
@@ -13,5 +13,6 @@ The following tests are performed upon Push or Pull-Request. The first column de
 | `test007` | `.tlg` | ✅ | ✅ | Parsing of JSON escape sequences for Unicode (`\u`) including conversion of surrogate pairs |
 | `test008` | `.tlg` | ✅ |    | Parsing of custom separators for arrays and children; parsing of custom replacements for boolean and null values |
 | `test009` | `.tlg` | ✅ |    | Externalizing of parsed data |
+| `test010` | `.vle` | ✅ |    | Use of `JSONParseKeys` and `JSONParseFilter` |
 | `test100` | `.tlg` | ✅ |    | Validation of JSON numbers |
 | `test200` | `.tlg` | ✅ |    | Checking for high and low surrogates; checking conversion of surrogate pairs |

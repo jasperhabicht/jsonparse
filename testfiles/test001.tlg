@@ -26,7 +26,7 @@ Parsing JSON ...
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(num) -1.23
+(num) -1.23 
 (key) A[2]:
 (nul) null
 (key) A:
@@ -58,7 +58,7 @@ Parsing JSON ...
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(num) -1.23
+(num) -1.23 
 (key) A[2]:
 (nul) null
 (key) A:

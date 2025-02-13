@@ -1,0 +1,38 @@
+\documentclass{article} 
+\usepackage[T1]{fontenc}
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\ExplSyntaxOn
+\box_new:N \l_jsonparse_test_box
+\ExplSyntaxOff
+
+\START
+
+\JSONParseSet{
+  escape=all
+}
+
+\JSONParse{\myJSONdataX}{ 
+  { 
+    "a" : [ "abc#def" , "abc$def" , "abc%def" , "abc&def" , 
+            "abc^def" , "abc_def" , "abc~def" ]
+  } 
+}
+
+\ExplSyntaxOn
+
+\TEST { parsing , ~ escape ~ sequences } {
+  
+  \hbox_set:Nn \l_jsonparse_test_box { \JSONParseArrayUse{\myJSONdataX}{a}{,} }
+  \box_show:N \l_jsonparse_test_box
+
+}
+
+\ExplSyntaxOff
+
+\END
+
+\end{document}

@@ -26,16 +26,16 @@ Parsing JSON ...
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(str) 1.23
+(num) -1.23
 (key) A[2]:
 (nul) null
 (key) A:
-(arr) [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ]
+(arr) [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ]
 (arr end)
 (key) B:
 (str) baz
 (key) .:
-(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" }
+(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" }
 (obj end)
 JSON parsing done.
 ============================================================
@@ -58,16 +58,16 @@ Parsing JSON ...
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(str) 1.23
+(num) -1.23
 (key) A[2]:
 (nul) null
 (key) A:
-(arr) [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ]
+(arr) [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ]
 (arr end)
 (key) B:
 (str) baz
 (key) .:
-(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" }
+(obj) { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" }
 (obj end)
 JSON parsing done.
 ============================================================

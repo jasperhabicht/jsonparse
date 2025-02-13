@@ -13,7 +13,7 @@
 
 \SEPARATOR
 
-\JSONParse{\myJSONdataA}{ { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" } }
+\JSONParse{\myJSONdataA}{ { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" } }
 
 \ExplSyntaxOn
 
@@ -41,7 +41,7 @@
 
 \OMIT
 \begin{filecontents}[noheader,force]{test-1.json}
-  { "A" : [ { "foo" : "bar" , "a" : 1 } , "1.23" , null ] , "B" : "baz" }
+  { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" }
 \end{filecontents}
 \TIMO
 

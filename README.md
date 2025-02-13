@@ -60,7 +60,7 @@ to plot their values using packages such as PGFPlots.
 
 Adding commas between the items of the children array can be done with:
 ```tex
-\JSONParseArrayValues{\myJSONdata}{children}{, }
+\JSONParseArrayUse{\myJSONdata}{children}{, }
 ```
 
 A tabular listing the contact points of above JSON file can be created with:

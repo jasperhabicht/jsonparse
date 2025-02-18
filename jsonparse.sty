@@ -265,10 +265,25 @@
 
 % ===
 
-\cs_if_exist:NF \str_casefold:n {
-  \cs_new_eq:NN \str_casefold:n \str_foldcase:n
-  \cs_new:Npn \str_foldcase:n { \str_casefold:n }
+\bool_new:N \l__jsonparse_compat_bool
+
+\cs_if_exist:NF \IfExplAtLeastTF {
+  \cs_new:Npn \IfExplAtLeastTF #1#2#3 { }
+  \bool_set_true:N \l__jsonparse_compat_bool
 }
+
+\IfExplAtLeastTF { 2024-12-09 } { } {
+  \bool_set_true:N \l__jsonparse_compat_bool
+}
+
+\bool_if:NT \l__jsonparse_compat_bool {
+  \cs_if_exist:NF \str_casefold:n {
+    \cs_new_eq:NN \str_casefold:n \str_foldcase:n
+    \cs_new:Npn \str_foldcase:n { \str_casefold:n }
+  }
+}
+
+% ===
 
 \exp_args_generate:n { NeoV }
 
@@ -310,19 +325,6 @@
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T , F , TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { Vn } { p }
 \prg_generate_conditional_variant:Nnn \str_if_in:nn { ee } { T }
-
-% ===
-
-\bool_new:N \l__jsonparse_compat_bool
-
-\cs_if_exist:NF \IfExplAtLeastTF {
-  \cs_new:Npn \IfExplAtLeastTF #1#2#3 { }
-  \bool_set_true:N \l__jsonparse_compat_bool
-}
-
-\IfExplAtLeastTF { 2024-12-09 } { } {
-  \bool_set_true:N \l__jsonparse_compat_bool
-}
 
 % ===
 
@@ -914,7 +916,7 @@
     \prop_set_eq:NN \l__jsonparse_temp_prop #1
     \prop_remove:Ne \l__jsonparse_temp_prop { \l__jsonparse_child_sep_str }
   } {
-    \prop_map_tokens:Nn #1 { \__jsonparse_filter:nn }
+    \prop_map_function:NN #1 \__jsonparse_filter:nn
   }
   \prop_set_eq:NN #1 \l__jsonparse_temp_prop
 }
@@ -1250,7 +1252,7 @@
 
 \cs_new_protected:Npn \jsonparse_parse_keys:NN #1#2 {
   \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
-  \prop_map_tokens:Nn #1 { \__jsonparse_parse_keys:nn }
+  \prop_map_function:NN #1 \__jsonparse_parse_keys:nn
   \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
   \tl_set_eq:NN #2 \l__jsonparse_keys_array_tl
 }
@@ -1303,7 +1305,7 @@
 \cs_new_protected:Npn \jsonparse_array_count:NN #1#2 {
   \int_zero:N \l__jsonparse_array_count_aux_int
   \seq_clear:N \l__jsonparse_array_count_last_seq
-  \prop_map_tokens:Nn #1 { \__jsonparse_array_count:nn }
+  \prop_map_function:NN #1 \__jsonparse_array_count:nn
   \int_set_eq:NN #2 \l__jsonparse_array_count_aux_int
 }
 
@@ -1487,8 +1489,8 @@
     }
   } {
     \int_zero:N \l__jsonparse_array_keys_index_int
-    \clist_map_tokens:Nn \l__jsonparse_array_map_keys_clist
-      { \__jsonparse_array_map_function_keys:n }
+    \clist_map_function:NN \l__jsonparse_array_map_keys_clist
+      \__jsonparse_array_map_function_keys:n
     \tl_gset_eq:NN \JSONParseArrayKey \JSONParseArrayKeyI
     \tl_gset_eq:NN \JSONParseArrayValue \JSONParseArrayValueI
   }
@@ -1524,8 +1526,8 @@
     \cs_set_eq:NN \__jsonparse_array_map_function_cs: #5
     \clist_if_empty:NF \l__jsonparse_array_map_keys_clist {
       \int_zero:N \l__jsonparse_array_keys_index_int
-      \clist_map_tokens:Nn \l__jsonparse_array_map_keys_clist
-        { \__jsonparse_array_map_function_generate_cs:n }
+      \clist_map_function:NN \l__jsonparse_array_map_keys_clist
+        \__jsonparse_array_map_function_generate_cs:n
     }
     \l__jsonparse_array_map_code_before_tl
     \int_step_function:nN { \l__jsonparse_array_count_int }

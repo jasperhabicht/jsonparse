@@ -238,12 +238,12 @@
   rescan                      .bool_set:N = \l__jsonparse_rescan_bool ,
   rescan                      .default:n  = { true } ,
   rescan                      .initial:n  = { true } ,
-  rescan                      .groups:n   = { output } ,
-  code ~ before               .tl_set:N   = \l__jsonparse_array_map_code_before_tl ,
-  code ~ after                .tl_set:N   = \l__jsonparse_array_map_code_after_tl
+  rescan                      .groups:n   = { output }
 }
 
 \keys_define:nn { jsonparse / map } {
+  code ~ before               .tl_set:N   = \l__jsonparse_array_map_code_before_tl ,
+  code ~ after                .tl_set:N   = \l__jsonparse_array_map_code_after_tl ,
   store ~ in                  .tl_set:N   = \l__jsonparse_array_map_store_in_tl
 }
 
@@ -1518,6 +1518,7 @@
   }
   \group_begin:
     \keys_set_known:nnN { jsonparse / typeset } {#1} \l__jsonparse_unused_keys_clist
+    \keys_set_known:noN { jsonparse / map } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}

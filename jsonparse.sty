@@ -1587,8 +1587,8 @@
   \__jsonparse_warning_undefined_prop:N #2
   \cs_gset:Npn \__jsonparse_array_map_inline_code:n ##1 {#4}
   \group_begin:
-    \keys_set_known:noN { jsonparse / store ~ in } {#1} \l__jsonparse_unused_keys_clist
-    \keys_set_known:nnN { jsonparse / map } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nnN { jsonparse / store ~ in } {#1} \l__jsonparse_unused_keys_clist
+    \keys_set_known:noN { jsonparse / map } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}

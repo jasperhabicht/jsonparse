@@ -1283,7 +1283,7 @@
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_array_map_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_array_map_store_in_tl
       }
-      \exp_last_unbraced:No \tl_gset:NV \l__jsonparse_array_map_store_in_tl
+      \exp_last_unbraced:No \jsonparse_parse_to_prop:NV \l__jsonparse_array_map_store_in_tl
         \l__jsonparse_keys_tl
     }
   \group_end:

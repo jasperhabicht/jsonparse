@@ -405,7 +405,8 @@ This can, for example, be necessary when numbers stored in the JSON data in scie
 
 \JSONParse{\myJSONnumber}{ { "number" : -1.1e-1 } }
 \begin{codeexamplecolumns}
-\JSONParseValue[rescan, store in=\mynumber]
+\JSONParseValue
+  [rescan, store in=\mynumber]
   {\myJSONnumber}{number}
 \num{\mynumber}
 \end{codeexamplecolumns}

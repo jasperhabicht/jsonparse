@@ -7,3 +7,6 @@ xetex
 
 ec
 cm-super
+
+latex-bin-dev
+latex-base-dev

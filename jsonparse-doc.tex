@@ -796,11 +796,13 @@ The following commands displayed in red boxes on the left have been deprecated a
 \begin{macroreplacement}
 |\JSONParseArrayMapFunction|
   [<1>, code before={<6>},
-  code after={<7>}]
+    code after={<7>}]
   {<2>}{<3>}[<4>]{\<5>}
 \end{macroreplacement}
 
-To ensure backward compatibility, the deprecated commands are still supported, but their use is not recommended.
+The command \macro{\JSONParseArrayMapFunction} takes as last argument a command denoting the relevant mapping function including the preceding backslash, while the deprecated command \macro{\JSONParseArrayValuesMap} required the name of this function without preceding backslash.
+
+To ensure backward compatibility, the deprecated commands are still supported, but their use is not recommended. The commands \macro{\JSONParseSetValue} and \macro{\JSONParseSetArrayCount} will globally set the relevant token variable.
 
 \section{L3 commands}
 

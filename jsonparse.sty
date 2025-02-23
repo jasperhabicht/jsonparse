@@ -290,7 +290,7 @@
 
 % ===
 
-\exp_args_generate:n { Neo , NeV , NeoV }
+\exp_args_generate:n { NoV , NooV }
 
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
@@ -1214,8 +1214,8 @@
 }
 \cs_generate_variant:Nn \jsonparse_gput_right_rescan:Nn { Ne }
 
-\cs_new_protected:Npn \__jsonparse_parse_value_aux:nn #1#2#3#4 {
-  \bool_if:nTF {#1} {
+\cs_new_protected:Npn \__jsonparse_parse_value_aux:nnnn #1#2#3#4 {
+  \tl_if_empty:nTF {#1} {
     \bool_if:nTF {#2} {
       \jsonparse_rescan:e { \prop_item:Ne #3 {#4} }
     } {
@@ -1241,10 +1241,10 @@
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       } 
     }
-    \exp_args:NNeo
+    \exp_args:NNoo
   \group_end:
-  \__jsonparse_parse_value_aux:nn { \tl_if_empty_p:N \l__jsonparse_store_in_tl }
-    { \l__jsonparse_rescan_bool } {#3} {#4}
+  \__jsonparse_parse_value_aux:nnnn { \l__jsonparse_store_in_tl }
+    { \l__jsonparse_rescan_bool } {#2} {#3}
 }
 
 % backward compatibility
@@ -1280,7 +1280,7 @@
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_keys_aux:nn #1#2 {
-  \bool_if:nTF {#1} {
+  \tl_if_empty:nTF {#1} {
     #2
   } {
     \jsonparse_parse_to_prop:No #1 {#2}
@@ -1301,9 +1301,9 @@
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       }
     }
-    \exp_args:NNeV
+    \exp_args:NNoV
   \group_end:
-  \__jsonparse_parse_keys_aux:nn { \tl_if_empty_p:N \l__jsonparse_store_in_tl }
+  \__jsonparse_parse_keys_aux:nn { \l__jsonparse_store_in_tl }
     \l__jsonparse_keys_tl
 }
 
@@ -1339,8 +1339,8 @@
   \int_set_eq:NN #2 \l__jsonparse_array_count_aux_int
 }
 
-\cs_new:Npn \__jsonparse_array_count_aux:nnn #1#2 {
-  \bool_if:nTF {#1} {
+\cs_new_protected:Npn \__jsonparse_array_count_aux:nn #1#2 {
+  \tl_if_empty:nTF {#1} {
     #2
   } {
     \tl_gset:Nn #1 {#2}
@@ -1360,9 +1360,9 @@
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       }
     }
-    \exp_args:NNeV
+    \exp_args:NNoV
   \group_end:
-  \__jsonparse_array_count_aux:nnn { \tl_if_empty_p:N \l__jsonparse_store_in_tl }
+  \__jsonparse_array_count_aux:nn { \l__jsonparse_store_in_tl }
     \l__jsonparse_array_count_int
 }
 
@@ -1405,8 +1405,8 @@
   }
 }
 
-\cs_new:Npn \__jsonparse_array_use_aux:nn #1#2 {
-  \bool_if:nTF {#1} {
+\cs_new_protected:Npn \__jsonparse_array_use_aux:nn #1#2 {
+  \tl_if_empty:nTF {#1} {
     \seq_use:Nn \g__jsonparse_array_use_temp_seq {#2}
   } {
     \tl_gset:Ne #1 { \seq_use:Nn \g__jsonparse_array_use_temp_seq {#2} }
@@ -1431,9 +1431,9 @@
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       }
     }
-    \exp_args:NNe
+    \exp_args:NNo
   \group_end:
-  \__jsonparse_array_use_aux:nn { \tl_if_empty_p:N \l__jsonparse_store_in_tl }
+  \__jsonparse_array_use_aux:nn { \l__jsonparse_store_in_tl }
     {#5}
 }
 
@@ -1584,7 +1584,7 @@
 \cs_new:Npn \__jsonparse_array_map_inline_code:n #1 { }
 
 \cs_new:Npn \__jsonparse_array_map_inline_aux:nnn #1#2#3 {
-  \bool_if:nT {#1} {
+  \tl_if_empty:nT {#1} {
     \__jsonparse_array_map_inline_auxi:nn {#2} {#3}
   }
 }
@@ -1619,9 +1619,9 @@
           \l__jsonparse_array_count_int
       }
     }
-    \exp_args:NNeoV
+    \exp_args:NNooV
   \group_end:
-  \__jsonparse_array_map_inline_aux:nnn { \tl_if_empty_p:N \l__jsonparse_store_in_tl }
+  \__jsonparse_array_map_inline_aux:nnn { \l__jsonparse_store_in_tl }
     { \l__jsonparse_zero_based_bool } \l__jsonparse_array_count_int
 }
 

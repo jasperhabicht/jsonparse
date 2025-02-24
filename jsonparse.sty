@@ -290,7 +290,7 @@
 
 % ===
 
-\exp_args_generate:n { NoV , NooV }
+\exp_args_generate:n { NoV , NoeV }
 
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
@@ -1241,10 +1241,10 @@
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       } 
     }
-    \exp_args:NNoo
+    \exp_args:NNoe
   \group_end:
   \__jsonparse_parse_value_aux:nnnn { \l__jsonparse_store_in_tl }
-    { \l__jsonparse_rescan_bool } {#2} {#3}
+    { \bool_if_p:N \l__jsonparse_rescan_bool } {#2} {#3}
 }
 
 % backward compatibility
@@ -1601,7 +1601,6 @@
   \cs_gset:Npn \__jsonparse_array_map_inline_code:n ##1 {#4}
   \group_begin:
     \keys_set_known:nnN { jsonparse / store ~ in } {#1} \l__jsonparse_unused_keys_clist
-    \keys_set_known:noN { jsonparse / map } { \l__jsonparse_unused_keys_clist } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1619,10 +1618,10 @@
           \l__jsonparse_array_count_int
       }
     }
-    \exp_args:NNooV
+    \exp_args:NNoeV
   \group_end:
   \__jsonparse_array_map_inline_aux:nnn { \l__jsonparse_store_in_tl }
-    { \l__jsonparse_zero_based_bool } \l__jsonparse_array_count_int
+    { \bool_if_p:N \l__jsonparse_zero_based_bool } \l__jsonparse_array_count_int
 }
 
 % ===

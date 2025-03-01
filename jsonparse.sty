@@ -608,7 +608,7 @@
       \__jsonparse_parse_other:w \l__jsonparse_input_tl \q_stop
   }
 }
-\cs_generate_variant:Nn \jsonparse_parse:n { e , o }
+\cs_generate_variant:Nn \jsonparse_parse:n { o , e }
 
 \cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
   \bool_if:NT \l__jsonparse_debug_mode_bool {

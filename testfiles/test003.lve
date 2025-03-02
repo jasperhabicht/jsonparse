@@ -55,17 +55,17 @@
 \ExplSyntaxOn
 
   \hbox_set:Nn \l_jsonparse_test_box { ~
-    0 : ~ [0].y : ~ 2
-    1 : ~ [1].y : ~ 4
-    2 : ~ [2].y : ~ 5
+    0 : ~ [0].y : ~ 2 ~
+    1 : ~ [1].y : ~ 4 ~
+    2 : ~ [2].y : ~ 5 ~
     3 : ~ [3].y : ~ 8
   }
   \box_show:N \l_jsonparse_test_box
 
   \hbox_set:Nn \l_jsonparse_test_box { ~
-    0 : ~ [0].y : ~ 2
-    1 : ~ [1].y : ~ 4
-    2 : ~ [2].y : ~ 5
+    0 : ~ [0].y : ~ 2 ~
+    1 : ~ [1].y : ~ 4 ~
+    2 : ~ [2].y : ~ 5 ~
     3 : ~ [3].y : ~ 8
   }
   \box_show:N \l_jsonparse_test_box

@@ -103,7 +103,7 @@
     \JSONParseExpandableValue{\JSONdataC}{data[#1].x} :
   }
 
-  \str_if_eq:onTF { \JSONvaluesC } { 1 ~ : 2 ~ : 3 ~ : 4 ~ : } {
+  \str_if_eq:onTF { \JSONvaluesC } { 1 : 2 : 3 : 4 : } {
     \TRUE
   } {
     \FALSE

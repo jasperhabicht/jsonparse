@@ -32,7 +32,7 @@
 \ExplSyntaxOn
 
 \TEST { parsing , ~ custom ~ child ~ separator } {
-  \str_if_eq:enTF { \myJSONvalueW } { 1 ~ } {
+  \str_if_eq:enTF { \myJSONvalueW } { 1 } {
     \TRUE
   } {
     \FALSE

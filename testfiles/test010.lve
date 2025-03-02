@@ -34,9 +34,9 @@
 \ExplSyntaxOn
  
   \str_if_eq:enTF {
-      1 ~
+      1
   } { 
-      1 ~
+      1
   } { \TRUE } { \FALSE }
 
 \ExplSyntaxOff

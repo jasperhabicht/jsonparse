@@ -32,7 +32,7 @@
   }
 
   \str_set:Nn \l_jsonparse_test_b_str {
-    \JSONParsePut ~ {\myJSONdataE ~ }{a}{1 ~ } 
+    \JSONParsePut ~ {\myJSONdataE ~ }{a}{1} 
     \JSONParsePut ~ {\myJSONdataE ~ }{.}{{ ~ "a" ~ : ~ 1 ~ }} 
   }
 

@@ -21,12 +21,12 @@ Parsing JSON ...
 (key) A[0].foo:
 (str) bar
 (key) A[0].a:
-(num) 1 
+(num) 1
 (key) A[0]:
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(num) -1.23 
+(num) -1.23
 (key) A[2]:
 (nul) null
 (key) A:
@@ -53,12 +53,12 @@ Parsing JSON ...
 (key) A[0].foo:
 (str) bar
 (key) A[0].a:
-(num) 1 
+(num) 1
 (key) A[0]:
 (obj) { "foo" : "bar" , "a" : 1 }
 (obj end)
 (key) A[1]:
-(num) -1.23 
+(num) -1.23
 (key) A[2]:
 (nul) null
 (key) A:

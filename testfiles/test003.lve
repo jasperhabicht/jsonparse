@@ -55,18 +55,18 @@
 \ExplSyntaxOn
 
   \hbox_set:Nn \l_jsonparse_test_box { ~
-    0 : ~ [0].y : ~ 2 ~
-    1 : ~ [1].y : ~ 4 ~
-    2 : ~ [2].y : ~ 5 ~
-    3 : ~ [3].y : ~ 8 
+    0 : ~ [0].y : ~ 2
+    1 : ~ [1].y : ~ 4
+    2 : ~ [2].y : ~ 5
+    3 : ~ [3].y : ~ 8
   }
   \box_show:N \l_jsonparse_test_box
 
   \hbox_set:Nn \l_jsonparse_test_box { ~
-    0 : ~ [0].y : ~ 2 ~
-    1 : ~ [1].y : ~ 4 ~
-    2 : ~ [2].y : ~ 5 ~
-    3 : ~ [3].y : ~ 8 
+    0 : ~ [0].y : ~ 2
+    1 : ~ [1].y : ~ 4
+    2 : ~ [2].y : ~ 5
+    3 : ~ [3].y : ~ 8
   }
   \box_show:N \l_jsonparse_test_box
 
@@ -84,7 +84,7 @@
   }
   \box_show:N \l_jsonparse_test_box
 
-  \str_if_eq:nnTF { 1 ~ : 2 ~ : 3 ~ : 4 ~ : } { 1 ~ : 2 ~ : 3 ~ : 4 ~ : } {
+  \str_if_eq:nnTF { 1 : 2 : 3 : 4 : } { 1 : 2 : 3 : 4 : } {
     \TRUE
   } {
     \FALSE

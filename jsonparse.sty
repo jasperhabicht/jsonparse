@@ -363,8 +363,6 @@
 \tl_new:N \l__jsonparse_object_array_key_tl
 \tl_new:N \l__jsonparse_object_array_val_tl
 \tl_new:N \l__jsonparse_remainder_tl
-\tl_new:N \l__jsonparse_remainder_copy_tl
-\int_new:N \l__jsonparse_object_array_length_int
 
 \int_new:N \l__jsonparse_array_index_int
 \int_new:N \l__jsonparse_array_count_int
@@ -693,12 +691,6 @@
   }
 }
 
-\cs_new_protected:Npn \__jsonparse_object_array_length:w #1 \s__jsonparse_mark #2 \q_stop {
-  \int_set:Nn \l__jsonparse_object_array_length_int {
-    \tl_count:n {#1}
-  }
-}
-
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_begin:w \c_left_brace_str #1 \q_stop {
   \__jsonparse_array_key_set:
   \group_begin:
@@ -715,9 +707,6 @@
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
       \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_child_sep_str }
     }
-    \tl_set:Nn \l__jsonparse_remainder_copy_tl {#1}
-    \tl_replace_once:Non \l__jsonparse_remainder_copy_tl { \c_right_brace_str } { \s__jsonparse_mark }
-    \exp_last_unbraced:No \__jsonparse_object_array_length:w \l__jsonparse_remainder_copy_tl \q_stop
     \tl_set:Nn \l__jsonparse_object_array_val_tl { \c_left_brace_str #1 }
     \__jsonparse_parse_remainder:
 }
@@ -725,7 +714,9 @@
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_end:w \c_right_brace_str #1 \q_stop {
     \tl_set:Ne \l__jsonparse_object_array_val_tl {
       \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
-        \l__jsonparse_object_array_length_int + 2
+        \int_eval:n {
+          -1 * \tl_count:n {#1} - 1
+        }
       }
     }
     \prop_gput:Nee \g_jsonparse_entries_prop
@@ -766,9 +757,6 @@
     } {
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
     }
-    \tl_set:Nn \l__jsonparse_remainder_copy_tl {#1}
-    \tl_replace_once:Nnn \l__jsonparse_remainder_copy_tl { ] } { \s__jsonparse_mark }
-    \exp_last_unbraced:No \__jsonparse_object_array_length:w \l__jsonparse_remainder_copy_tl \q_stop
     \tl_set:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_array_sep_left_str }
     \__jsonparse_parse_remainder:
@@ -777,7 +765,9 @@
 \cs_new_protected:Npn \__jsonparse_parse_array_end:w ] #1 \q_stop {
     \tl_set:Ne \l__jsonparse_object_array_val_tl {
       \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
-        \l__jsonparse_object_array_length_int + 2
+        \int_eval:n {
+          -1 * \tl_count:n {#1} - 1
+        }
       }
     }
     \prop_gput:Nee \g_jsonparse_entries_prop

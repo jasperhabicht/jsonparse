@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-02-25} {1.2.2}
+\ProvidesExplPackage {jsonparse} {2025-03-23} {1.2.3}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1626,20 +1626,23 @@
 
 \cs_new:Npn \__jsonparse_array_map_inline_code:n #1 { }
 
-\cs_new:Npn \__jsonparse_array_map_inline_aux:nnnn #1#2#3#4 {
-  \tl_if_empty:nTF {#1} {
-    \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
-  } {
-    \bool_if:nTF {#2} {
-      \tl_gset:Ne #1 {
-        \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
-      }
+\cs_new:Npn \__jsonparse_array_map_inline_aux:nnnnn #1#2#3#4#5 {
+  \group_begin:
+    \cs_set:Npn \__jsonparse_array_map_inline_code:n ##1 {#5}
+    \tl_if_empty:nTF {#1} {
+      \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
     } {
-      \tl_set:Ne #1 {
-        \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
+      \bool_if:nTF {#2} {
+        \tl_gset:Ne #1 {
+          \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
+        }
+      } {
+        \tl_set:Ne #1 {
+          \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
+        }
       }
     }
-  }
+  \group_end:
 }
 
 \cs_new:Npn \__jsonparse_array_map_inline_auxi:nn #1#2 {
@@ -1650,7 +1653,6 @@
 
 \NewDocumentCommand { \JSONParseArrayMapInline } { O{} m m +m } {
   \__jsonparse_warning_undefined_prop:N #2
-  \cs_gset:Npn \__jsonparse_array_map_inline_code:n ##1 {#4}
   \group_begin:
     \keys_set_known:nnN { jsonparse / store ~ in } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1668,9 +1670,9 @@
     }
     \exp_args:NNoeeV
   \group_end:
-  \__jsonparse_array_map_inline_aux:nnnn { \l__jsonparse_store_in_tl }
+  \__jsonparse_array_map_inline_aux:nnnnn { \l__jsonparse_store_in_tl }
     { \bool_if_p:N \l__jsonparse_store_in_global_bool } { \bool_if_p:N \l__jsonparse_zero_based_bool }
-    \l__jsonparse_array_count_int
+    \l__jsonparse_array_count_int {#4}
 }
 
 % ===

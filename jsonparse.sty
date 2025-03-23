@@ -1628,9 +1628,9 @@
     JSONParseArrayMapFunction ,
     JSONParseArrayMapInline
   } {
-    \str_if_in:eeT { \exp_args:NNo \exp_args:No \tl_to_str:o {
-      \use:c { __jsonparse_array_map_inline_ \int_to_roman:n {#1} _code:n } { }
-    } } { \c_backslash_str ##1 } {
+    \str_if_in:eeT { \exp_args:No \tl_to_str:o {
+      \cs:w __jsonparse_array_map_inline_ \int_to_roman:n {#1} _code:n \cs_end: { }
+    } } { \c_backslash_str ##1 ~ } {
       \msg_error:nn { jsonparse } { nested-non-expandable }
     }
   }

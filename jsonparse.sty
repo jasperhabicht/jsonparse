@@ -296,7 +296,7 @@
 
 % ===
 
-\exp_args_generate:n { NoeV , Noee , NoeeV }
+\exp_args_generate:n { NoeV , Noee , NoeeVV }
 
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
@@ -1618,41 +1618,48 @@
 }
 % ===
 
-\cs_new:Npn \__jsonparse_warning_function_expandable: {
-  \str_if_in:eeT { \tl_to_str:o { \__jsonparse_array_map_inline_code:n { } } }
-    { \c_backslash_str JSONParseValue }
-    { \msg_error:nn { jsonparse } { nested-non-expandable } }
+\cs_new:Npn \__jsonparse_warning_function_expandable:n #1 {
+  \str_if_in:eeT { \tl_to_str:o {
+    \use:c { __jsonparse_array_map_inline_ \int_to_roman:n {#1} _code:n } { }
+  } } { \c_backslash_str JSONParseValue } {
+    \msg_error:nn { jsonparse } { nested-non-expandable }
+  }
 }
+\cs_generate_variant:Nn \__jsonparse_warning_function_expandable:n { V }
 
-\cs_new:Npn \__jsonparse_array_map_inline_code:n #1 { }
+\int_new:N \g__jsonparse_array_map_inline_int
+\cs_generate_variant:Nn \int_step_function:nnN { nnc }
 
-\cs_new:Npn \__jsonparse_array_map_inline_aux:nnnnn #1#2#3#4#5 {
-  \group_begin:
-    \cs_set:Npn \__jsonparse_array_map_inline_code:n ##1 {#5}
-    \tl_if_empty:nTF {#1} {
-      \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
+\cs_new_protected:Npn \__jsonparse_array_map_inline_aux:nnnnn #1#2#3#4#5 {
+  \tl_if_empty:nTF {#1} {
+    \__jsonparse_array_map_inline_auxi:nnn {#3} {#4} {#5}
+  } {
+    \bool_if:nTF {#2} {
+      \tl_gset:Ne #1 {
+        \__jsonparse_array_map_inline_auxi:nnn {#3} {#4} {#5}
+      }
     } {
-      \bool_if:nTF {#2} {
-        \tl_gset:Ne #1 {
-          \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
-        }
-      } {
-        \tl_set:Ne #1 {
-          \__jsonparse_array_map_inline_auxi:nn {#3} {#4}
-        }
+      \tl_set:Ne #1 {
+        \__jsonparse_array_map_inline_auxi:nnn {#3} {#4} {#5}
       }
     }
-  \group_end:
+  }
 }
 
-\cs_new:Npn \__jsonparse_array_map_inline_auxi:nn #1#2 {
-  \int_step_function:nnN {
+\cs_new:Npn \__jsonparse_array_map_inline_auxi:nnn #1#2#3 {
+  \int_step_function:nnc {
     \bool_if:nTF {#1} { 0 } { 1 }
-  } {#2} \__jsonparse_array_map_inline_code:n
+  } {#2} {
+    __jsonparse_array_map_inline_ \int_to_roman:n {#3} _code:n
+  }
 }
 
 \NewDocumentCommand { \JSONParseArrayMapInline } { O{} m m +m } {
   \__jsonparse_warning_undefined_prop:N #2
+  \int_gincr:N \g__jsonparse_array_map_inline_int
+  \cs_new:cpn {
+    __jsonparse_array_map_inline_ \int_to_roman:n { \g__jsonparse_array_map_inline_int } _code:n
+  } ##1 {#4}
   \group_begin:
     \keys_set_known:nnN { jsonparse / store ~ in } {#1} \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
@@ -1663,16 +1670,19 @@
       \int_decr:N \l__jsonparse_array_count_int
     }
     \tl_if_empty:NF \l__jsonparse_store_in_tl {
-      \__jsonparse_warning_function_expandable:
+      \__jsonparse_warning_function_expandable:V \g__jsonparse_array_map_inline_int
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_store_in_tl
       }
     }
-    \exp_args:NNoeeV
+    \exp_args:NNoeeVV
   \group_end:
-  \__jsonparse_array_map_inline_aux:nnnnn { \l__jsonparse_store_in_tl }
-    { \bool_if_p:N \l__jsonparse_store_in_global_bool } { \bool_if_p:N \l__jsonparse_zero_based_bool }
-    \l__jsonparse_array_count_int {#4}
+  \__jsonparse_array_map_inline_aux:nnnnn
+    { \l__jsonparse_store_in_tl }
+    { \bool_if_p:N \l__jsonparse_store_in_global_bool }
+    { \bool_if_p:N \l__jsonparse_zero_based_bool }
+    \l__jsonparse_array_count_int
+    \g__jsonparse_array_map_inline_int
 }
 
 % ===

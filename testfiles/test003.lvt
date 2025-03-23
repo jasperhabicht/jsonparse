@@ -113,6 +113,25 @@
 
 \ENDTEST
 
+
+\BEGINTEST{arrays: nested array map inline}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box {
+    \JSONParseArrayMapInline{\JSONdataC}{data}{
+      \JSONParseValue{\JSONdataC}{data[#1].x} :
+      \JSONParseArrayMapInline{\JSONdataC}{items}{
+        \JSONParseValue{\JSONdataC}{items[##1]} +
+      } \par
+    }
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
 \END
 
 \end{document}

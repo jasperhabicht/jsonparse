@@ -94,6 +94,23 @@
 
 \ENDTEST
 
+
+\BEGINTEST{arrays: nested array map inline}
+
+\ExplSyntaxOn
+
+  \hbox_set:Nn \l_jsonparse_test_box {
+    1 : a + b + c + d + \par
+    2 : a + b + c + d + \par
+    3 : a + b + c + d + \par
+    4 : a + b + c + d + \par
+  }
+  \box_show:N \l_jsonparse_test_box
+
+\ExplSyntaxOff
+
+\ENDTEST
+
 \END
 
 \end{document}

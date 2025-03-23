@@ -313,7 +313,7 @@
 \cs_generate_variant:Nn \str_casefold:n { o }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { o }
 \cs_generate_variant:Nn \str_set:Nn { Ne }
-\cs_generate_variant:Nn \int_step_function:nnN { nVN }
+\cs_generate_variant:Nn \int_step_function:nnN { nnc , nVN }
 \cs_generate_variant:Nn \clist_const:Nn { Ne }
 \cs_generate_variant:Nn \seq_put_right:Nn { Ne }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
@@ -380,6 +380,7 @@
 
 \clist_new:N \l__jsonparse_array_map_keys_clist
 \str_new:N \l__jsonparse_array_map_function_str
+\int_new:N \g__jsonparse_array_map_inline_int
 
 \bool_new:N \l__jsonparse_prop_map_first_bool
 \bool_new:N \l__jsonparse_externalize_load_bool
@@ -1619,16 +1620,22 @@
 % ===
 
 \cs_new:Npn \__jsonparse_warning_function_expandable:n #1 {
-  \str_if_in:eeT { \tl_to_str:o {
-    \use:c { __jsonparse_array_map_inline_ \int_to_roman:n {#1} _code:n } { }
-  } } { \c_backslash_str JSONParseValue } {
-    \msg_error:nn { jsonparse } { nested-non-expandable }
+  \clist_map_inline:nn {
+    JSONParseValue ,
+    JSONParseKeys ,
+    JSONParseArrayCount ,
+    JSONParseArrayUse ,
+    JSONParseArrayMapFunction ,
+    JSONParseArrayMapInline
+  } {
+    \str_if_in:eeT { \exp_args:NNo \exp_args:No \tl_to_str:o {
+      \use:c { __jsonparse_array_map_inline_ \int_to_roman:n {#1} _code:n } { }
+    } } { \c_backslash_str ##1 } {
+      \msg_error:nn { jsonparse } { nested-non-expandable }
+    }
   }
 }
 \cs_generate_variant:Nn \__jsonparse_warning_function_expandable:n { V }
-
-\int_new:N \g__jsonparse_array_map_inline_int
-\cs_generate_variant:Nn \int_step_function:nnN { nnc }
 
 \cs_new_protected:Npn \__jsonparse_array_map_inline_aux:nnnnn #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {

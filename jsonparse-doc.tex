@@ -557,7 +557,7 @@ Finally, the first optional argument of the command can be used to pass options 
 \begin{macrodef}
 |\JSONParseArrayMapInline|[<options>]{<token variable>}{<key>}{<inline function>}
 \end{macrodef}
-The command \macro{\JSONParseArrayMapInline} takes as first mandatory argument a token variable holding a parsed JSON string or JSON file and as second mandatory argument a key to select an array in the JSON data. The last argument can contain any code where the index of the current item is represented by \macro{#1}.
+The command \macro{\JSONParseArrayMapInline} takes as first mandatory argument a token variable holding a parsed JSON string or JSON file and as second mandatory argument a key to select an array in the JSON data. The last argument can contain any code where the index of the current item is represented by \macro{#1}. The code may contain another instance of \macro{\JSONParseArrayMapInline}, which means that the command can be nested.
 
 Using the above example, the mechanism could be implemented as follows:
 
@@ -597,7 +597,7 @@ Making use of the commands \macro{\JSONParseKeys} and \macro{\JSONParseValue} to
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example by switching off rescanning via \macro{rescan=false}. This is possible because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
-The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed.
+The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information. It is important to note that the inline function needs to be fully expandable. For example, it is not possible to use \macro{\JSONParseValue} in the code of the inline function while \macro{\JSONParseExpandableValue} is allowed. Note that the key \macro{store in} cannot be combined with nested use of \macro{\JSONParseArrayMapInline} because \macro{\JSONParseArrayMapInline} itself is not expandable.
 
 Storing the result of the mapped inline function can be helpful if JSON data should be reformatted for use in a plotting functions. An example for a use case with PGFplots is shown below. In this example, the parsed JSON string \macro{{ "data": [ [0,0], [1,-1], [2,1] ] }} was stored in the token variable \macro{\myJSONplotdata}.
 

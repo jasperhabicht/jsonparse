@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.2.3}
-\def\jsonparsefiledate{23 March 2025}
+\def\jsonparsefileversion{1.3.0}
+\def\jsonparsefiledate{25 March 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -266,6 +266,7 @@
 \changes{v1.2.1}{2025/02/24}{Unified functions, added option to store result globally.}
 %\changes{v1.2.2}{2025/02/25}{Fixes in documentation.}
 \changes{v1.2.3}{2025/03/23}{Enabled nesting of mapped inline function.}
+\changes{v1.3.0}{2025/03/25}{Enhancements in key setting mechanism.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -292,9 +293,55 @@ The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaT
 \begin{macrodef}
 |debug|
 \end{macrodef}
-The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file.
+The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file. It will also show the relevant keys associated to the values including the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) that represents the complete JSON string.
 
-This key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+Let us assume that the following JSON data is parsed:
+
+\begin{codeexample}
+  {
+    "string" : "a" ,
+    "boolean true" : true , 
+    "boolean false" : false ,
+    "null" : null ,
+    "number" : "number" : -1.1e-1 ,
+    "array" : [ "a" , "b" , "c" ]
+  }
+\end{codeexample}
+
+This will then result to the following output to the log:
+
+\begin{codeexample}
+  Parsing JSON ...
+  (obj begin)
+  (key) string:
+    (str) a
+  (key) boolean true:
+    (tru) true
+  (key) boolean false:
+    (fal) false
+  (key) null:
+    (nul) null
+  (key) number:
+    (num) -1.1e-1
+  (arr begin)
+  (key) array[0]:
+    (str) a
+  (key) array[1]:
+    (str) b
+  (key) array[2]:
+    (str) c
+  (key) array:
+    (arr) [ "a" , "b" , "c" ]
+  (arr end)
+  (key) .:
+    (obj) { "string" : "a" , "boolean true" : true , "boolean false" : 
+    false , "null" : null , "number" : "number" : -1.1e-1 , "array" : 
+    [ "a" , "b" , "c" ] }
+  (obj end)
+  JSON parsing done.
+\end{codeexample}
+
+The \macro{debug} key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \section{General remarks of the parsing procedure}
 
@@ -389,7 +436,7 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. When the option \macro{rescan} is used, the token list is rescanned before it is typeset (which means that all category codes that may have been changed before are set to the default values). This is the default behavior. If rescanning is not desired, pass the option \macro{rescan=false} to the command.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{child sep}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
+When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{separator/child}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
@@ -843,7 +890,7 @@ The command \macro{\jsonparse_parse_to_prop_local:Nn} works in the very same way
 \begin{macrodef}
 |\jsonparse_parse_keys:NN| <token variable> <string variable>
 \end{macrodef}
-The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{child sep}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
+The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the first arguments as property list and selects all top-level keys which are then stored in the string variable as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
 
 \begin{macrodef}
 |\jsonparse_rescan:n| {<JSON value>}
@@ -878,7 +925,7 @@ The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given
 \begin{macrodef}
 |\jsonparse_filter:Nn| <token variable> {<key>}
 \end{macrodef}
-The command \macro{\jsonparse_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. If the second argument matches the pseudo key \macro{.} (or the string defined using the key \macro{child sep}) exactly, the complete property list except for this key is returned.
+The command \macro{\jsonparse_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. If the second argument matches the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) exactly, the complete property list except for this key is returned.
 
 \begin{macrodef}
 |\jsonparse_array_count:NN| <token variable> <integer variable>

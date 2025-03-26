@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.3.0}
-\def\jsonparsefiledate{25 March 2025}
+\def\jsonparsefileversion{1.3.1}
+\def\jsonparsefiledate{27 March 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -122,6 +122,19 @@
 }
 \ExplSyntaxOff
 
+\NewDocumentCommand{\expandablestarcode}{}{
+  \fill[black!50, shift={([xshift={-10pt}, yshift={-10pt-0.5em}]frame.north east)}]
+    (90:3.75pt)
+    \foreach \i in {1,...,4} {
+      -- ({90+360/5*\i*2}:3.75pt)
+    } -- cycle;
+}
+
+\NewDocumentCommand{\expandablestar}{}{
+  \tikz{\expandablestarcode}
+}
+
+
 \tcbset{
     size=small,
     arc=2.5pt,
@@ -144,11 +157,7 @@
     optional hypertarget={#2},
     overlay={
       \IfBooleanT{#1}{
-        \fill[black!50, shift={([xshift={-10pt}, yshift={-10pt-0.5em}]frame.north east)}]
-          (90:3.75pt)
-          \foreach \i in {1,...,4} {
-            -- ({90+360/5*\i*2}:3.75pt)
-          } -- cycle;
+        \expandablestarcode
       }
     }
 }
@@ -267,6 +276,7 @@
 %\changes{v1.2.2}{2025/02/25}{Fixes in documentation.}
 \changes{v1.2.3}{2025/03/23}{Enabled nesting of mapped inline function.}
 \changes{v1.3.0}{2025/03/25}{Enhancements in key setting mechanism.}
+%\changes{v1.3.1}{2025/02/25}{Fixes in documentation.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -407,7 +417,7 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 
 \section{Main user commands}
 
-The first part of this section describes the basic commands for parsing JSON data and retrieving values from parsed JSON data. The second part of this section describes the various commands for handling arrays provided by this package.
+The first part of this section describes the basic commands for parsing JSON data and retrieving values from parsed JSON data. The second part of this section describes the various commands for handling arrays provided by this package. Commands marked with a star (\expandablestar) are fully expandable.
 
 \subsection{Basic parsing commands}
 
@@ -864,7 +874,22 @@ To ensure backward compatibility, the deprecated commands are still supported, b
 
 \section{L3 commands}
 
-The following commands are provided for defining user functions by package authors. For the conditional functions described above, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics.
+The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
+
+\begin{macrodef}
+|\l_jsonparse_externalize_prefix_str|
+\end{macrodef}
+The token variable \macro{\l_jsonparse_externalize_prefix_str} holds the prefix for externalization file names as defined by the user via the key \macro{externalize prefix}.
+
+\begin{macrodef}
+|\l_jsonparse_current_prop_str|
+\end{macrodef}
+The token variable \macro{\l_jsonparse_current_prop_str} holds the name of the property list as defined by the user when calling the command \macro{\JSONParse} or \macro{\JSONParseFromFile}.
+
+\begin{macrodef}
+|\g_jsonparse_entries_prop|
+\end{macrodef}
+The token variable \macro{\g_jsonparse_entries_prop} holds as property list all elements of a JSON data structure that was parsed by the command \macro{\jsonparse_parse:n}.
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}
@@ -908,7 +933,7 @@ The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the
 |\jsonparse_gset_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_gset_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
-The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the second argument.
+The command \macro{\jsonparse_gset_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the second argument.
 
 \begin{macrodef}
 |\jsonparse_put_right_rescan:Nn| <token variable> {<JSON value>}

@@ -250,7 +250,7 @@
   code ~ after                .tl_set:N   = \l__jsonparse_array_map_code_after_tl
 }
 
-\keys_define:nn { jsonparse / store ~ in } {
+\keys_define:nn { jsonparse / set } {
   store ~ in                  .tl_set:N   = \l__jsonparse_store_in_tl ,
   global                      .bool_set:N = \l__jsonparse_store_in_global_bool ,
   global                      .default:n  = { true } ,
@@ -272,8 +272,8 @@
     { jsonparse / parse } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / typeset } { \l__jsonparse_unused_keys_clist }
     { jsonparse / typeset } \l__jsonparse_unused_keys_clist
-  \keys_set_known:nonN { jsonparse / store ~ in } { \l__jsonparse_unused_keys_clist }
-    { jsonparse / store ~ in } \l__jsonparse_unused_keys_clist
+  \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
+    { jsonparse / set } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / map } { \l__jsonparse_unused_keys_clist }
     { jsonparse / map } \l__jsonparse_unused_keys_clist
   \__jsonparse_warning_unused_keys:
@@ -1275,8 +1275,8 @@
   \group_begin:
     \keys_set_known:nnnN { jsonparse / typeset } {#1}
       { jsonparse / typeset } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / store ~ in } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / store ~ in }\l__jsonparse_unused_keys_clist
+    \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
+      { jsonparse / set }\l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \tl_if_empty:NF \l__jsonparse_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_store_in_tl {
@@ -1337,8 +1337,8 @@
 \NewDocumentCommand { \JSONParseKeys } { O{} m m } {
   \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / store ~ in } {#1}
-      { jsonparse / store ~ in } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nnnN { jsonparse / set } {#1}
+      { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1402,8 +1402,8 @@
 \NewDocumentCommand { \JSONParseArrayCount } { O{} m m } {
   \__jsonparse_warning_undefined_prop:N #2
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / store ~ in } {#1}
-      { jsonparse / store ~ in } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nnnN { jsonparse / set } {#1}
+      { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1476,8 +1476,8 @@
   \group_begin:
     \keys_set_known:nnnN { jsonparse / typeset } {#1}
       { jsonparse / typeset } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / store ~ in } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / store ~ in } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
+      { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1687,8 +1687,8 @@
     __jsonparse_array_map_inline_ \int_to_roman:n { \g__jsonparse_array_map_inline_int } _code:n
   } ##1 {#4}
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / store ~ in } {#1}
-      { jsonparse / store ~ in } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nnnN { jsonparse / set } {#1}
+      { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}

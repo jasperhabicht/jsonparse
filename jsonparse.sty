@@ -294,8 +294,7 @@
 
 \bool_if:NT \l__jsonparse_compat_bool {
   \cs_if_exist:NF \str_casefold:n {
-    \cs_new_eq:NN \str_casefold:n \str_foldcase:n
-    \cs_new:Npn \str_foldcase:n { \str_casefold:n }
+    \cs_new:Npn \str_casefold:n { \str_foldcase:n }
   }
 }
 
@@ -313,6 +312,7 @@
 \cs_generate_variant:Nn \tl_replace_once:Nnn { Non }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
+\cs_generate_variant:Nn \tl_to_str:n { o , e }
 \cs_generate_variant:Nn \tl_trim_spaces:n { e }
 \cs_generate_variant:Nn \str_case_e:nn { en }
 \cs_generate_variant:Nn \str_casefold:n { o }

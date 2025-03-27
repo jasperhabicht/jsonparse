@@ -122,8 +122,8 @@
 }
 \ExplSyntaxOff
 
-\NewDocumentCommand{\expandablestarcode}{}{
-  \fill[black!50, shift={([xshift={-10pt}, yshift={-10pt-0.5em}]frame.north east)}]
+\NewDocumentCommand{\expandablestarcode}{ O{0,0} }{
+  \fill[black!50, shift={([xshift={-10pt}, yshift={-10pt-0.5em}]#1)}]
     (90:3.75pt)
     \foreach \i in {1,...,4} {
       -- ({90+360/5*\i*2}:3.75pt)
@@ -156,7 +156,7 @@
     optional hypertarget={#2},
     overlay={
       \IfBooleanT{#1}{
-        \expandablestarcode
+        \expandablestarcode[frame.north east]
       }
     }
 }
@@ -174,7 +174,7 @@
     after={\par\smallskip\noindent}
 }
 
-\NewTCBListing{macrodeprecated}{}{
+\NewTCBListing{macrodeprecated}{ s }{
     listing only,
     listing style={jsonparsedocmacro},
     boxrule=0pt,
@@ -182,10 +182,19 @@
     box align=top,
     after=\hfill,
     colframe=black!25!red!10,
-    colback=black!25!red!10
+    colback=black!25!red!10,
+    enhanced,
+    overlay={
+      \IfBooleanT{#1}{
+        \fill[black!25!red!10]
+          ([yshift={5pt-1.5em}]frame.north east)
+          -- ++(5pt,-5pt) -- ++(-5pt,-5pt)
+          -- cycle;
+      }
+    }
 }
 
-\NewTCBListing{macroreplacement}{}{
+\NewTCBListing{macroreplacement}{ }{
     listing only,
     listing style={jsonparsedocmacro},
     boxrule=0pt,
@@ -802,9 +811,9 @@ The key \macro{global} can be used together with the key \macro{store in} to glo
 
 \section{Deprecated commands}
 
-The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in green boxes on the right should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
+The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in green box right to it should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseSetValue|
   {<1>}{<2>}{<3>}
 \end{macrodeprecated}
@@ -814,7 +823,7 @@ The following commands displayed in red boxes on the left have been deprecated a
   rescan=false]{<2>}{<3>}
 \end{macroreplacement}
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseSetRescanValue|
   {<1>}{<2>}{<3>}
 \end{macrodeprecated}
@@ -824,7 +833,7 @@ The following commands displayed in red boxes on the left have been deprecated a
   rescan]{<2>}{<3>}
 \end{macroreplacement}
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseSetKeys|
   {<1>}{<2>}{<3>}
 \end{macrodeprecated}
@@ -834,7 +843,7 @@ The following commands displayed in red boxes on the left have been deprecated a
   [store in={<1>}]{<2>}{<3>}
 \end{macroreplacement}
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseSetArrayCount|
   {<1>}{<2>}{<3>}
 \end{macrodeprecated}
@@ -844,7 +853,7 @@ The following commands displayed in red boxes on the left have been deprecated a
   [store in={<1>}]{<2>}{<3>}
 \end{macroreplacement}
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseArrayValues|
   [<1>]{<2>}{<3>}[<4>]{<5>}
 \end{macrodeprecated}
@@ -854,7 +863,7 @@ The following commands displayed in red boxes on the left have been deprecated a
   [<1>]{<2>}{<3>}[<4>]{<5>}
 \end{macroreplacement}
 
-\begin{macrodeprecated}
+\begin{macrodeprecated}*
 |\JSONParseArrayValuesMap|
   [<1>]{<2>}{<3>}[<4>]{<5>}
   [<6>][<7>]

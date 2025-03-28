@@ -354,7 +354,8 @@
   \prop_new_linked:N \l__jsonparse_temp_copy_prop
 }
 
-\scan_new:N \s__jsonparse_mark
+\scan_new:N \s__jsonparse_stop
+\scan_new:N \s__jsonparse_split
 
 \tl_new:N \g__jsonparse_json_tl
 \tl_new:N \l__jsonparse_input_tl
@@ -819,17 +820,17 @@
 
 \cs_new_protected:Npn \__jsonparse_parse_other:w #1 \q_stop {
   \__jsonparse_array_key_set:
-  \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_mark }
-  \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_mark , }
-  \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_mark ] }
-  \tl_replace_once:Non \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_mark \c_right_brace_str }
+  \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
+  \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_split , }
+  \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
+  \tl_replace_once:Non \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
   \exp_last_unbraced:No
     \__jsonparse_parse_other_aux:w \l__jsonparse_temp_tl \q_stop
 }
 
-\cs_new_protected:Npn \__jsonparse_parse_other_aux:w #1 \s__jsonparse_mark #2 \q_stop {
+\cs_new_protected:Npn \__jsonparse_parse_other_aux:w #1 \s__jsonparse_split #2 \q_stop {
   \tl_set:Nn \l__jsonparse_remainder_tl {#2}
-  \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_mark }
+  \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_split }
   \tl_set:Ne \l__jsonparse_temp_tl { \tl_trim_spaces:n {#1} }
   \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
     \bool_if:NTF \l__jsonparse_check_num_bool {
@@ -1173,7 +1174,7 @@
   \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
   \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
   \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNNN
-  \tl_set:Ne #1 {#2}
+  \tl_set:Ne #1 { #2 \s__jsonparse_stop }
   \cs_set_eq:NN \" \__jsonparse_tex_quote:
   \cs_set_eq:NN \\ \__jsonparse_tex_backslash:
   \bool_if:NT \l__jsonparse_escape_number_sign_bool {
@@ -1197,6 +1198,7 @@
   \bool_if:NT \l__jsonparse_escape_tilde_bool {
     \tl_replace_all:Noe #1 { \c_tilde_str } { \c_backslash_str \c_tilde_str { } }
   }
+  \tl_remove_all:Nn #1 { \s__jsonparse_stop }
 }
 
 \cs_new_protected:Npn \jsonparse_rescan:n #1 {

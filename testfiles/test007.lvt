@@ -9,7 +9,8 @@
   { 
     "a" : "ab\u0063d" ,
     "b" : "ab\ud83d\ude0ed" , 
-    "c" : "ab\u65e5d" 
+    "c" : "ab\u65e5d" , 
+    "d" : "\u65e5"
   } 
 }
 
@@ -47,6 +48,16 @@
       \myJSONc
   } { 
       ab \codepoint_generate:nn { "65E5 } { 12 } d
+  } { \TRUE } { \FALSE }
+
+  \OMIT
+  \JSONParseSetRescanValue{\myJSONc}{\myJSONdata}{d}
+  \TIMO 
+
+  \str_if_eq:eeTF {
+      \myJSONc
+  } { 
+      \codepoint_generate:nn { "65E5 } { 12 }
   } { \TRUE } { \FALSE }
 
 \ExplSyntaxOff

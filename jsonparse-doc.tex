@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.3.1}
-\def\jsonparsefiledate{30 March 2025}
+\def\jsonparsefileversion{1.3.2}
+\def\jsonparsefiledate{1 April 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -36,23 +36,23 @@
 \makeatletter
 \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
 \renewcommand{\@makefntext}[1]{%
-    \noindent\hbox to 0.75em{\normalfont\@thefnmark\hss}~#1%
+  \noindent\hbox to 0.75em{\normalfont\@thefnmark\hss}~#1%
 }
 \makeatother
 
 \tcbuselibrary{skins,listings}
 \lstdefinestyle{jsonparsedocmacro}{
-    basicstyle=\small\ttfamily,
-    literate=*{<}{{{\color{black!50}\guilsinglleft}}}1
-        {>}{{{\color{black!50}\guilsinglright}}}1,
-    keywords={},
-    moredelim=[is][\bfseries]{|}{|},
-    moredelim=[is][\bfseries\itshape]{?}{?},
-    moredelim=[is][\color{black!50}]{!}{!},
+  basicstyle=\small\ttfamily,
+  literate=*{<}{{{\color{black!50}\guilsinglleft}}}1
+    {>}{{{\color{black!50}\guilsinglright}}}1,
+  keywords={},
+  moredelim=[is][\bfseries]{|}{|},
+  moredelim=[is][\bfseries\itshape]{?}{?},
+  moredelim=[is][\color{black!50}]{!}{!},
 }
 \lstdefinestyle{jsonparsedoccodeexample}{
-    basicstyle=\small\ttfamily,
-    keywords={},
+  basicstyle=\small\ttfamily,
+  keywords={},
 }
 
 \hypersetup{colorlinks}
@@ -60,61 +60,61 @@
 \ExplSyntaxOn
 \int_new:N \l_jsonparse_doc_change_int
 \NewDocumentCommand{\changes}{ m m m }{
-    \int_incr:N \l_jsonparse_doc_change_int
-    \prop_new:c { l_jsonparse_doc_change_
-        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop }
-    \prop_put:cnn { l_jsonparse_doc_change_
-        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { version } {#1}
-    \prop_put:cnn { l_jsonparse_doc_change_
-        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { date } {#2}
-    \prop_put:cnn { l_jsonparse_doc_change_
-        \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { changes } {#3}
+  \int_incr:N \l_jsonparse_doc_change_int
+  \prop_new:c { l_jsonparse_doc_change_
+    \int_to_roman:n { \l_jsonparse_doc_change_int } _prop }
+  \prop_put:cnn { l_jsonparse_doc_change_
+    \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { version } {#1}
+  \prop_put:cnn { l_jsonparse_doc_change_
+    \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { date } {#2}
+  \prop_put:cnn { l_jsonparse_doc_change_
+    \int_to_roman:n { \l_jsonparse_doc_change_int } _prop } { changes } {#3}
 }
 \NewDocumentCommand{\printchanges}{ }{
-    \section{Changes}
-    \begin{description}
-        \setlength\itemsep{0pt}
-        \int_step_inline:nn { \l_jsonparse_doc_change_int } {
-            \item[
-                \prop_item:cn { l_jsonparse_doc_change_
-                \int_to_roman:n { ##1 } _prop } { version } ~
-                \normalfont{ (
-                    \prop_item:cn { l_jsonparse_doc_change_
-                    \int_to_roman:n { ##1 } _prop } { date }
-                ) }
-            ]
-            \prop_item:cn { l_jsonparse_doc_change_
-            \int_to_roman:n { ##1 } _prop } { changes }
-        }
-    \end{description}
+  \section{Changes}
+  \begin{description}
+    \setlength\itemsep{0pt}
+    \int_step_inline:nn { \l_jsonparse_doc_change_int } {
+      \item[
+        \prop_item:cn { l_jsonparse_doc_change_
+        \int_to_roman:n { ##1 } _prop } { version } ~
+        \normalfont{ (
+          \prop_item:cn { l_jsonparse_doc_change_
+          \int_to_roman:n { ##1 } _prop } { date }
+        ) }
+      ]
+      \prop_item:cn { l_jsonparse_doc_change_
+      \int_to_roman:n { ##1 } _prop } { changes }
+    }
+  \end{description}
 }
 
 \tl_new:N \l_jsonparse_doc_doctitle_tl
 \NewExpandableDocumentCommand{\makedoctitle}{ o m o m m o m }{
-    \hypersetup{
-        pdfauthor={#5},
-        pdftitle={\IfValueTF{#1}{#1}{#2}},
-        pdfsubject={\IfValueTF{#3}{#3}{#4}}
-    }
-    \tl_set:Nn \l_jsonparse_doc_doctitle_tl {
-        \group_begin:
-            \tcbset{
-                title ~ style ~ hook/.style={
-                    boxrule=2pt,
-                    fontupper=\huge\ttfamily
-                }
-            }
-            \setlength{\parindent}{0pt}\sffamily
-            \Huge{\bfseries #2}\par\bigskip
-            \Large #4\par\bigskip
-            \large #5
-            \IfValueT{#6}{
-                \,\footnote{#6}\par\bigskip
-            }
-            #7\par\bigskip
-            \rule{\textwidth}{.08em}
-        \group_end:
-    }
+  \hypersetup{
+    pdfauthor={#5},
+    pdftitle={\IfValueTF{#1}{#1}{#2}},
+    pdfsubject={\IfValueTF{#3}{#3}{#4}}
+  }
+  \tl_set:Nn \l_jsonparse_doc_doctitle_tl {
+    \group_begin:
+      \tcbset{
+        title ~ style ~ hook/.style={
+          boxrule=2pt,
+          fontupper=\huge\ttfamily
+        }
+      }
+      \setlength{\parindent}{0pt}\sffamily
+      \Huge{\bfseries #2}\par\bigskip
+      \Large #4\par\bigskip
+      \large #5
+      \IfValueT{#6}{
+        \,\footnote{#6}\par\bigskip
+      }
+      #7\par\bigskip
+      \rule{\textwidth}{.08em}
+    \group_end:
+  }
 }
 
 \NewExpandableDocumentCommand{\printdoctitle}{ }{
@@ -135,117 +135,116 @@
 }
 
 \tcbset{
-    size=small,
-    arc=2.5pt,
-    outer arc=2.5pt,
-    colframe=black!10,
-    colback=black!10,
-    title style hook/.style={},
-    optional hypertarget/.code={
-      \IfValueT{#1}{\pgfkeysalso{hypertarget=#1}}
-    }
+  size=small,
+  arc=2.5pt,
+  outer arc=2.5pt,
+  colframe=black!10,
+  colback=black!10,
+  title style hook/.style={},
 }
 
 \NewTCBListing{macrodef}{ s o }{
-    listing only,
-    listing style={jsonparsedocmacro},
-    grow to left by=2cm,
-    boxrule=0pt,
-    after={\par\smallskip\noindent},
-    enhanced,
-    optional hypertarget={#2},
+  listing only,
+  listing style={jsonparsedocmacro},
+  grow to left by=2cm,
+  boxrule=0pt,
+  after={\par\smallskip\noindent},
+  enhanced,
+  IfValueT={#2}{
+    hypertarget=#2
+  },
+  IfBooleanT={#1}{
     overlay={
-      \IfBooleanT{#1}{
-        \expandablestarcode[frame.north east]
-      }
+      \expandablestarcode[frame.north east]
     }
+  }
 }
 
 \NewTCBListing{codeexample}{ }{
-    listing only,
-    listing style={jsonparsedoccodeexample},
-    after={\par\smallskip\noindent}
+  listing only,
+  listing style={jsonparsedoccodeexample},
+  after={\par\smallskip\noindent}
 }
 
 \NewTCBListing{codeexamplecolumns}{ }{
-    text side listing,
-    lefthand width=4.5cm,
-    listing style={jsonparsedoccodeexample},
-    after={\par\smallskip\noindent}
+  text side listing,
+  lefthand width=4.5cm,
+  listing style={jsonparsedoccodeexample},
+  after={\par\smallskip\noindent}
 }
 
 \NewTCBListing{macrodeprecated}{ s }{
-    listing only,
-    listing style={jsonparsedocmacro},
-    boxrule=0pt,
-    width={0.5\linewidth-2.5pt},
-    box align=top,
-    after=\hfill,
-    colframe=black!25!red!10,
-    colback=black!25!red!10,
-    enhanced,
+  listing only,
+  listing style={jsonparsedocmacro},
+  boxrule=0pt,
+  width={0.5\linewidth-2.5pt},
+  box align=top,
+  after=\hfill,
+  colframe=black!25!red!10,
+  colback=black!25!red!10,
+  enhanced,
+  IfBooleanT={#1}{
     overlay={
-      \IfBooleanT{#1}{
-        \fill[black!25!red!10]
-          ([yshift={5pt-1.5em}]frame.north east)
-          -- ++(5pt,-5pt) -- ++(-5pt,-5pt)
-          -- cycle;
-      }
+      \fill[black!25!red!10]
+        ([yshift={5pt-1.5em}]frame.north east)
+        -- ++(5pt,-5pt) -- ++(-5pt,-5pt)
+        -- cycle;
     }
+  }
 }
 
 \NewTCBListing{macroreplacement}{ }{
-    listing only,
-    listing style={jsonparsedocmacro},
-    boxrule=0pt,
-    width={0.5\linewidth-2.5pt},
-    box align=top,
-    before={},
-    colframe=black!25!green!10,
-    colback=black!25!green!10
+  listing only,
+  listing style={jsonparsedocmacro},
+  boxrule=0pt,
+  width={0.5\linewidth-2.5pt},
+  box align=top,
+  before={},
+  colframe=black!25!green!10,
+  colback=black!25!green!10
 }
 
 \NewTotalTCBox{\macro}{ O{} v }{
-    verbatim,
-    size=tight,
-    arc=1pt,
-    outer arc=1pt,
-    top=0.5pt,
-    bottom=0.5pt,
-    left=2pt,
-    right=2pt,
-    boxrule=0pt,
-    colframe=black!10,
-    colback=black!10,
-    fontupper=\small\ttfamily,
-    #1
+  verbatim,
+  size=tight,
+  arc=1pt,
+  outer arc=1pt,
+  top=0.5pt,
+  bottom=0.5pt,
+  left=2pt,
+  right=2pt,
+  boxrule=0pt,
+  colframe=black!10,
+  colback=black!10,
+  fontupper=\small\ttfamily,
+  #1
 }{\vphantom{/g}\lstinline^#2^}
 
 \NewTotalTCBox{\titlemacro}{ s O{} m }{
-    verbatim,
-    size=tight,
-    arc=1pt,
-    outer arc=1pt,
-    top=0.5pt,
-    bottom=0.5pt,
-    left=2pt,
-    right=2pt,
-    boxrule=0pt,
-    colframe=black!10,
-    colback=black!10,
-    fontupper=\small\ttfamily,
-    title style hook,
-    #2
+  verbatim,
+  size=tight,
+  arc=1pt,
+  outer arc=1pt,
+  top=0.5pt,
+  bottom=0.5pt,
+  left=2pt,
+  right=2pt,
+  boxrule=0pt,
+  colframe=black!10,
+  colback=black!10,
+  fontupper=\small\ttfamily,
+  title style hook,
+  #2
 }{\vphantom{/g}\IfBooleanT{#1}{\textbackslash}#3}
 
 \usepackage{jsonparse}
 
 \makedoctitle
-    [The jsonparse package]
-    {The \titlemacro{jsonparse} package}
-    {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
-    {Jasper Habicht}[E-mail: \href{mailto:mail@jasperhabicht.de}{mail@jasperhabicht.de}. I am grateful to Joseph Wright, Jonathan P. Spratte and David Carlisle who helped me navigating the peculiarities of TeX and optimizing the code. Jason, the JSON parsing horse: \textcopyright{} 2024--2025 Hannah Klöber.]
-    {Version \jsonparsefileversion, released on \jsonparsefiledate}
+  [The jsonparse package]
+  {The \titlemacro{jsonparse} package}
+  {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
+  {Jasper Habicht}[E-mail: \href{mailto:mail@jasperhabicht.de}{mail@jasperhabicht.de}. I am grateful to Joseph Wright, Jonathan P. Spratte and David Carlisle who helped me navigating the peculiarities of TeX and optimizing the code. Jason, the JSON parsing horse: \textcopyright{} 2024--2025 Hannah Klöber.]
+  {Version \jsonparsefileversion, released on \jsonparsefiledate}
 
 %\changes{v0.3.0}{2024/04/08}{First public beta release.}
 \changes{v0.5.0}{2024/04/09}{Changed from string token variables to token lists to support Unicode.}
@@ -306,7 +305,7 @@ The package has been tested, but not exhaustively. The author is grateful for re
 
 To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document.
 
-The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaTeX or XeLaTeX.
+The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaTeX or XeLaTeX. It should also work with upTeX.
 
 \begin{macrodef}
 |debug|
@@ -326,7 +325,7 @@ Let us assume that the following JSON data is parsed:
   }
 \end{codeexample}
 
-This will then result to the following output to the log:
+This will then result in the following output to the log:
 
 \begin{codeexample}
   Parsing JSON ...
@@ -385,15 +384,15 @@ It is possible to insert TeX macros to the JSON source that will eventually be p
 Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. Used inside the \macro{\JSONParse} command, the control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
-    \JSONParse{\myJSONdataA}{
-        { "a" : { "b" : "c" } }
-    }
+\JSONParse{\myJSONdataA}{
+  { "a" : { "b" : "c" } }
+}
 
-    \JSONParse{\myJSONdataB}{
-        { "d" : \x{myJSONdataA}{a} }
-    }
+\JSONParse{\myJSONdataB}{
+  { "d" : \x{myJSONdataA}{a} }
+}
 
-    \JSONParseValue{\myJSONdataB}{d.b}
+\JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
 Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
@@ -493,6 +492,42 @@ The command \macro{\JSONParseKeys} is used to get all top-level keys of a JSON o
 
 The command \macro{\JSONParseKeys} accepts as option the key \macro{store in} to get all top-level keys of a JSON object as JSON array and parse this array into a token variable. Note that the return value is stored as property list, not as string. The token variable to store the keys as array is created if it does not exist.
 
+As an example, let us assume that the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
+
+\begin{codeexample}
+{
+  "array" : [
+    {
+      "key_a" : "one" ,
+      "key_b" : "two"
+    } ,
+    {
+      "key_a" : "three" ,
+      "key_b" : "four"
+    }
+  ]
+}
+\end{codeexample}
+\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
+
+We can then generate an array consisting of all keys of the object that is the first item of the array using \macro{\JSONParseKeys{\myJSONdata}{array[0]}}. We can also generate an array consisting of all top-level keys of the parsed JSON data using \macro{\JSONParseKeys{\myJSONdata}{.}} where \macro{.} is the pseudo-key representing the complete parsed JSON string. Note that in addition to the key of an array, keys for each item of this array will be added to the array of keys:
+
+\begin{codeexamplecolumns}
+\JSONParseKeys{\myJSONdata}{array[0]}
+
+\JSONParseKeys{\myJSONdata}{.}
+\end{codeexamplecolumns}
+
+If we store such an array of keys in the token variable \macro{\myJSONkeys}, we can for example access the first item of this array of keys using \macro{\JSONParseValue{\myJSONkeys}{[0]}}:
+
+\begin{codeexamplecolumns}
+\JSONParseKeys[store in=\myJSONkeys]
+  {\myJSONdata}{.}
+\JSONParseValue{\myJSONkeys}{[0]}
+\end{codeexamplecolumns}
+
+Note that the underscores in the names of the keys can be printed without changing to math mode in the above example because they are stored as strings where all characters (except for spaces and tabs) have category code 12 (``other'').
+
 \begin{macrodef}
 |\JSONParseFilter|{<token variable>}{<token variable>}{<key>}
 \end{macrodef}
@@ -519,7 +554,7 @@ The command \macro{\JSONParseArrayCount} accepts the use of the key \macro{store
 \end{macrodef}
 The command \macro{\JSONParseArrayUse} is used to select all values from an array from a parsed JSON string or JSON file. The second argument takes the token variable that holds the parsed JSON data. The first argument takes the key to select the relevant entry from the parsed JSON data using JavaScript syntax. The third argument is optional and can be used to pass a subkey, i.\,e.\ a key that is used to select a value for every item. The last argument takes a string that is inserted between all values when they are typeset.
 
-For example, let us assume the following JSON data structure is parsed into the token variable \macro{\myJSONdata}:
+Let us again assume the following JSON data structure being parsed into the token variable \macro{\myJSONdata}:
 
 \begin{codeexample}
 {
@@ -535,7 +570,6 @@ For example, let us assume the following JSON data structure is parsed into the 
   ]
 }
 \end{codeexample}
-\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
 When using \macro{\JSONParseArrayUse{\myJSONdata}{array}[key_a]{, }}, `\JSONParseArrayUse{\myJSONdata}{array}[key_a]{, }' is then typeset to the document.
 

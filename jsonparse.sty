@@ -823,9 +823,9 @@
   \tl_if_head_eq_charcode:oNTF { \l__jsonparse_remainder_tl } : {
     \tl_remove_once:NV \l__jsonparse_remainder_tl \c_colon_str
     \tl_set:Ne \l__jsonparse_key_tl 
-      { \l__jsonparse_prefix_tl \__jsonparse_remove_last_quote:n {#1} }
+      { \l__jsonparse_prefix_tl \__jsonparse_remove_last_quote:n { \exp_not:N #1} }
   } {
-    \tl_set:Ne \l__jsonparse_val_tl { \__jsonparse_remove_last_quote:n {#1} }
+    \tl_set:Ne \l__jsonparse_val_tl { \__jsonparse_remove_last_quote:n { \exp_not:N #1 } }
     \prop_gput:Nee \g_jsonparse_entries_prop
       { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
     % string

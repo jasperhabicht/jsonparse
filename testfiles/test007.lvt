@@ -10,7 +10,11 @@
     "a" : "ab\u0063d" ,
     "b" : "ab\ud83d\ude0ed" , 
     "c" : "ab\u65e5d" , 
-    "d" : "\u65e5"
+    "d" : "\u65e5" ,
+    "e" : "\u0062\ud83d\ude0e\u0063\u0063\u0062" ,
+    "f" : "\u0062\u0063\ud83d\ude0e\u0063\u0062" ,
+    "g" : "\u0062\u0063\u0063\ud83d\ude0e\u0062" ,
+    "h" : "\ud83d\ude0e"
   } 
 }
 
@@ -51,13 +55,53 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONc}{\myJSONdata}{d}
+  \JSONParseSetRescanValue{\myJSONd}{\myJSONdata}{d}
   \TIMO 
 
   \str_if_eq:eeTF {
-      \myJSONc
+      \myJSONd
   } { 
       \codepoint_generate:nn { "65E5 } { 12 }
+  } { \TRUE } { \FALSE }
+
+  \OMIT
+  \JSONParseSetRescanValue{\myJSONe}{\myJSONdata}{e}
+  \TIMO 
+
+  \str_if_eq:eeTF {
+      \myJSONe
+  } { 
+      b \codepoint_generate:nn { "1F60E } { 12 } ccb
+  } { \TRUE } { \FALSE }
+
+  \OMIT
+  \JSONParseSetRescanValue{\myJSONf}{\myJSONdata}{f}
+  \TIMO 
+
+  \str_if_eq:eeTF {
+      \myJSONf
+  } { 
+      bc \codepoint_generate:nn { "1F60E } { 12 } cb
+  } { \TRUE } { \FALSE }
+
+  \OMIT
+  \JSONParseSetRescanValue{\myJSONg}{\myJSONdata}{g}
+  \TIMO 
+
+  \str_if_eq:eeTF {
+      \myJSONg
+  } { 
+      bcc \codepoint_generate:nn { "1F60E } { 12 } b
+  } { \TRUE } { \FALSE }
+
+  \OMIT
+  \JSONParseSetRescanValue{\myJSONh}{\myJSONdata}{h}
+  \TIMO 
+
+  \str_if_eq:eeTF {
+      \myJSONh
+  } { 
+      \codepoint_generate:nn { "1F60E } { 12 }
   } { \TRUE } { \FALSE }
 
 \ExplSyntaxOff

@@ -309,7 +309,7 @@
 \cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { NV }
 \cs_generate_variant:Nn \tl_replace_all:Nnn { Non , Noe }
-\cs_generate_variant:Nn \tl_replace_once:Nnn { Non }
+\cs_generate_variant:Nn \tl_replace_once:Nnn { Noe }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
 \cs_generate_variant:Nn \tl_to_str:n { o , e }
@@ -796,9 +796,20 @@
   \__jsonparse_parse_remainder:
 }
 
-\cs_new_protected:Npn \__jsonparse_parse_string_key:w " #1 " #2 \q_stop {
+\cs_new_protected:Npn \__jsonparse_parse_string_key:w " #1 \q_stop {
   \__jsonparse_array_key_set:
-  \tl_set:Ne \l__jsonparse_remainder_tl { \tl_trim_spaces:n {#2} }
+  \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
+  \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_split , }
+  \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
+  \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
+  \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_colon_str } { \s__jsonparse_split \c_colon_str }
+  \exp_last_unbraced:No
+    \__jsonparse_parse_string_key_aux:w \l__jsonparse_temp_tl \q_stop
+}
+
+\cs_new_protected:Npn \__jsonparse_parse_string_key_aux:w #1 " #2 \s__jsonparse_split #3 \q_stop {
+  \tl_set:Nn \l__jsonparse_remainder_tl {#3}
+  \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_split }
   % key or string?
   \tl_if_head_eq_charcode:oNTF { \l__jsonparse_remainder_tl } : {
     \tl_remove_once:NV \l__jsonparse_remainder_tl \c_colon_str
@@ -823,7 +834,7 @@
   \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_split , }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
-  \tl_replace_once:Non \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
+  \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
   \exp_last_unbraced:No
     \__jsonparse_parse_other_aux:w \l__jsonparse_temp_tl \q_stop
 }
@@ -1139,19 +1150,22 @@
 \cs_generate_variant:Nn \jsonparse_unicode_convert_surrogate_pair:nn { ee }
 
 \cs_new:Npn \__jsonparse_unicode_char:NNNNN #1#2#3#4#5 {
-  \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
   \cs_if_eq:NNTF #5 \u {
-    \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 }
+    \jsonparse_unicode_if_high_surrogate:eTF { " \str_uppercase:n {#1#2#3#4} } {
+      \__jsonparse_unicode_char_aux:nNNNN { " #1#2#3#4 }
+    } {
+      \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
+      \__jsonparse_unicode_char:NNNNN
+    }
   } {
+    \__jsonparse_unicode_char_aux:nNNNN { } #1#2#3#4
     #5
   }
 }
 
 \cs_new:Npn \__jsonparse_unicode_char_aux:nNNNN #1#2#3#4#5 {
   \tl_if_empty:nTF {#1} {
-    \jsonparse_unicode_if_high_surrogate:eF { " \str_uppercase:n {#2#3#4#5} } {
-      \codepoint_generate:en { " \str_uppercase:n {#2#3#4#5} } { 12 }
-    }
+    \codepoint_generate:en { " \str_uppercase:n {#2#3#4#5} } { 12 }
   } {
     \jsonparse_unicode_if_low_surrogate:eTF { " \str_uppercase:n {#2#3#4#5} } {
       \codepoint_generate:nn {

@@ -798,6 +798,7 @@
 
 \cs_new_protected:Npn \__jsonparse_parse_string_key:w " #1 \q_stop {
   \__jsonparse_array_key_set:
+  \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_split , }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
   \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
@@ -830,6 +831,7 @@
 
 \cs_new_protected:Npn \__jsonparse_parse_other:w #1 \q_stop {
   \__jsonparse_array_key_set:
+  \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { , } { \s__jsonparse_split , }
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
   \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }

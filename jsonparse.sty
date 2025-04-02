@@ -796,18 +796,6 @@
   \__jsonparse_parse_remainder:
 }
 
-\cs_new:Npn \__jsonparse_parse_remove_last_quote:n #1 {
-  \tl_trim_spaces_apply:nN {#1} \__jsonparse_parse_remove_last_quote_aux:n
-}
-
-\cs_new:Npn \__jsonparse_parse_remove_last_quote_aux:n #1 {
-  \__jsonparse_parse_remove_last_quote_aux:w #1 \q_stop
-}
-
-\cs_new:Npn \__jsonparse_parse_remove_last_quote_aux:w #1 " \q_stop {
-  #1
-}
-
 \cs_new_protected:Npn \__jsonparse_parse_string_key:w " #1 \q_stop {
   \__jsonparse_array_key_set:
   \tl_set:Nn \l__jsonparse_temp_tl { #1 \s__jsonparse_split }
@@ -819,16 +807,20 @@
     \__jsonparse_parse_string_key_aux:w \l__jsonparse_temp_tl \q_stop
 }
 
-\cs_new_protected:Npn \__jsonparse_parse_string_key_aux:w #1 \s__jsonparse_split #2 \q_stop {
-  \tl_set:No \l__jsonparse_remainder_tl {#2}
+\cs_new_protected:Npn \__jsonparse_parse_string_key_aux:w #1 " #2 \s__jsonparse_split #3 \q_stop {
+  \tl_set:No \l__jsonparse_remainder_tl {#3}
   \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_split }
+  \tl_if_blank:nF {#2} {
+    % non-whitespace between delimiters found
+    \msg_error:nnoo { jsonparse } { parsing-error }
+      { \l__jsonparse_key_tl } {#1}
+  }
   % key or string?
   \tl_if_head_eq_charcode:oNTF { \l__jsonparse_remainder_tl } : {
     \tl_remove_once:NV \l__jsonparse_remainder_tl \c_colon_str
-    \tl_set:Ne \l__jsonparse_key_tl 
-      { \l__jsonparse_prefix_tl \__jsonparse_parse_remove_last_quote:n {#1} }
+    \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
   } {
-    \tl_set:No \l__jsonparse_val_tl { \__jsonparse_parse_remove_last_quote:n {#1} }
+    \tl_set:Nn \l__jsonparse_val_tl {#1}
     \prop_gput:Nee \g_jsonparse_entries_prop
       { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
     % string

@@ -66,9 +66,9 @@
   Invalid ~ escape ~ sequence ~ #1 ~ in ~ key.
 }
 
-\msg_new:nnn { jsonparse } { escape-char-not-found } {
+\msg_new:nnn { jsonparse } { escape-char-unknown } {
   \msg_error_text:n { jsonparse } \iow_newline:
-  Escape ~ character ~ #1 ~ not ~ found.
+  Escape ~ character ~ #1 ~ unknown.
 }
 
 \msg_new:nnn { jsonparse } { prop-undefined } {
@@ -81,7 +81,7 @@
   Control ~ sequence ~ undefined: ~ #1.
 }
 
-\msg_new:nnn { jsonparse } { unknown-key } {
+\msg_new:nnn { jsonparse } { key-unknown } {
   \msg_warning_text:n { jsonparse } \iow_newline:
   Ignoring ~ key: ~ #1. \iow_newline:
   The ~ key ~ is ~ either ~ unknown ~ or ~
@@ -232,7 +232,7 @@
               \bool_set_true:N \l__jsonparse_escape_low_line_bool
             }
           } {
-            \msg_error:nno { jsonparse } { escape-char-not-found }
+            \msg_error:nno { jsonparse } { escape-char-unknown }
               {##1}
           }
         }
@@ -260,7 +260,7 @@
 
 \cs_new_protected:Npn \__jsonparse_warning_unused_keys: {
   \clist_map_inline:Nn \l__jsonparse_unused_keys_clist {
-    \msg_warning:nne { jsonparse } { unknown-key } {
+    \msg_warning:nne { jsonparse } { key-unknown } {
       ##1
     }
   }

@@ -109,7 +109,7 @@
 \str_new:N \l_jsonparse_current_prop_str
 
 \tl_new:N \l__jsonparse_externalize_file_name_tl
-\tl_new:N \l__jsonparse_externalize_file_data_tl
+\bool_new:N \l__jsonparse_externalize_bool
 
 \str_new:N \l__jsonparse_child_sep_str
 \str_new:N \l__jsonparse_array_sep_left_str
@@ -120,7 +120,6 @@
 \bool_new:N \l__jsonparse_zero_based_bool
 \bool_new:N \l__jsonparse_check_num_bool
 \bool_new:N \l__jsonparse_rescan_bool
-\bool_new:N \l__jsonparse_externalize_bool
 
 \str_new:N \l__jsonparse_backspace_str
 \str_new:N \l__jsonparse_formfeed_str
@@ -131,7 +130,7 @@
 \tl_new:N \l__jsonparse_array_map_code_before_tl
 \tl_new:N \l__jsonparse_array_map_code_after_tl
 
-\tl_new:N \l__jsonparse_set_tore_in_tl
+\tl_new:N \l__jsonparse_set_store_in_tl
 \bool_new:N \l__jsonparse_set_global_bool
 
 \clist_new:N \l__jsonparse_unused_keys_clist
@@ -391,6 +390,7 @@
 \str_new:N \l__jsonparse_array_map_function_str
 \int_new:N \g__jsonparse_array_map_inline_int
 
+\tl_new:N \l__jsonparse_externalize_file_data_tl
 \bool_new:N \l__jsonparse_externalize_load_bool
 \iow_new:N \g__jsonparse_externalize_iow
 

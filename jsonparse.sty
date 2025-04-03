@@ -136,6 +136,8 @@
 
 \clist_new:N \l__jsonparse_unused_keys_clist
 
+\str_new:N \l__jsonparse_escape_temp_str
+
 \clist_const:Nn \c__jsonparse_escape_tex_chars_clist {
   number_sign ,
   dollar_sign ,
@@ -149,8 +151,6 @@
 \clist_map_inline:Nn \c__jsonparse_escape_tex_chars_clist {
   \bool_new:c { l__jsonparse_escape_ #1 _bool }
 }
-
-\str_new:N \l__jsonparse_escape_temp_str
 
 \keys_define:nn { jsonparse / parse } {
   externalize                 .bool_set:N = \l__jsonparse_externalize_bool ,

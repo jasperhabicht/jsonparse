@@ -61,11 +61,6 @@
   File ~ #1 ~ already ~ existing.
 }
 
-\msg_new:nnn { jsonparse } { escape-in-key } {
-  \msg_error_text:n { jsonparse } \iow_newline:
-  Invalid ~ escape ~ sequence ~ #1 ~ in ~ key.
-}
-
 \msg_new:nnn { jsonparse } { escape-char-unknown } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Escape ~ character ~ #1 ~ unknown.

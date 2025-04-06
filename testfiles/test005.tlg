@@ -20,8 +20,12 @@ Parsing JSON ...
 (obj end)
 JSON parsing done.
 Parsing JSON ...
+(obj begin)
 (key) d:
 (str) c
+(key) .:
+(obj) { "d" : "c" }
+(obj end)
 JSON parsing done.
 ============================================================
 TEST 1: parsing, nested

@@ -11,7 +11,7 @@
 
 \JSONParse{\theJSONdataA}{ { "a" : { "b" : [ "c" , "d" ] } } }
 
-\JSONParse{\theJSONdataB}{ "d" : "\x{theJSONdataA}{a.b[0]}" }
+\JSONParse{\theJSONdataB}{ { "d" : "\x{theJSONdataA}{a.b[0]}" } }
 
 \ExplSyntaxOn
 

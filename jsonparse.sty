@@ -38,7 +38,7 @@
   #1
 }
 
-\msg_new:nnn { jsonparse } { parsing-error } {
+\msg_new:nnn { jsonparse } { parsing-error-generic } {
   \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Parsing ~ error ~ at ~ key ~ `#1` ~ with ~ value ~ `#2`.
@@ -54,6 +54,12 @@
   \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Misplaced ~ colon ~ at ~ key ~ #1.
+}
+
+\msg_new:nnn { jsonparse } { parsing-error-key } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Could ~ not ~ parse ~ JSON. \iow_newline:
+  Missing ~ key ~ in ~ object.
 }
 
 \msg_new:nnn { jsonparse } { nested-non-expandable } {
@@ -379,6 +385,7 @@
 
 \bool_new:N \l__jsonparse_parse_array_bool
 \bool_new:N \l__jsonparse_parse_object_bool
+\bool_new:N \l__jsonparse_parse_key_bool
 \bool_new:N \l__jsonparse_parse_keys_first_bool
 
 \int_new:N \l__jsonparse_array_index_int
@@ -716,8 +723,9 @@
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_begin:w \c_left_brace_str #1 \q_stop {
   \__jsonparse_array_key_set:
   \group_begin:
-    \bool_set_false:N \l__jsonparse_parse_array_bool
     \bool_set_true:N \l__jsonparse_parse_object_bool
+    \bool_set_false:N \l__jsonparse_parse_array_bool
+    \bool_set_false:N \l__jsonparse_parse_key_bool
     \tl_set:Nn \l__jsonparse_remainder_tl {#1}
     % object begin
     \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -742,6 +750,9 @@
           -1 * \tl_count:n {#1} - 1
         }
       }
+    }    
+    \bool_if:NF \l__jsonparse_parse_key_bool {
+      \msg_error:nn { jsonparse } { parsing-error-key }
     }
     \prop_gput:Nee \g_jsonparse_entries_prop
       { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
@@ -821,6 +832,10 @@
   \bool_lazy_or:nnF { \l__jsonparse_parse_object_bool } { \l__jsonparse_parse_array_bool } {
     \msg_error:nn { jsonparse } { parsing-error-comma }
   }
+  \bool_lazy_and:nnT { \l__jsonparse_parse_object_bool } { \bool_not_p:n { \l__jsonparse_parse_key_bool } } {
+    \msg_error:nn { jsonparse } { parsing-error-key }
+  }
+  \bool_set_false:N \l__jsonparse_parse_key_bool
   \tl_set:Nn \l__jsonparse_remainder_tl {#1}
   \__jsonparse_parse_remainder:
 }
@@ -841,7 +856,7 @@
   \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_split }
   \tl_if_blank:nF {#2} {
     % non-whitespace between delimiters found
-    \msg_error:nnoo { jsonparse } { parsing-error }
+    \msg_error:nnoo { jsonparse } { parsing-error-generic }
       { \l__jsonparse_key_tl } {#1}
   }
   % key or string?
@@ -852,6 +867,7 @@
     }
     \tl_remove_once:NV \l__jsonparse_remainder_tl \c_colon_str
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
+    \bool_set_true:N \l__jsonparse_parse_key_bool
   } {
     \tl_set:Nn \l__jsonparse_val_tl {#1}
     \prop_gput:Nee \g_jsonparse_entries_prop
@@ -896,7 +912,7 @@
         }
       } {
         % not a valid JSON number
-        \msg_error:nnoo { jsonparse } { parsing-error }
+        \msg_error:nnoo { jsonparse } { parsing-error-generic }
           { \l__jsonparse_key_tl } {#1}
       }
     } {

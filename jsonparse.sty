@@ -722,17 +722,17 @@
 
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_begin:w \c_left_brace_str #1 \q_stop {
   \__jsonparse_array_key_set:
+  % object begin
+  \bool_if:NT \l__jsonparse_debug_mode_bool {
+    \msg_log:nnn { jsonparse } { debug-info } {
+      (obj ~ begin)
+    }
+  }
   \group_begin:
     \bool_set_true:N \l__jsonparse_parse_object_bool
     \bool_set_false:N \l__jsonparse_parse_array_bool
     \bool_set_false:N \l__jsonparse_parse_key_bool
     \tl_set:Nn \l__jsonparse_remainder_tl {#1}
-    % object begin
-    \bool_if:NT \l__jsonparse_debug_mode_bool {
-      \msg_log:nnn { jsonparse } { debug-info } {
-        (obj ~ begin)
-      }
-    }
     \tl_if_empty:NTF \l__jsonparse_key_tl {
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_child_sep_str
     } {
@@ -750,7 +750,7 @@
           -1 * \tl_count:n {#1} - 1
         }
       }
-    }    
+    }
     \bool_if:NF \l__jsonparse_parse_key_bool {
       \msg_error:nn { jsonparse } { parsing-error-key }
     }
@@ -776,16 +776,16 @@
 
 \cs_new_protected:Npn \__jsonparse_parse_array_begin:w [ #1 \q_stop {
   \__jsonparse_array_key_set:
+  % array begin
+  \bool_if:NT \l__jsonparse_debug_mode_bool {
+    \msg_log:nnn { jsonparse } { debug-info } {
+      (arr ~ begin)
+    }
+  }
   \group_begin:
     \bool_set_false:N \l__jsonparse_parse_object_bool
     \bool_set_true:N \l__jsonparse_parse_array_bool
     \tl_set:Nn \l__jsonparse_remainder_tl {#1}
-    % array begin
-    \bool_if:NT \l__jsonparse_debug_mode_bool {
-      \msg_log:nnn { jsonparse } { debug-info } {
-        (arr ~ begin)
-      }
-    }
     \int_zero:N \l__jsonparse_array_index_int
     \bool_if:NT \l__jsonparse_zero_based_bool {
       \int_decr:N \l__jsonparse_array_index_int
@@ -830,9 +830,11 @@
 
 \cs_new_protected:Npn \__jsonparse_parse_delimiter:w , #1 \q_stop {
   \bool_lazy_or:nnF { \l__jsonparse_parse_object_bool } { \l__jsonparse_parse_array_bool } {
+    % comma not in object or array
     \msg_error:nn { jsonparse } { parsing-error-comma }
   }
   \bool_lazy_and:nnT { \l__jsonparse_parse_object_bool } { \bool_not_p:n { \l__jsonparse_parse_key_bool } } {
+    % object item without key
     \msg_error:nn { jsonparse } { parsing-error-key }
   }
   \bool_set_false:N \l__jsonparse_parse_key_bool
@@ -862,6 +864,7 @@
   % key or string?
   \tl_if_head_eq_charcode:oNTF { \l__jsonparse_remainder_tl } : {
     \bool_if:NF \l__jsonparse_parse_object_bool {
+      % colon not in object
       \msg_error:nno { jsonparse } { parsing-error-colon }
         { \l__jsonparse_key_tl }
     }

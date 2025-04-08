@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-07} {1.3.2}
+\ProvidesExplPackage {jsonparse} {2025-04-10} {1.4.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -132,6 +132,7 @@
 \str_new:N \l__jsonparse_null_str
 \bool_new:N \l__jsonparse_zero_based_bool
 \bool_new:N \l__jsonparse_check_num_bool
+\bool_new:N \l__jsonparse_values_only_bool
 \bool_new:N \l__jsonparse_rescan_bool
 
 \str_new:N \l__jsonparse_backspace_str
@@ -187,6 +188,9 @@
   check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
   check ~ num                 .default:n  = { true } ,
   check ~ num                 .initial:n  = { true } ,
+  values ~ only               .bool_set:N = \l__jsonparse_values_only_bool ,
+  values ~ only               .default:n  = { true } ,
+  values ~ only               .initial:n  = { true } ,
   keyword                     .code:n     = { \keys_set:nn { jsonparse / parse / keyword } {#1} } ,
   keyword / true              .str_set:N  = \l__jsonparse_true_str ,
   keyword / true              .initial:n  = { true } ,
@@ -739,27 +743,31 @@
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
       \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_child_sep_str }
     }
-    \tl_set:Nn \l__jsonparse_object_array_val_tl { \c_left_brace_str #1 }
+    \bool_if:NF \l__jsonparse_values_only_bool {
+      \tl_set:Nn \l__jsonparse_object_array_val_tl { \c_left_brace_str #1 }
+    }
     \__jsonparse_parse_remainder:
 }
 
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_end:w \c_right_brace_str #1 \q_stop {
-    \tl_set:Ne \l__jsonparse_object_array_val_tl {
-      \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
-        \int_eval:n {
-          -1 * \tl_count:n {#1} - 1
-        }
-      }
-    }
     \bool_if:NF \l__jsonparse_parse_key_bool {
       \msg_error:nn { jsonparse } { parsing-error-key }
     }
-    \prop_gput:Nee \g_jsonparse_entries_prop
-      { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
-    \bool_if:NT \l__jsonparse_debug_mode_bool {
-      \msg_log:nne { jsonparse } { debug-info } {
-        (key) ~ \str_use:N \l__jsonparse_object_array_key_tl : \iow_newline:
-        \iow_char:N \  \iow_char:N \  (obj) ~ \str_use:N \l__jsonparse_object_array_val_tl
+    \bool_if:NF \l__jsonparse_values_only_bool {
+      \tl_set:Ne \l__jsonparse_object_array_val_tl {
+        \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
+          \int_eval:n {
+            -1 * \tl_count:n {#1} - 1
+          }
+        }
+      }
+      \prop_gput:Nee \g_jsonparse_entries_prop
+        { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
+      \bool_if:NT \l__jsonparse_debug_mode_bool {
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_object_array_key_tl : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (obj) ~ \str_use:N \l__jsonparse_object_array_val_tl
+        }
       }
     }
     \bool_set_false:N \l__jsonparse_parse_object_bool
@@ -795,25 +803,29 @@
     } {
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
     }
-    \tl_set:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_array_sep_left_str }
+    \bool_if:NF \l__jsonparse_values_only_bool {
+      \tl_set:Nn \l__jsonparse_object_array_val_tl { [ #1 }
+    }
     \__jsonparse_parse_remainder:
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_array_end:w ] #1 \q_stop {
-    \tl_set:Ne \l__jsonparse_object_array_val_tl {
-      \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
-        \int_eval:n {
-          -1 * \tl_count:n {#1} - 1
+    \bool_if:NF \l__jsonparse_values_only_bool {  
+      \tl_set:Ne \l__jsonparse_object_array_val_tl {
+        \tl_range:Nne \l__jsonparse_object_array_val_tl { 1 } {
+          \int_eval:n {
+            -1 * \tl_count:n {#1} - 1
+          }
         }
       }
-    }
-    \prop_gput:Nee \g_jsonparse_entries_prop
-      { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
-    \bool_if:NT \l__jsonparse_debug_mode_bool {
-      \msg_log:nne { jsonparse } { debug-info } {
-        (key) ~ \str_use:N \l__jsonparse_object_array_key_tl : \iow_newline:
-        \iow_char:N \  \iow_char:N \  (arr) ~ \str_use:N \l__jsonparse_object_array_val_tl
+      \prop_gput:Nee \g_jsonparse_entries_prop
+        { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
+      \bool_if:NT \l__jsonparse_debug_mode_bool {
+        \msg_log:nne { jsonparse } { debug-info } {
+          (key) ~ \str_use:N \l__jsonparse_object_array_key_tl : \iow_newline:
+          \iow_char:N \  \iow_char:N \  (arr) ~ \str_use:N \l__jsonparse_object_array_val_tl
+        }
       }
     }
     \bool_set_false:N \l__jsonparse_parse_array_bool

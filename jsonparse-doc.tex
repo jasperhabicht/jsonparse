@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.3.2}
-\def\jsonparsefiledate{7 April 2025}
+\def\jsonparsefileversion{1.4.0}
+\def\jsonparsefiledate{10 April 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -292,6 +292,7 @@
 \changes{v1.3.0}{2025/03/25}{Enhancements in key setting mechanism.}
 %\changes{v1.3.1}{2025/03/30}{Fixes in documentation. Bug fixes.}
 %\changes{v1.3.2}{2025/04/07}{Bug fixes and code improvements.}
+\changes{v1.4.0}{2025/04/10}{Enhancements in parsing speed.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -318,7 +319,7 @@ The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaT
 \begin{macrodef}
 |debug|
 \end{macrodef}
-The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file. It will also show the relevant keys associated to the values including the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) that represents the complete JSON string.
+The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file. It will also show the relevant keys associated to the values. If the key \macro{values only} is set to \macro{false}, objects and arrays will be shown as values to the respective keys, including the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) that represents the complete JSON string.
 
 Let us assume that the following JSON data is parsed:
 
@@ -333,7 +334,7 @@ Let us assume that the following JSON data is parsed:
   }
 \end{codeexample}
 
-This will then result in the following output to the log:
+With the key \macro{values only} set to \macro{false}, this will then result in the following output to the log:
 
 \begin{codeexample}
   Parsing JSON ...
@@ -372,11 +373,11 @@ The \macro{debug} key can be set either as package option or using \macro{\JSONP
 
 In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape'').
 
-During parsing, the package identifies JSON objects, arrays, strings, numbers, boolean values and null values from the JSON data. It stores all these values together with the relevant keys in a property list. Once the parsing process is done, every value can be retrieved from the property list by calling the relevant key. The package ignores whitespace in the JSON data. The JSON data should be an object or an array. In general, the package accepts any valid JSON data. If a key is defined multiple times, the latter definition will silently overwrite the former.
+During parsing, the package identifies JSON objects, arrays, strings, numbers, boolean values and null values from the JSON data. It stores all these values together with the relevant keys in a property list. Once the parsing process is done, every value can be retrieved from the property list by calling the relevant key. The package ignores whitespace in the JSON data. In general, the package accepts any valid JSON data. If a key is defined multiple times, the latter definition will silently overwrite the former.
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}).  This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.
 
 Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e.\ a backslash with category code 12).
 
@@ -463,7 +464,7 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. When the option \macro{rescan} is used, the token list is rescanned before it is typeset (which means that all category codes that may have been changed before are set to the default values). This is the default behavior. If rescanning is not desired, pass the option \macro{rescan=false} to the command.
 
-When a key is associated with an object or array, the whole object or array is output as JSON string. The special key \macro{.} (or the string defined using the key \macro{separator/child}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
+If the key \macro{values only} is set to \macro{false} and a key is associated with an object or array, the whole object or array is output as JSON string. Additionally, the special key \macro{.} (or the string defined using the key \macro{separator/child}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 \warning The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
@@ -518,9 +519,9 @@ As an example, let us assume that the following JSON data structure is parsed in
   ]
 }
 \end{codeexample}
-\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
+\JSONParse[values only=false]{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
-We can then generate an array consisting of all keys of the object that is the first item of the array using \macro{\JSONParseKeys{\myJSONdata}{array[0]}}. We can also generate an array consisting of all top-level keys of the parsed JSON data using \macro{\JSONParseKeys{\myJSONdata}{.}} where \macro{.} is the pseudo-key representing the complete parsed JSON string. Note that in addition to the key of an array, keys for each item of this array will be added to the array of keys:
+We can then generate an array consisting of all keys of the object that is the first item of the array using \macro{\JSONParseKeys{\myJSONdata}{array[0]}}. We can also generate an array consisting of all top-level keys of the parsed JSON data using \macro{\JSONParseKeys{\myJSONdata}{.}} where \macro{.} is the pseudo key representing the complete parsed JSON string. Note that in order for this to work, we need to set the key \macro{values only} to \macro{false} before parsing the JSON string. Also note that in addition to the key of an array, keys for each item of this array will be added to the array of keys:
 
 \begin{codeexamplecolumns}
 \JSONParseKeys{\myJSONdata}{array[0]}
@@ -819,6 +820,14 @@ If set to \macro{false}, the key \macro{check num} omits an internal check of nu
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
+\begin{macrodef}
+|values only|
+|values only|={<boolean>}
+\end{macrodef}
+If set to \macro{false}, the key \macro{values only} activates the storage of arrays and objects as values to the relative keys. Also, the whole JSON string will be stored as value with the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}). Setting this key to false will slow down the parsing process.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
+  
 \subsection{Keys affecting the typesetting}
 
 Some keys that change the typesetting behavior are explained in other parts of this documentation.

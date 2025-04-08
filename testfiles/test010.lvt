@@ -9,7 +9,7 @@
 \box_new:N \l_jsonparse_test_box
 \ExplSyntaxOff
 
-\JSONParse{\JSONdataD}{
+\JSONParse[values only=false]{\JSONdataD}{
   {
     "data" : [ 
        { "x" : 1 , "y" : 2 } ,

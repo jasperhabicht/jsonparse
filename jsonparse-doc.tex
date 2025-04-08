@@ -393,8 +393,9 @@ It is possible to insert TeX macros to the JSON source that will eventually be p
 Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. Used inside the \macro{\JSONParse} command, the control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
-\JSONParse{\myJSONdataA}{
-  { "a" : { "b" : "c" } }
+\JSONParse[values only=false]
+  {\myJSONdataA}{
+    { "a" : { "b" : "c" } }
 }
 
 \JSONParse{\myJSONdataB}{
@@ -404,7 +405,7 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
 \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
-\warning Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
+\warning Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command. Also, in most cases it will be necessary to set the key \macro{values only} to \macro{false} to activate storing of whole objects and arrays.
 
 \begin{macrodef}
 |escape|={all}

@@ -9,7 +9,7 @@
 
 \SEPARATOR
 
-\JSONParse{\myJSONdata}{ { "A" : true , "B" : false , "C" : null } }
+\JSONParse[values only=false]{\myJSONdata}{ { "A" : true , "B" : false , "C" : null } }
 
 \SEPARATOR
 

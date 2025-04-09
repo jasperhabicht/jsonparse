@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.4.0}
-\def\jsonparsefiledate{10 April 2025}
+\def\jsonparsefileversion{1.4.1}
+\def\jsonparsefiledate{11 April 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -843,18 +843,20 @@ keyword/|true|={<string>}
 keyword/|false|={<string>}
 keyword/|null|={<string>}
 \end{macrodef}
-With the keys \macro{keyword/true}, \macro{keyword/false} and \macro{keyword/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings can be used as replacement. These replacements take place already during parsing.
+With the keys \macro{keyword/true}, \macro{keyword/false} and \macro{keyword/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings should be used as replacement. These replacements take place already during parsing.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, these keys only take effect when set before parsing.
 
 \begin{macrodef}
-replace/|backspace|={<string>}
-replace/|formfeed|={<string>}
-replace/|linefeed|={<string>}
-replace/|carriage return|={<string>}
-replace/|horizontal tab|={<string>}
+replace/|backspace|={<token list>}
+replace/|formfeed|={<token list>}
+replace/|linefeed|={<token list>}
+replace/|carriage return|={<token list>}
+replace/|horizontal tab|={<token list>}
 \end{macrodef}
-These keys can be used to set the replacement text for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement string is a space in each case. Only strings can be used as replacement. These replacements take place only during typesetting.
+These keys can be used to set the replacement for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement is a space in each case. These replacements take place only during typesetting.
+
+\warning Note that commands such as \macro{\par} needs to be masked (for example by using a copy created via \macro{\let}) in order to be used as replacement.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 

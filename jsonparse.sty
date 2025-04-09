@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-10} {1.4.0}
+\ProvidesExplPackage {jsonparse} {2025-04-11} {1.4.1}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -135,11 +135,11 @@
 \bool_new:N \l__jsonparse_skip_structures_bool
 \bool_new:N \l__jsonparse_rescan_bool
 
-\str_new:N \l__jsonparse_backspace_str
-\str_new:N \l__jsonparse_formfeed_str
-\str_new:N \l__jsonparse_linefeed_str
-\str_new:N \l__jsonparse_carriage_return_str
-\str_new:N \l__jsonparse_horizontal_tab_str
+\tl_new:N \l__jsonparse_backspace_tl
+\tl_new:N \l__jsonparse_formfeed_tl
+\tl_new:N \l__jsonparse_linefeed_tl
+\tl_new:N \l__jsonparse_carriage_return_tl
+\tl_new:N \l__jsonparse_horizontal_tab_tl
 
 \tl_new:N \l__jsonparse_array_map_code_before_tl
 \tl_new:N \l__jsonparse_array_map_code_after_tl
@@ -202,15 +202,15 @@
 
 \keys_define:nn { jsonparse / typeset } {
   replace                     .code:n     = { \keys_set:nn { jsonparse / typeset / replace } {#1} } ,
-  replace / backspace         .str_set:N  = \l__jsonparse_backspace_str ,
+  replace / backspace         .tl_set:N   = \l__jsonparse_backspace_tl ,
   replace / backspace         .initial:n  = { ~ } ,
-  replace / formfeed          .str_set:N  = \l__jsonparse_formfeed_str ,
+  replace / formfeed          .tl_set:N   = \l__jsonparse_formfeed_tl ,
   replace / formfeed          .initial:n  = { ~ } ,
-  replace / linefeed          .str_set:N  = \l__jsonparse_linefeed_str ,
+  replace / linefeed          .tl_set:N   = \l__jsonparse_linefeed_tl ,
   replace / linefeed          .initial:n  = { ~ } ,
-  replace / carriage ~ return .str_set:N  = \l__jsonparse_carriage_return_str ,
+  replace / carriage ~ return .tl_set:N   = \l__jsonparse_carriage_return_tl ,
   replace / carriage ~ return .initial:n  = { ~ } ,
-  replace / horizontal ~ tab  .str_set:N  = \l__jsonparse_horizontal_tab_str ,
+  replace / horizontal ~ tab  .tl_set:N   = \l__jsonparse_horizontal_tab_tl ,
   replace / horizontal ~ tab  .initial:n  = { ~ } ,
   escape                      .code:n     = {
     \str_case:nnF {#1} {
@@ -1313,11 +1313,11 @@
   \cs_set:Npn \" { " }
   \cs_set:Npn \/ { / }
   \cs_set:Npn \\ { \c_backslash_str }
-  \cs_set:Npn \b { \l__jsonparse_backspace_str }
-  \cs_set:Npn \f { \l__jsonparse_formfeed_str }
-  \cs_set:Npn \n { \l__jsonparse_linefeed_str }
-  \cs_set:Npn \r { \l__jsonparse_carriage_return_str }
-  \cs_set:Npn \t { \l__jsonparse_horizontal_tab_str }
+  \cs_set:Npn \b { \l__jsonparse_backspace_tl }
+  \cs_set:Npn \f { \l__jsonparse_formfeed_tl }
+  \cs_set:Npn \n { \l__jsonparse_linefeed_tl }
+  \cs_set:Npn \r { \l__jsonparse_carriage_return_tl }
+  \cs_set:Npn \t { \l__jsonparse_horizontal_tab_tl }
   \cs_set_eq:NN \u \__jsonparse_unicode_char:NNNNN
   \tl_set:Ne #1 { #2 \s__jsonparse_stop }
   \cs_set_eq:NN \" \__jsonparse_tex_quote:

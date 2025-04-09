@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{l3benchmark}
+\usepackage[debug]{../jsonparse}
+
+\ExplSyntaxOn
+
+\seq_new:N \g_jsonparse_benchmark_file_data_seq
+\ior_new:N \g_jsonparse_benchmark_ior
+\iow_new:N \g_jsonparse_benchmark_iow
+
+\cs_generate_variant:Nn \seq_use:Nn { No }
+
+\benchmark_tic:
+\ExplSyntaxOff
+
+\JSONParseFromFile{\theJSONdata}{4KB.json}
+
+\ExplSyntaxOn
+\benchmark_toc:
+
+\ior_open:NnT \g_jsonparse_benchmark_ior { benchmark-log.txt } {
+  \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
+    \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
+  }
+  \ior_close:N \g_jsonparse_benchmark_ior
+}
+
+\iow_open:Ne \g_jsonparse_benchmark_iow { benchmark-log.txt }
+\iow_now:Ne \g_jsonparse_benchmark_iow {
+  \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
+  \c_sys_timestamp_str : \fp_use:N \g_benchmark_time_fp \iow_newline:
+}
+\iow_close:N \g_jsonparse_benchmark_iow
+
+\ExplSyntaxOff
+
+\begin{document}
+
+Result written to file benchmark-log.txt.
+
+\end{document}

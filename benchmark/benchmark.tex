@@ -27,7 +27,7 @@
 \ExplSyntaxOn
 \benchmark_toc:
 
-\ior_open:NnTF \g_jsonparse_benchmark_ior { benchmark-log.md } {
+\ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
     \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
   }
@@ -41,7 +41,7 @@
     { |  -----------  |  ---------  |   --------------   | }
 }
 
-\iow_open:Ne \g_jsonparse_benchmark_iow { benchmark-log.md }
+\iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
 \iow_now:Ne \g_jsonparse_benchmark_iow {
   \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
   \iow_newline:
@@ -53,6 +53,6 @@
 
 \begin{document}
 
-Result written to file benchmark-log.txt.
+Result written to file README.md.
 
 \end{document}

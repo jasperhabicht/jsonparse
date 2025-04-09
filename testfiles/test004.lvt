@@ -71,7 +71,7 @@
 
 \BEGINTEST{escape sequences: nesting}
 
-\JSONParse[values only=false]{\myJSONdataY}{ { "a" : "foo\\emph{bar}baz" , "b" : { "one" : "foo\\emph{bar}baz" , "two" : "f\\\"oo" , "three" : "f\\%oo"} } }
+\JSONParse{\myJSONdataY}{ { "a" : "foo\\emph{bar}baz" , "b" : { "one" : "foo\\emph{bar}baz" , "two" : "f\\\"oo" , "three" : "f\\%oo"} } }
 
 \ExplSyntaxOn
 

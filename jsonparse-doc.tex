@@ -319,7 +319,7 @@ The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaT
 \begin{macrodef}
 |debug|
 \end{macrodef}
-The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file. It will also show the relevant keys associated to the values. If the key \macro{values only} is set to \macro{false}, objects and arrays will be shown as values to the respective keys, including the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) that represents the complete JSON string.
+The package can be loaded with the option \macro{debug}. It will then output to the log file every instance of a string, a boolean (true or false) value, a null value, a number as well as the start and end of every object and the start and end of every array that is found while parsing the JSON string or JSON file. It will also show the relevant keys associated to the values. If the key \macro{skip structures} is not set (or not set to \macro{true}), objects and arrays will be shown as values to the respective keys, including the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) that represents the complete JSON string.
 
 Let us assume that the following JSON data is parsed:
 
@@ -334,7 +334,7 @@ Let us assume that the following JSON data is parsed:
   }
 \end{codeexample}
 
-With the key \macro{values only} set to \macro{false}, this will then result in the following output to the log:
+This will then result in the following output to the log:
 
 \begin{codeexample}
   Parsing JSON ...
@@ -393,9 +393,8 @@ It is possible to insert TeX macros to the JSON source that will eventually be p
 Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. Used inside the \macro{\JSONParse} command, the control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
-\JSONParse[values only=false]
-  {\myJSONdataA}{
-    { "a" : { "b" : "c" } }
+\JSONParse{\myJSONdataA}{
+  { "a" : { "b" : "c" } }
 }
 
 \JSONParse{\myJSONdataB}{
@@ -405,7 +404,7 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
 \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
-\warning Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command. Also, in most cases it will be necessary to set the key \macro{values only} to \macro{false} to activate storing of whole objects and arrays.
+\warning Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
 
 \begin{macrodef}
 |escape|={all}
@@ -465,7 +464,7 @@ Nested objects and arrays are assigned keys that adhere to JavaScript syntax. Fo
 
 The first optional argument can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally. When the option \macro{rescan} is used, the token list is rescanned before it is typeset (which means that all category codes that may have been changed before are set to the default values). This is the default behavior. If rescanning is not desired, pass the option \macro{rescan=false} to the command.
 
-If the key \macro{values only} is set to \macro{false} and a key is associated with an object or array, the whole object or array is output as JSON string. Additionally, the special key \macro{.} (or the string defined using the key \macro{separator/child}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
+When a key is associated with an object or array (and the key \macro{skip structures} is not set), the whole object or array is output as JSON string. Additionally, the special key \macro{.} (or the string defined using the key \macro{separator/child}) returns the whole JSON object (or the whole JSON array if the JSON data only consists of one array) as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 \warning The command \macro{\JSONParseValue} is not expandable and can therefore not be used as argument of certain other arguments where expansion is needed. In such cases, the expandable command \macro{\JSONParseExpandableValue} should be used.
 
@@ -520,9 +519,9 @@ As an example, let us assume that the following JSON data structure is parsed in
   ]
 }
 \end{codeexample}
-\JSONParse[values only=false]{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
+\JSONParse{\myJSONdata}{ { "array" : [ { "key_a" : "one" , "key_b" : "two" } , { "key_a" : "three" , "key_b" : "four" } ] } }
 
-We can then generate an array consisting of all keys of the object that is the first item of the array using \macro{\JSONParseKeys{\myJSONdata}{array[0]}}. We can also generate an array consisting of all top-level keys of the parsed JSON data using \macro{\JSONParseKeys{\myJSONdata}{.}} where \macro{.} is the pseudo key representing the complete parsed JSON string. Note that in order for this to work, we need to set the key \macro{values only} to \macro{false} before parsing the JSON string. Also note that in addition to the key of an array, keys for each item of this array will be added to the array of keys:
+We can then generate an array consisting of all keys of the object that is the first item of the array using \macro{\JSONParseKeys{\myJSONdata}{array[0]}}. We can also generate an array consisting of all top-level keys of the parsed JSON data using \macro{\JSONParseKeys{\myJSONdata}{.}} where \macro{.} is the pseudo key representing the complete parsed JSON string. Note that in addition to the key of an array, keys for each item of this array will be added to the array of keys:
 
 \begin{codeexamplecolumns}
 \JSONParseKeys{\myJSONdata}{array[0]}
@@ -709,7 +708,7 @@ Making use of the commands \macro{\JSONParseKeys} and \macro{\JSONParseValue} to
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example by switching off rescanning via \macro{rescan=false}. This is possible because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
-The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information. 
+The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information.
 
 \warning In order for the result to be stored in a token variable, the inline function needs to be fully expandable. For example, it is not possible to use the command \macro{\JSONParseValue} in the code of the inline function while using the command \macro{\JSONParseExpandableValue} is allowed. Note that the command \macro{\JSONParseArrayMapInline} itself is not expandable which means that nested use of this command prevents storing the result in a token variable.
 
@@ -814,21 +813,21 @@ If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the in
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, this key only takes effect when set before parsing.
 
 \begin{macrodef}
-|check num|
-|check num|={<boolean>}
+|validate numbers|
+|validate numbers|={<boolean>}
 \end{macrodef}
-If set to \macro{false}, the key \macro{check num} omits an internal check of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed if many numbers are to be parsed. Checks are carried out per default.
+If set to \macro{false}, the key \macro{validate numbers} omits an internal validation of numerical expressions against the JSON specification for numbers. Turning off this feature can increase the parsing speed if many numbers are to be parsed. Validations are carried out per default.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
 \begin{macrodef}
-|values only|
-|values only|={<boolean>}
+|skip structures|
+|skip structures|={<boolean>}
 \end{macrodef}
-If set to \macro{false}, the key \macro{values only} activates the storage of arrays and objects as values to the relative keys. Also, the whole JSON string will be stored as value with the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}). Setting this key to false will slow down the parsing process.
+If set or explicitly set to \macro{true}, the key \macro{skip structures} deactivates the storage of arrays and objects as values to the relative keys. Also, it omits storing of the whole JSON string as value with the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}). Skipping structures is deactivated per default. Setting this key to true can speed up the parsing process and circumvent memory limitations.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
-  
+
 \subsection{Keys affecting the typesetting}
 
 Some keys that change the typesetting behavior are explained in other parts of this documentation.

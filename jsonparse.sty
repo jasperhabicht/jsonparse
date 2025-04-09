@@ -131,8 +131,8 @@
 \str_new:N \l__jsonparse_false_str
 \str_new:N \l__jsonparse_null_str
 \bool_new:N \l__jsonparse_zero_based_bool
-\bool_new:N \l__jsonparse_check_num_bool
-\bool_new:N \l__jsonparse_values_only_bool
+\bool_new:N \l__jsonparse_validate_numbers_bool
+\bool_new:N \l__jsonparse_skip_structures_bool
 \bool_new:N \l__jsonparse_rescan_bool
 
 \str_new:N \l__jsonparse_backspace_str
@@ -185,12 +185,12 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  check ~ num                 .bool_set:N = \l__jsonparse_check_num_bool ,
-  check ~ num                 .default:n  = { true } ,
-  check ~ num                 .initial:n  = { true } ,
-  values ~ only               .bool_set:N = \l__jsonparse_values_only_bool ,
-  values ~ only               .default:n  = { true } ,
-  values ~ only               .initial:n  = { true } ,
+  validate ~ numbers          .bool_set:N = \l__jsonparse_validate_numbers_bool ,
+  validate ~ numbers          .default:n  = { true } ,
+  validate ~ numbers          .initial:n  = { true } ,
+  skip ~ structures           .bool_set:N = \l__jsonparse_skip_structures_bool ,
+  skip ~ structures           .default:n  = { true } ,
+  skip ~ structures           .initial:n  = { false } ,
   keyword                     .code:n     = { \keys_set:nn { jsonparse / parse / keyword } {#1} } ,
   keyword / true              .str_set:N  = \l__jsonparse_true_str ,
   keyword / true              .initial:n  = { true } ,
@@ -821,7 +821,7 @@
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
       \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_child_sep_str }
     }
-    \bool_if:NF \l__jsonparse_values_only_bool {
+    \bool_if:NF \l__jsonparse_skip_structures_bool {
       \__jsonparse_collect_object_array:No \l__jsonparse_object_array_val_tl { \c_left_brace_str #1 }
     }
     \__jsonparse_parse_remainder:
@@ -831,7 +831,7 @@
     \bool_if:NF \l__jsonparse_parse_key_bool {
       \msg_error:nn { jsonparse } { parsing-error-key }
     }
-    \bool_if:NF \l__jsonparse_values_only_bool {
+    \bool_if:NF \l__jsonparse_skip_structures_bool {
       \prop_gput:Nee \g_jsonparse_entries_prop
         { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
       \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -875,14 +875,14 @@
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_key_tl
     }
     \tl_set:Ne \l__jsonparse_prefix_tl { \l__jsonparse_key_tl \l__jsonparse_array_sep_left_str }
-    \bool_if:NF \l__jsonparse_values_only_bool {
+    \bool_if:NF \l__jsonparse_skip_structures_bool {
       \__jsonparse_collect_object_array:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     }
     \__jsonparse_parse_remainder:
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_array_end:w ] #1 \q_stop {
-    \bool_if:NF \l__jsonparse_values_only_bool {
+    \bool_if:NF \l__jsonparse_skip_structures_bool {
       \prop_gput:Nee \g_jsonparse_entries_prop
         { \l__jsonparse_object_array_key_tl } { \l__jsonparse_object_array_val_tl }
       \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -978,7 +978,7 @@
   \tl_remove_all:Nn \l__jsonparse_remainder_tl { \s__jsonparse_split }
   \tl_set:Ne \l__jsonparse_temp_tl { \tl_trim_spaces:n {#1} }
   \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
-    \bool_if:NTF \l__jsonparse_check_num_bool {
+    \bool_if:NTF \l__jsonparse_validate_numbers_bool {
       \jsonparse_if_num:VTF \l__jsonparse_temp_tl {
         \tl_set:No \l__jsonparse_val_tl { \l__jsonparse_temp_tl }
         \prop_gput:Nee \g_jsonparse_entries_prop

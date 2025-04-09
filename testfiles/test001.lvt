@@ -9,11 +9,11 @@
 
 \SEPARATOR
 
-\JSONParse[values only=false]{\myJSONdata}{ { "A" : true , "B" : false , "C" : null } }
+\JSONParse{\myJSONdata}{ { "A" : true , "B" : false , "C" : null } }
 
 \SEPARATOR
 
-\JSONParse[values only=false]{\myJSONdataA}{ { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" } }
+\JSONParse{\myJSONdataA}{ { "A" : [ { "foo" : "bar" , "a" : 1 } , -1.23 , null ] , "B" : "baz" } }
 
 \ExplSyntaxOn
 
@@ -45,7 +45,7 @@
 \end{filecontents}
 \TIMO
 
-\JSONParseFromFile[values only=false]{\myJSONdataB}{test-1.json}
+\JSONParseFromFile{\myJSONdataB}{test-1.json}
 
 \ExplSyntaxOn
 

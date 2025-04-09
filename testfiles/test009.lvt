@@ -5,7 +5,7 @@
 
 \begin{document}
 
-\JSONParse[externalize, values only=false]{\myJSONdataE}{
+\JSONParse[externalize]{\myJSONdataE}{
   { "a" : 1 }
 }
 

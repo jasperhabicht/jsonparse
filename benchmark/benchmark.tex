@@ -1,8 +1,17 @@
 \documentclass{article}
 \usepackage{l3benchmark}
-\usepackage[debug]{../jsonparse}
 
 \ExplSyntaxOn
+
+\tl_new:N \g_jsonparse_benchmark_version
+
+\cs_set_eq:NN \ProvidesExplPackageOrig \ProvidesExplPackage
+\RenewDocumentCommand{\ProvidesExplPackage}{ m m m m }{
+  \ProvidesExplPackageOrig{#1}{#2}{#3}{#4}
+  \tl_set:Nn \g_jsonparse_benchmark_version { v #3 }
+}
+\usepackage[debug]{../jsonparse}
+\cs_set_eq:NN \ProvidesExplPackage \ProvidesExplPackageOrig
 
 \seq_new:N \g_jsonparse_benchmark_file_data_seq
 \ior_new:N \g_jsonparse_benchmark_ior
@@ -28,7 +37,7 @@
 \iow_open:Ne \g_jsonparse_benchmark_iow { benchmark-log.txt }
 \iow_now:Ne \g_jsonparse_benchmark_iow {
   \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
-  \c_sys_timestamp_str : \fp_use:N \g_benchmark_time_fp \iow_newline:
+  \c_sys_timestamp_str : \g_jsonparse_benchmark_version : \fp_use:N \g_benchmark_time_fp \iow_newline:
 }
 \iow_close:N \g_jsonparse_benchmark_iow
 

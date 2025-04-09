@@ -136,8 +136,10 @@
 
 \NewDocumentCommand{\warning}{}{%
   \begin{tikzpicture}[overlay, baseline={(w.base)}]
-    \node[circle, fill, black!25!red!10, text=black!25!red]
+    \node[circle, fill, black!25!red!10, text=black!25!red, outer sep=0pt]
       (w) at (-3em,0pt) {\bfseries !};
+    \fill[black!25!red!10]
+      (w.east) |- (w.south) -- cycle;
   \end{tikzpicture}%
 }
 
@@ -324,47 +326,47 @@ The package can be loaded with the option \macro{debug}. It will then output to 
 Let us assume that the following JSON data is parsed:
 
 \begin{codeexample}
-  {
-    "string" : "a" ,
-    "boolean true" : true ,
-    "boolean false" : false ,
-    "null" : null ,
-    "number" : "number" : -1.1e-1 ,
-    "array" : [ "a" , "b" , "c" ]
-  }
+{
+  "string" : "a" ,
+  "boolean true" : true ,
+  "boolean false" : false ,
+  "null" : null ,
+  "number" : "number" : -1.1e-1 ,
+  "array" : [ "a" , "b" , "c" ]
+}
 \end{codeexample}
 
 This will then result in the following output to the log:
 
 \begin{codeexample}
-  Parsing JSON ...
-  (obj begin)
-  (key) string:
-    (str) a
-  (key) boolean true:
-    (tru) true
-  (key) boolean false:
-    (fal) false
-  (key) null:
-    (nul) null
-  (key) number:
-    (num) -1.1e-1
-  (arr begin)
-  (key) array[0]:
-    (str) a
-  (key) array[1]:
-    (str) b
-  (key) array[2]:
-    (str) c
-  (key) array:
-    (arr) [ "a" , "b" , "c" ]
-  (arr end)
-  (key) .:
-    (obj) { "string" : "a" , "boolean true" : true , "boolean false" :
-    false , "null" : null , "number" : "number" : -1.1e-1 , "array" :
-    [ "a" , "b" , "c" ] }
-  (obj end)
-  JSON parsing done.
+Parsing JSON ...
+(obj begin)
+(key) string:
+  (str) a
+(key) boolean true:
+  (tru) true
+(key) boolean false:
+  (fal) false
+(key) null:
+  (nul) null
+(key) number:
+  (num) -1.1e-1
+(arr begin)
+(key) array[0]:
+  (str) a
+(key) array[1]:
+  (str) b
+(key) array[2]:
+  (str) c
+(key) array:
+  (arr) [ "a" , "b" , "c" ]
+(arr end)
+(key) .:
+  (obj) { "string" : "a" , "boolean true" : true , "boolean false" :
+  false , "null" : null , "number" : "number" : -1.1e-1 , "array" :
+  [ "a" , "b" , "c" ] }
+(obj end)
+JSON parsing done.
 \end{codeexample}
 
 The \macro{debug} key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
@@ -651,16 +653,17 @@ Typesetting the above example in a tabular way can be achieved as follows:
 }
 
 \JSONParseArrayMapFunction[
-    code before={
-      \begin{tabular}{ c c }
-        \textbf{key a} &
-        \textbf{key b} \\ \hline
-    },
-    code after={
-      \hline \end{tabular}
-    }
-  ]{\myJSONdata}
-  {array}[key_a,key_b]{\myJSONitem}
+  code before={
+    \begin{tabular}{ c c }
+      \textbf{key a} &
+      \textbf{key b} \\ \hline
+  },
+  code after={
+      \hline
+    \end{tabular}
+  }
+]{\myJSONdata}{array}[key_a,key_b]
+  {\myJSONitem}
 \end{codeexamplecolumns}
 
 Finally, the first optional argument of the command can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally.
@@ -676,9 +679,9 @@ Using the above example, the mechanism could be implemented as follows:
 \begin{itemize}
   \JSONParseArrayMapInline{\myJSONdata}
     {array}{
-    \item \JSONParseValue{\myJSONdata}
-      {array[#1].key_a}
-  }
+      \item \JSONParseValue{\myJSONdata}
+        {array[#1].key_a}
+    }
 \end{itemize}
 \end{codeexamplecolumns}
 
@@ -687,23 +690,23 @@ Making use of the commands \macro{\JSONParseKeys} and \macro{\JSONParseValue} to
 \begin{codeexamplecolumns}
 \JSONParseArrayMapInline{\myJSONdata}
   {array}{
-  \JSONParseKeys[store in=\mykeys]
-    {\myJSONdata}{array[#1]}
-  \JSONParseValue
-    [store in=\mykeya, rescan=false]
-    {\mykeys}{[0]}
-  \JSONParseValue
-    [store in=\mykeyb, rescan=false]
-    {\mykeys}{[1]}
+    \JSONParseKeys[store in=\mykeys]
+      {\myJSONdata}{array[#1]}
+    \JSONParseValue
+      [store in=\mykeya, rescan=false]
+      {\mykeys}{[0]}
+    \JSONParseValue
+      [store in=\mykeyb, rescan=false]
+      {\mykeys}{[1]}
 
-  \emph{\mykeya :}
-  \JSONParseValue{\myJSONdata}
-    {array[#1].\mykeya}\par
+    \emph{\mykeya :}
+    \JSONParseValue{\myJSONdata}
+      {array[#1].\mykeya}\par
 
-  \emph{\mykeyb :}
-  \JSONParseValue{\myJSONdata}
-    {array[#1].\mykeyb}\par\bigskip
-}
+    \emph{\mykeyb :}
+    \JSONParseValue{\myJSONdata}
+      {array[#1].\mykeyb}\par\bigskip
+  }
 \end{codeexamplecolumns}
 
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example by switching off rescanning via \macro{rescan=false}. This is possible because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
@@ -728,7 +731,7 @@ Storing the result of the mapped inline function can be helpful if JSON data sho
     \JSONParseExpandableValue
       {\myJSONplotdata}{data[#1][1]}
     )
-}
+  }
 
 \begin{tikzpicture}
   \begin{axis}

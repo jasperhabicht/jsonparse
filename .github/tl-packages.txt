@@ -12,4 +12,4 @@ latex-bin-dev
 latex-base-dev
 latex-firstaid-dev
 
-l3benchmark
+l3experimental

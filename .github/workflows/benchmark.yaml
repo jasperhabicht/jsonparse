@@ -20,7 +20,7 @@ jobs:
       run: |
         git config --global user.name "jasperhabicht"
         git config --global user.email "mail@jasperhabicht.de"
-        git add -A
-        git commit -m "Update benchmark results (Action)" benchmark/README.md
-        git commit -m "Update benchmark results (Action)" benchmark/benchmark.pdf
+        git add benchmark/README.md
+        git add benchmark/benchmark.pdf
+        git commit -m "Update benchmark results (Action)"
         git push

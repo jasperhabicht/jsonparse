@@ -1,0 +1,18 @@
+name: Check benchmark of jsonparse
+
+on: [push, pull_request]
+
+jobs:
+  l3build-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install TeX Live
+      uses: zauguin/install-texlive@v3
+      with:
+        package_file: .github/tl-packages.txt
+    - name: Run benchmark check
+      run: |
+        pdflatex benchmark.tex
+      working-directory: benchmark/

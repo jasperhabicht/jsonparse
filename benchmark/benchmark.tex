@@ -14,10 +14,15 @@
 \cs_set_eq:NN \ProvidesExplPackage \ProvidesExplPackageOrig
 
 \seq_new:N \g_jsonparse_benchmark_file_data_seq
+\str_new:N \g_jsonparse_benchmark_last_version_str
 \ior_new:N \g_jsonparse_benchmark_ior
 \iow_new:N \g_jsonparse_benchmark_iow
 
 \cs_generate_variant:Nn \seq_use:Nn { No }
+
+\cs_new_protected:Npn \__jsonparse_benchmack_get_version:w | #1 | #2 | #3 \q_stop {
+  \str_gset:Nn \g_jsonparse_benchmark_last_version_str {#2}
+}
 
 \benchmark_tic:
 \ExplSyntaxOff
@@ -30,24 +35,29 @@
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
     \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
+    \tl_if_blank:nF {#1} {
+      \__jsonparse_benchmack_get_version:w #1 \q_stop
+    }
   }
   \ior_close:N \g_jsonparse_benchmark_ior
 } {
-  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq 
+  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
     { }
-  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq 
+  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
     { | ~ timestamp ~ | ~ version ~ | ~ parsing ~ time ~ | }
-  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq 
+  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
     { |  -----------  |  ---------  |   --------------   | }
 }
 
-\iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
-\iow_now:Ne \g_jsonparse_benchmark_iow {
-  \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
-  \iow_newline:
-  | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str | \fp_use:N \g_benchmark_time_fp | 
+\str_if_eq:VVF \g_jsonparse_benchmark_version_str \g_jsonparse_benchmark_last_version_str {
+  \iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
+  \iow_now:Ne \g_jsonparse_benchmark_iow {
+    \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
+    \iow_newline:
+    | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str | \fp_use:N \g_benchmark_time_fp |
+  }
+  \iow_close:N \g_jsonparse_benchmark_iow
 }
-\iow_close:N \g_jsonparse_benchmark_iow
 
 \ExplSyntaxOff
 

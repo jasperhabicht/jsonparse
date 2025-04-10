@@ -5,8 +5,6 @@ on: [push, pull_request]
 jobs:
   benchmark-check:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -18,3 +16,17 @@ jobs:
       run: |
         pdflatex benchmark.tex
       working-directory: benchmark/
+    - name: Prepare update
+      run: |
+        mkdir publish
+        mv benchmark/*.md publish
+    - name: Deploy
+      # if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./publish
+        enable_jekyll: false
+        force_orphan: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'

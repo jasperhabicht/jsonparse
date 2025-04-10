@@ -19,10 +19,9 @@ jobs:
     - name: Prepare update
       run: |
         mkdir publish
-        mv benchmark/*.pdf publish
-        mv benchmark/*.md publish
+        cp benchmark/*.pdf publish
+        cp benchmark/*.md publish
     - name: Deploy
-      # if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

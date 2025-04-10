@@ -19,6 +19,7 @@ jobs:
     - name: Prepare update
       run: |
         mkdir publish
+        mv benchmark/*.pdf publish
         mv benchmark/*.md publish
     - name: Deploy
       # if: github.ref == 'refs/heads/main'

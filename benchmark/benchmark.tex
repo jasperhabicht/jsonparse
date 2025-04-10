@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{booktabs}
 \usepackage{l3benchmark}
 
 \ExplSyntaxOn
@@ -20,8 +21,26 @@
 
 \cs_generate_variant:Nn \seq_use:Nn { No }
 
-\cs_new_protected:Npn \__jsonparse_benchmack_get_version:w | #1 | #2 | #3 \q_stop {
+\cs_new_protected:Npn \__jsonparse_benchmark_get_version:w | #1 | #2 | #3 \q_stop {
   \str_gset:Nn \g_jsonparse_benchmark_last_version_str {#2}
+}
+
+\cs_new:Npn \__jsonparse_benchmark_get_tabular_data:w | #1 | #2 | #3 | \q_stop {
+  \tl_if_head_eq_charcode:nNT {#1} D {
+    #1 & #2 & #3 \\
+  }
+}
+
+\cs_new:Npn \__jsonparse_benchmark_get_tabular_data:n #1 {
+  \tl_if_blank:nF {#1} {
+    \__jsonparse_benchmark_get_tabular_data:w #1 \q_stop
+  }
+}
+
+\NewDocumentCommand { \printtabulardata } { } {
+  \seq_map_function:NN
+    \g_jsonparse_benchmark_file_data_seq
+    \__jsonparse_benchmark_get_tabular_data:n
 }
 
 \benchmark_tic:
@@ -36,7 +55,7 @@
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
     \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
     \tl_if_blank:nF {#1} {
-      \__jsonparse_benchmack_get_version:w #1 \q_stop
+      \__jsonparse_benchmark_get_version:w #1 \q_stop
     }
   }
   \ior_close:N \g_jsonparse_benchmark_ior
@@ -63,6 +82,12 @@
 
 \begin{document}
 
-Result written to README.md.
+\begin{tabular}{ l l l }
+  \toprule
+  \textbf{timestamp} & \textbf{version} & \textbf{parsing time} \\
+  \midrule
+  \printtabulardata
+  \bottomrule
+\end{tabular}
 
 \end{document}

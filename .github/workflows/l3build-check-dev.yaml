@@ -3,7 +3,7 @@ name: Test jsonparse using l3build -dev
 on: [push, pull_request]
 
 jobs:
-  l3build-check:
+  l3build-check-dev:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository

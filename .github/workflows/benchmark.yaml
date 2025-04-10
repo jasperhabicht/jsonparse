@@ -3,8 +3,10 @@ name: Check benchmark of jsonparse
 on: [push, pull_request]
 
 jobs:
-  l3build-check:
+  benchmark-check:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4

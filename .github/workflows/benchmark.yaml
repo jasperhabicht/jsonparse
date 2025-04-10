@@ -12,6 +12,9 @@ jobs:
       uses: zauguin/install-texlive@v4
       with:
         package_file: .github/tl-packages.txt
+    - name: Copy data
+      run: |
+        cp publish/README.md benchmark
     - name: Run benchmark check
       run: |
         pdflatex benchmark.tex
@@ -19,8 +22,8 @@ jobs:
     - name: Prepare update
       run: |
         mkdir publish
-        cp benchmark/*.pdf publish
-        cp benchmark/*.md publish
+        mv benchmark/*.pdf publish
+        mv benchmark/*.md publish
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v4
       with:

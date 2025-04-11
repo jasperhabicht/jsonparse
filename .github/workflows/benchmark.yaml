@@ -18,8 +18,8 @@ jobs:
       working-directory: benchmark/
     - name: Commit and push changes
       run: |
-        git config --global user.name "jasperhabicht"
-        git config --global user.email "mail@jasperhabicht.de"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add benchmark/README.md
         git add benchmark/benchmark.pdf
         git commit -m "Update benchmark results (Action)"

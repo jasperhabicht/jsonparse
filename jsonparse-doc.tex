@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.4.1}
-\def\jsonparsefiledate{11 April 2025}
+\def\jsonparsefileversion{1.5.0}
+\def\jsonparsefiledate{13 April 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -295,6 +295,7 @@
 %\changes{v1.3.1}{2025/03/30}{Fixes in documentation. Bug fixes.}
 %\changes{v1.3.2}{2025/04/07}{Bug fixes and code improvements.}
 \changes{v1.4.0}{2025/04/10}{Enhancements in parsing speed.}
+%\changes{v1.5.0}{2025/04/13}{Overall enhancements.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -390,9 +391,9 @@ The JSON escape sequences \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r} and \ma
 It is possible to insert TeX macros to the JSON source that will eventually be parsed when typesetting. Backslashes of TeX macros need to be escaped by another backslash. The TeX macros \macro{\"} and \macro{\\} must be escaped twice in the JSON source so that they become \macro{\\\"} and \macro{\\\\} respectively.
 
 \begin{macrodef}
-|\x|{<token variable name>}{<key>}
+|\$|{<token variable name>}{<key>}
 \end{macrodef}
-Using the control sequence \macro{\x}, it is possible to nest JSON strings into each other. Used inside the \macro{\JSONParse} command, the control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
+Using the control sequence \macro{\$}, it is possible to nest JSON strings into each other. Used inside the \macro{\JSONParse} command, the control sequence takes two arguments delimited by curly braces. The first argument represents the name of the token variable that holds the parsed JSON data where the inserted JSON string should be taken from. The second argument sets the key that should be selected. The following example shows a simple use case:
 
 \begin{codeexamplecolumns}
 \JSONParse{\myJSONdataA}{
@@ -400,13 +401,13 @@ Using the control sequence \macro{\x}, it is possible to nest JSON strings into 
 }
 
 \JSONParse{\myJSONdataB}{
-  { "d" : \x{myJSONdataA}{a} }
+  { "d" : \${myJSONdataA}{a} }
 }
 
 \JSONParseValue{\myJSONdataB}{d.b}
 \end{codeexamplecolumns}
 
-\warning Note that the control sequence \macro{\x} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\x} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\x} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
+\warning Note that the control sequence \macro{\$} is replaced by the value exactly. Therefore, if the value happens to be a string, the control sequence \macro{\$} should be placed between quotation marks (\macro{"}) in order for the resulting string to be valid JSON. The control sequence \macro{\$} is only available inside the \macro{\JSONParse} command, but not inside the \macro{\JSONParseFromFile} command.
 
 \begin{macrodef}
 |escape|={all}
@@ -934,6 +935,14 @@ The following commands displayed in red boxes on the left have been deprecated a
   [<1>, code before={<6>},
     code after={<7>}]
   {<2>}{<3>}[<4>]{\<5>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\x|{<1>}{<2>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\$|{<1>}{<2>}
 \end{macroreplacement}
 
 The command \macro{\JSONParseArrayMapFunction} takes as last argument a command denoting the relevant mapping function including the preceding backslash, while the deprecated command \macro{\JSONParseArrayValuesMap} required the name of this function without preceding backslash.

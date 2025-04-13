@@ -18,6 +18,8 @@
 \str_new:N \g_jsonparse_benchmark_last_version_str
 \ior_new:N \g_jsonparse_benchmark_ior
 \iow_new:N \g_jsonparse_benchmark_iow
+\fp_new:N \g_jsonparse_benchmark_time_fp
+\fp_new:N \g_jsonparse_benchmark_time_average_fp
 
 \cs_generate_variant:Nn \seq_use:Nn { No }
 
@@ -43,13 +45,19 @@
     \__jsonparse_benchmark_get_tabular_data:n
 }
 
-\benchmark_tic:
-\ExplSyntaxOff
+\int_step_inline:nn { 3 } {
+  \benchmark_tic:
 
-\JSONParseFromFile{\theJSONdata}{4KB.json}
+  \JSONParseFromFile{\theJSONdata}{4KB.json}
 
-\ExplSyntaxOn
-\benchmark_toc:
+  \benchmark_toc:
+
+  \tl_set_eq:NN \theJSONdata \undefined
+  \fp_gadd:Nn \g_jsonparse_benchmark_time_fp { \g_benchmark_time_fp }
+}
+
+\fp_gset:Nn \g_jsonparse_benchmark_time_average_fp
+  { \g_jsonparse_benchmark_time_fp / 3 }
 
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
@@ -73,7 +81,8 @@
   \iow_now:Ne \g_jsonparse_benchmark_iow {
     \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
     \iow_newline:
-    | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str | \fp_use:N \g_benchmark_time_fp |
+    | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str 
+      | \fp_use:N \g_jsonparse_benchmark_time_average_fp |
   }
   \iow_close:N \g_jsonparse_benchmark_iow
 }

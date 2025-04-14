@@ -8,5 +8,6 @@
 *.zip
 
 build/*
+benchmark/*.pdf
+benchmark/*.md
 jsonparse/*
-testfiles-custom/*

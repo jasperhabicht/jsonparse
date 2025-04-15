@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0b}
+\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0c}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -648,7 +648,7 @@
 % ===
 
 \cs_new_protected:Npn \jsonparse_parse:n #1 {
-  \__jsonparse_tl_set_trim_spaces:Ne \l__jsonparse_input_tl {#1}
+  \__jsonparse_tl_set_trim_spaces:Nn \l__jsonparse_input_tl {#1}
   \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:o { \l__jsonparse_input_tl } :w } {
     \l__jsonparse_input_tl \q_stop
   } {
@@ -667,7 +667,7 @@
     }
   }
   \prop_gclear:N \g_jsonparse_entries_prop
-  \jsonparse_parse:n {#2}
+  \jsonparse_parse:e {#2}
   \prop_gset_eq:NN #1 \g_jsonparse_entries_prop
   \bool_if:NT \l__jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {
@@ -685,7 +685,7 @@
     }
   }
   \prop_clear:N \g_jsonparse_entries_prop
-  \jsonparse_parse:n {#2}
+  \jsonparse_parse:e {#2}
   \prop_set_eq:NN #1 \g_jsonparse_entries_prop
   \bool_if:NT \l__jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {

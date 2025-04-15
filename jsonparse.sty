@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0a}
+\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0b}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -385,7 +385,6 @@
 \tl_new:N \l__jsonparse_object_array_key_tl
 \tl_new:N \l__jsonparse_object_array_val_tl
 \tl_new:N \l__jsonparse_remainder_tl
-\tl_new:N \l__jsonparse_trim_spaces_temp_tl
 
 \bool_new:N \l__jsonparse_parse_array_bool
 \bool_new:N \l__jsonparse_parse_object_bool
@@ -432,13 +431,11 @@
 % ===
 
 \cs_new_protected:Npn \__jsonparse_tl_trim_spaces:N #1 {
-  \tl_set_eq:NN \l__jsonparse_trim_spaces_temp_tl #1
-  \tl_trim_spaces_apply:oN { \l__jsonparse_trim_spaces_temp_tl } \__jsonparse_tl_set_trim_spaces_aux:nN #1
+  \tl_trim_spaces_apply:oN {#1} \__jsonparse_tl_set_trim_spaces_aux:nN #1
 }
 
 \cs_new_protected:Npn \__jsonparse_tl_set_trim_spaces:Nn #1#2 {
-  \tl_set:Nn \l__jsonparse_trim_spaces_temp_tl {#2}
-  \tl_trim_spaces_apply:oN { \l__jsonparse_trim_spaces_temp_tl } \__jsonparse_tl_set_trim_spaces_aux:nN #1
+  \tl_trim_spaces_apply:nN {#2} \__jsonparse_tl_set_trim_spaces_aux:nN #1
 }
 \cs_generate_variant:Nn \__jsonparse_tl_set_trim_spaces:Nn { Ne }
 

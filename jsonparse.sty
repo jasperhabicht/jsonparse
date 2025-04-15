@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0d}
+\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0e}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -327,7 +327,7 @@
 \cs_generate_variant:Nn \tl_replace_once:Nnn { Noe }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
-\cs_generate_variant:Nn \tl_to_str:n { o , e }
+\cs_generate_variant:Nn \tl_to_str:n { o }
 \cs_generate_variant:Nn \str_case_e:nn { en }
 \cs_generate_variant:Nn \str_casefold:n { o }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { o }
@@ -452,20 +452,21 @@
 }
 
 \clist_const:Ne \c__jsonparse_num_exponent_clist {
-  \tl_to_str:n { e } ,
-  \tl_to_str:n { E }
+  e , E
 }
 
 \clist_const:Ne \c__jsonparse_num_plus_minus_clist {
-  \tl_to_str:n { + } ,
-  \tl_to_str:n { - }
+  + , -
 }
 
 \prg_new_conditional:Npnn \jsonparse_if_num:n #1 { p , T , F , TF } {
-  \exp_last_unbraced:Ne
-    \__jsonparse_parse_num:w { \tl_to_str:e { \tl_trim_spaces:n {#1} } } \q_stop
+  \tl_trim_spaces_apply:nN {#1} \__jsonparse_parse_num:n
 }
 \prg_generate_conditional_variant:Nnn \jsonparse_if_num:n { V } { p , T , F , TF }
+
+\cs_new:Npn \__jsonparse_parse_num:n #1 {
+  \__jsonparse_parse_num:w #1 \q_stop
+}
 
 \cs_new:Npn \__jsonparse_parse_num:w #1#2 \q_stop {
   \cs_if_exist_use:cTF { __jsonparse_parse_num_first_ #1 :w } {

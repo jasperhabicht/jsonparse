@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0c}
+\ProvidesExplPackage {jsonparse} {2025-04-13} {1.5.0d}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -322,8 +322,6 @@
 \cs_generate_variant:Nn \file_input:n { e }
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
 \cs_generate_variant:Nn \tl_gset_rescan:Nnn { Nno , Nne }
-\cs_generate_variant:Nn \tl_range:nnn { nne , nen }
-\cs_generate_variant:Nn \tl_range:Nnn { Nne , Nen }
 \cs_generate_variant:Nn \tl_remove_once:Nn { NV }
 \cs_generate_variant:Nn \tl_replace_all:Nnn { Non , Noe }
 \cs_generate_variant:Nn \tl_replace_once:Nnn { Noe }
@@ -711,7 +709,7 @@
     \cs_if_exist_use:cTF { __jsonparse_collect_object_array_ \str_head:n {#1} :w } {
       #1 \q_stop
     } {
-      \tl_if_blank:eTF { \str_head:n {#1} } {
+      \tl_if_head_is_space:nTF {#1} {
         \__jsonparse_collect_object_array_space:w #1 \q_stop
       } {
         \__jsonparse_collect_object_array_other:w #1 \q_stop
@@ -803,10 +801,8 @@
 
 \cs_new_protected:Npn \__jsonparse_array_key_set: {
   \str_if_eq:eVT {
-    \tl_range:Nen \l__jsonparse_prefix_tl {
-      \int_eval:n {
-        -1 * \tl_count:N \l__jsonparse_array_sep_left_str
-      }
+    \tl_range:Nnn \l__jsonparse_prefix_tl {
+      -1 * \tl_count:N \l__jsonparse_array_sep_left_str
     } { -1 }
   } \l__jsonparse_array_sep_left_str {
     \int_incr:N \l__jsonparse_array_index_int
@@ -1079,21 +1075,23 @@
 
 \cs_new_protected:Npn \__jsonparse_filter:nn #1#2 {
   \str_case_e:en {
-    \tl_range:nne {#1} { 1 } { \int_eval:n {
-      \tl_count:o { \l__jsonparse_filter_key_str } + 1
-    } }
+    \tl_range:nnn {#1} { 1 } {
+      \tl_count:N \l__jsonparse_filter_key_str + 1
+    }
   } {
     { \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str } {
-      \prop_put:Nen \l__jsonparse_temp_prop
-        { \tl_range:nen {#1} { \int_eval:n {
-          \tl_count:o { \l__jsonparse_filter_key_str } + 2
-        } } { -1 } } {#2}
+      \prop_put:Nen \l__jsonparse_temp_prop {
+        \tl_range:nnn {#1} {
+          \tl_count:N \l__jsonparse_filter_key_str + 2
+        } { -1 }
+      } {#2}
     }
     { \l__jsonparse_filter_key_str \l__jsonparse_array_sep_left_str } {
-      \prop_put:Nen \l__jsonparse_temp_prop
-        { \tl_range:nen {#1} { \int_eval:n {
-          \tl_count:o { \l__jsonparse_filter_key_str } + 1
-        } } { -1 } } {#2}
+      \prop_put:Nen \l__jsonparse_temp_prop {
+        \tl_range:nnn {#1} {
+          \tl_count:N \l__jsonparse_filter_key_str + 1
+        } { -1 }
+      } {#2}
     }
   }
 }

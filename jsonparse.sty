@@ -452,10 +452,11 @@
 }
 
 \clist_const:Ne \c__jsonparse_num_exponent_clist {
-  e , E
+  \tl_to_str:n { e } , 
+  \tl_to_str:n { E }
 }
 
-\clist_const:Ne \c__jsonparse_num_plus_minus_clist {
+\clist_const:Nn \c__jsonparse_num_plus_minus_clist {
   + , -
 }
 

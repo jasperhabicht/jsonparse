@@ -1168,6 +1168,12 @@
 }
 \cs_generate_variant:Nn \__jsonparse_nested_construct_cs:Nnn { Noo }
 
+\cs_new_protected:Npn \__jsonparse_protect_escape_sequeces: {
+  \clist_map_inline:nn { " , / , \c_backslash_str , b , f , n , r , t , u } {
+    \cs_set:cpn {##1} { \exp_not:c {##1} }
+  }
+}
+
 \NewDocumentCommand { \JSONParse } { O{} m +v } {
   \group_begin:
     \str_set:Ne \l_jsonparse_current_prop_str { \cs_to_str:N #2 }
@@ -1194,15 +1200,7 @@
       }
       \tl_gclear:N \g__jsonparse_json_tl
       \group_begin:
-        \cs_set:Npn \" { \exp_not:N \" }
-        \cs_set:Npn \/ { \exp_not:N \/ }
-        \cs_set:Npn \\ { \exp_not:N \\ }
-        \cs_set:Npn \b { \exp_not:N \b }
-        \cs_set:Npn \f { \exp_not:N \f }
-        \cs_set:Npn \n { \exp_not:N \n }
-        \cs_set:Npn \r { \exp_not:N \r }
-        \cs_set:Npn \t { \exp_not:N \t }
-        \cs_set:Npn \u { \exp_not:N \u }
+        \__jsonparse_protect_escape_sequeces:
         \__jsonparse_nested_construct_cs:Noo \$ \c_left_brace_str \c_right_brace_str
         % backward compatibility
         \__jsonparse_nested_construct_cs:Noo \x \c_left_brace_str \c_right_brace_str
@@ -1248,15 +1246,7 @@
       }
       \tl_gclear:N \g__jsonparse_json_tl
       \group_begin:
-        \cs_set:Npn \" { \exp_not:N \" }
-        \cs_set:Npn \/ { \exp_not:N \/ }
-        \cs_set:Npn \\ { \exp_not:N \\ }
-        \cs_set:Npn \b { \exp_not:N \b }
-        \cs_set:Npn \f { \exp_not:N \f }
-        \cs_set:Npn \n { \exp_not:N \n }
-        \cs_set:Npn \r { \exp_not:N \r }
-        \cs_set:Npn \t { \exp_not:N \t }
-        \cs_set:Npn \u { \exp_not:N \u }
+        \__jsonparse_protect_escape_sequeces:
         \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \l__jsonparse_externalize_file_data_tl
         \tl_gset_eq:NN \g__jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
         \jsonparse_parse_to_prop:Ne #2 { \g__jsonparse_json_tl }
@@ -1267,9 +1257,6 @@
     }
   \group_end:
 }
-
-\cs_new_eq:NN \__jsonparse_tex_quote: \"
-\cs_new_eq:NN \__jsonparse_tex_backslash: \\
 
 \prg_new_conditional:Npnn \jsonparse_unicode_if_high_surrogate:n #1 { p , T , F , TF } {
   \int_compare:nNnTF {#1} > { "D7FF } {
@@ -1330,6 +1317,9 @@
     }
   }
 }
+
+\cs_new_eq:NN \__jsonparse_tex_quote: \"
+\cs_new_eq:NN \__jsonparse_tex_backslash: \\
 
 \cs_new_protected:Npn \__jsonparse_rescan_setup:Nn #1#2 {
   \cs_set:Npn \" { " }

@@ -461,7 +461,7 @@
 }
 
 \prg_new_conditional:Npnn \jsonparse_if_num:n #1 { p , T , F , TF } {
-  \tl_trim_spaces_apply:nN {#1} \__jsonparse_parse_num:n
+  \tl_trim_spaces_apply:oN { \tl_to_str:n {#1} } \__jsonparse_parse_num:n
 }
 \prg_generate_conditional_variant:Nnn \jsonparse_if_num:n { V } { p , T , F , TF }
 

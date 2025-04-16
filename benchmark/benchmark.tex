@@ -46,19 +46,21 @@
     \__jsonparse_benchmark_get_tabular_data:n
 }
 
-\int_step_inline:nn { 3 } {
-  \benchmark_tic:
+\cs_new:Npn \__jsonparse_benchmark_run: {
+  \int_step_inline:nn { 3 } {
+    \benchmark_tic:
 
-  \JSONParseFromFile{\theJSONdata}{4KB.json}
+    \JSONParseFromFile{\theJSONdata}{4KB.json}
 
-  \benchmark_toc:
+    \benchmark_toc:
 
-  \tl_set_eq:NN \theJSONdata \undefined
-  \fp_gadd:Nn \g_jsonparse_benchmark_time_fp { \g_benchmark_time_fp }
+    \tl_set_eq:NN \theJSONdata \undefined
+    \fp_gadd:Nn \g_jsonparse_benchmark_time_fp { \g_benchmark_time_fp }
+  }
+
+  \fp_gset:Nn \g_jsonparse_benchmark_time_average_fp
+    { \g_jsonparse_benchmark_time_fp / 3 }
 }
-
-\fp_gset:Nn \g_jsonparse_benchmark_time_average_fp
-  { \g_jsonparse_benchmark_time_fp / 3 }
 
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
@@ -77,7 +79,10 @@
     { |  -----------  |  ---------  |   --------------   | }
 }
 
-\str_if_eq:VVF \g_jsonparse_benchmark_version_str \g_jsonparse_benchmark_last_version_str {
+\str_if_eq:VVTF \g_jsonparse_benchmark_version_str \g_jsonparse_benchmark_last_version_str {
+  \tex_end:D
+} {
+  \__jsonparse_benchmark_run:
   \iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
   \iow_now:Ne \g_jsonparse_benchmark_iow {
     \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }

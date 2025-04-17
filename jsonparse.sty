@@ -772,7 +772,7 @@
 % ===
 
 \clist_const:Ne \__jsonparse_collect_object_array_split_clist {
-    \c_left_brace_str , \c_right_brace_str , [ , ] , "
+  " , \c_left_brace_str , \c_right_brace_str , [ , ]
 }
 
 \tl_new:N \l__jsonparse_collect_object_array_temp_tl
@@ -783,9 +783,9 @@
   \clist_map_inline:Nn \__jsonparse_collect_object_array_split_clist {
     \__jsonparse_collect_object_array_other_split_setup:n {##1}
     \exp_after:wN \__jsonparse_collect_object_array_other_split:w 
-        \l__jsonparse_collect_object_array_temp_tl
-        \s__jsonparse_stop \__jsonparse_collect_object_array_other_split_aux:w
-        ##1 \s__jsonparse_stop \__jsonparse_collect_object_array_other_split_auxi:w
+      \l__jsonparse_collect_object_array_temp_tl
+      \s__jsonparse_stop \__jsonparse_collect_object_array_other_split_aux:w
+      ##1 \s__jsonparse_stop \__jsonparse_collect_object_array_other_split_auxi:w
   }
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl {
     \l__jsonparse_collect_object_array_temp_tl

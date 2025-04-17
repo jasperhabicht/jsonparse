@@ -697,7 +697,7 @@
 
 % ===
 
-\cs_new:Npn \__jsonparse_collect_object_array:Nn #1#2 {
+\cs_new_protected:Npn \__jsonparse_collect_object_array:Nn #1#2 {
   \tl_clear:N \l__jsonparse_collect_object_array_store_tl
   \bool_set_false:N \l__jsonparse_collect_object_array_stop_bool
   \int_zero:N \l__jsonparse_collect_object_array_level_int
@@ -706,7 +706,7 @@
 }
 \cs_generate_variant:Nn \__jsonparse_collect_object_array:Nn { No }
 
-\cs_new:Npn \__jsonparse_collect_object_array:w #1 \q_stop {
+\cs_new_protected:Npn \__jsonparse_collect_object_array:w #1 \q_stop {
   \bool_if:NF \l__jsonparse_collect_object_array_stop_bool {
     \cs_if_exist_use:cTF { __jsonparse_collect_object_array_ \str_head:n {#1} :w } {
       #1 \q_stop
@@ -720,13 +720,13 @@
   }
 }
 
-\cs_new:cpn { __jsonparse_collect_object_array_ " :w } " #1 " #2 \q_stop {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ " :w } " #1 " #2 \q_stop {
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { " #1 " }
   \__jsonparse_collect_object_array:w #2 \q_stop
 }
 
 \exp_last_unbraced:Nno
-  \cs_new:cpn { __jsonparse_collect_object_array_ \c_left_brace_str :w }
+  \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_left_brace_str :w }
     \c_left_brace_str #1 \q_stop {
   \int_incr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_left_brace_str }
@@ -734,7 +734,7 @@
 }
 
 \exp_last_unbraced:Nno
-  \cs_new:cpn { __jsonparse_collect_object_array_ \c_right_brace_str :w }
+  \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_right_brace_str :w }
     \c_right_brace_str #1 \q_stop {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_right_brace_str }
@@ -744,13 +744,13 @@
   \__jsonparse_collect_object_array:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_collect_object_array_ [ :w } [ #1 \q_stop {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ [ :w } [ #1 \q_stop {
   \int_incr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { [ }
   \__jsonparse_collect_object_array:w #1 \q_stop
 }
 
-\cs_new:cpn { __jsonparse_collect_object_array_ ] :w } ] #1 \q_stop {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ ] :w } ] #1 \q_stop {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { ] }
   \int_if_zero:nT { \l__jsonparse_collect_object_array_level_int } {
@@ -759,12 +759,12 @@
   \__jsonparse_collect_object_array:w #1 \q_stop
 }
 
-\cs_new:Npn \__jsonparse_collect_object_array_space:w #1#2 \q_stop {
+\cs_new_protected:Npn \__jsonparse_collect_object_array_space:w #1#2 \q_stop {
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { ~ }
   \__jsonparse_collect_object_array:w #1#2 \q_stop
 }
 
-\cs_new:Npn \__jsonparse_collect_object_array_other:w #1#2 \q_stop {
+\cs_new_protected:Npn \__jsonparse_collect_object_array_other:w #1#2 \q_stop {
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { #1 }
   \__jsonparse_collect_object_array:w #2 \q_stop
 }

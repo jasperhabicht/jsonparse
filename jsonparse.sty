@@ -452,7 +452,7 @@
 }
 
 \clist_const:Ne \c__jsonparse_num_exponent_clist {
-  \tl_to_str:n { e } , 
+  \tl_to_str:n { e } ,
   \tl_to_str:n { E }
 }
 
@@ -727,36 +727,36 @@
 
 \exp_last_unbraced:Nno
   \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_left_brace_str :w }
-    \c_left_brace_str #1 \q_stop {
+    \c_left_brace_str {
   \int_incr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_left_brace_str }
-  \__jsonparse_collect_object_array:w #1 \q_stop
+  \__jsonparse_collect_object_array:w
 }
 
 \exp_last_unbraced:Nno
   \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_right_brace_str :w }
-    \c_right_brace_str #1 \q_stop {
+    \c_right_brace_str {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_right_brace_str }
   \int_if_zero:nT { \l__jsonparse_collect_object_array_level_int } {
     \bool_gset_true:N \l__jsonparse_collect_object_array_stop_bool
   }
-  \__jsonparse_collect_object_array:w #1 \q_stop
+  \__jsonparse_collect_object_array:w
 }
 
-\cs_new_protected:cpn { __jsonparse_collect_object_array_ [ :w } [ #1 \q_stop {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ [ :w } [ {
   \int_incr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { [ }
-  \__jsonparse_collect_object_array:w #1 \q_stop
+  \__jsonparse_collect_object_array:w
 }
 
-\cs_new_protected:cpn { __jsonparse_collect_object_array_ ] :w } ] #1 \q_stop {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ ] :w } ] {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { ] }
   \int_if_zero:nT { \l__jsonparse_collect_object_array_level_int } {
     \bool_gset_true:N \l__jsonparse_collect_object_array_stop_bool
   }
-  \__jsonparse_collect_object_array:w #1 \q_stop
+  \__jsonparse_collect_object_array:w
 }
 
 \cs_new_protected:Npn \__jsonparse_collect_object_array_space:w #1#2 \q_stop {
@@ -771,34 +771,28 @@
 
 % ===
 
-\cs_new_protected:cpn { __jsonparse_parse_ \c_left_brace_str :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_object_begin:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ \c_left_brace_str :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_object_begin:w
 }
 
-\cs_new_protected:cpn { __jsonparse_parse_ \c_right_brace_str :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_object_end:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ \c_right_brace_str :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_object_end:w
 }
 
-\cs_new_protected:cpn { __jsonparse_parse_ [ :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_array_begin:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ [ :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_array_begin:w
 }
 
-\cs_new_protected:cpn { __jsonparse_parse_ ] :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_array_end:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ ] :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_array_end:w
 }
 
-\cs_new_protected:cpn { __jsonparse_parse_ , :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_delimiter:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ , :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_delimiter:w
 }
 
-\cs_new_protected:cpn { __jsonparse_parse_ " :w } #1 \q_stop {
-  \exp_last_unbraced:No
-    \__jsonparse_parse_string_key:w #1 \q_stop
+\cs_new_protected:cpn { __jsonparse_parse_ " :w } {
+  \exp_last_unbraced:No \__jsonparse_parse_string_key:w
 }
 
 \cs_new_protected:Npn \__jsonparse_array_key_set: {

@@ -317,7 +317,7 @@ The package is continuously being tested, but bugs cannot be ruled out. The auth
 
 To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document.
 
-The package does not load any dependencies. It can be used with PDFLaTeX, LuaLaTeX or XeLaTeX. It should also work with upTeX.
+The package can be used with PDFLaTeX, LuaLaTeX or XeLaTeX. It should also work with upTeX. The package does not load any dependencies, but it needs a LaTeX kernel of 1 June 2022 or newer. It is recommended to use the package with an up-to-date TeX distribution.
 
 \begin{macrodef}
 |debug|
@@ -445,9 +445,9 @@ The first part of this section describes the basic commands for parsing JSON dat
 \end{macrodef}
 The command \macro{\JSONParse} is used to parse a JSON string and globally store the parsed result in a token variable (a property list). The second argument takes the name of the token variable that is created by the command. The third argument takes the JSON string to be parsed.
 
-For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of one entry with the key \macro{key} and the value \macro{value}. The command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can then be used to extract the relevant value from this property list (see the description below).
+For example, using \macro{\JSONParse{\myJSONdata}{ { "key" : "value" } }}, the relevant JSON string will be parsed and the result stored in the token variable \macro{\myJSONdata} as property list. In this case, the property list only consists of two entries of which one has the key \macro{key} and the value \macro{value} and the other represents the whole object. Once the JSON string has been parsed, the command \macro{\JSONParseValue{\myJSONdata}{key}}, for example, can be used to extract the relevant value from this property list (see the description below).
 
-The first optional argument can be used to pass options to the command that are then applied locally.
+The first optional argument of the command \macro{\JSONParse} can be used to pass options to the command that are then applied locally.
 
 \warning The command \macro{\JSONParse} takes the JSON string as verbatim argument which means that the command can't be used inside a macro argument. One consequence of this for example is that when using the \macro{beamer} document class, the command \macro{\JSONParse} can only be used inside the \macro{frame} environment if the \macro{fragile} option is set.
 

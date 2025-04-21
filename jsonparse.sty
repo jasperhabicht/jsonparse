@@ -94,6 +94,11 @@
   Control ~ sequence ~ undefined: ~ #1.
 }
 
+\msg_new:nnn { jsonparse } { not-array-item } {
+  \msg_error_text:n { jsonparse } \iow_newline:
+  Key ~ does ~ not ~ represent ~ an ~ array ~ item: ~ #1
+}
+
 \msg_new:nnn { jsonparse } { key-unknown } {
   \msg_warning_text:n { jsonparse } \iow_newline:
   Ignoring ~ key: ~ #1. \iow_newline:
@@ -109,11 +114,6 @@
 \msg_new:nnn { jsonparse } { loading-external } {
   \msg_info_text:n { jsonparse } \iow_newline:
   Loading ~ from ~ external ~ file: ~ #1.
-}
-
-\msg_new:nnn { jsonparse } { not-array-item } {
-  \msg_info_text:n { jsonparse } \iow_newline:
-  Key ~ does ~ not ~ represent ~ an ~ array ~ item: ~ #1
 }
 
 % ===
@@ -1520,7 +1520,9 @@
 }
 
 \cs_new_protected:Npn \__jsonparse_array_count:nn #1#2 {
-  \str_if_eq:eVF { \tl_head:n {#1} } \l__jsonparse_array_sep_left_str {
+  \str_if_eq:eVF { 
+    \tl_range:nnn {#1} { 1 } { \tl_count:N \l__jsonparse_array_sep_left_str } 
+  } \l__jsonparse_array_sep_left_str {
     \msg_error:nnn { jsonparse } { not-array-item }
       {#1}
   }

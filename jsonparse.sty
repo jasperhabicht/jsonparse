@@ -1520,8 +1520,8 @@
 }
 
 \cs_new_protected:Npn \__jsonparse_array_count:nn #1#2 {
-  \str_if_eq:eVF { 
-    \tl_range:nnn {#1} { 1 } { \tl_count:N \l__jsonparse_array_sep_left_str } 
+  \str_if_eq:eVF {
+    \tl_range:nnn {#1} { 1 } { \tl_count:N \l__jsonparse_array_sep_left_str }
   } \l__jsonparse_array_sep_left_str {
     \msg_error:nnn { jsonparse } { not-array-item }
       {#1}

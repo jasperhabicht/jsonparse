@@ -389,6 +389,8 @@
 \bool_new:N \l__jsonparse_parse_key_bool
 \bool_new:N \l__jsonparse_parse_keys_first_bool
 
+\int_new:N \l__jsonparse_array_sep_left_count_int
+
 \int_new:N \l__jsonparse_collect_object_array_level_int
 \tl_new:N \l__jsonparse_collect_object_array_store_tl
 
@@ -648,6 +650,7 @@
 
 \cs_new_protected:Npn \jsonparse_parse:n #1 {
   \__jsonparse_tl_set_trim_spaces:Nn \l__jsonparse_input_tl {#1}
+  \int_set:Nn \l__jsonparse_array_sep_left_count_int { \str_count:N \l__jsonparse_array_sep_left_str }
   \cs_if_exist_use:cTF { __jsonparse_parse_ \str_head_ignore_spaces:o { \l__jsonparse_input_tl } :w } {
     \l__jsonparse_input_tl \q_stop
   } {
@@ -798,7 +801,7 @@
 \cs_new_protected:Npn \__jsonparse_array_key_set: {
   \str_if_eq:eVT {
     \tl_range:Nnn \l__jsonparse_prefix_tl {
-      -1 * \tl_count:N \l__jsonparse_array_sep_left_str
+      -1 * \l__jsonparse_array_sep_left_count_int
     } { -1 }
   } \l__jsonparse_array_sep_left_str {
     \int_incr:N \l__jsonparse_array_index_int

@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-04-20} {1.5.0}
+\ProvidesExplPackage {jsonparse} {2025-04-22} {1.5.1}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -391,7 +391,6 @@
 
 \int_new:N \l__jsonparse_collect_object_array_level_int
 \tl_new:N \l__jsonparse_collect_object_array_store_tl
-\bool_new:N \l__jsonparse_collect_object_array_stop_bool
 
 \int_new:N \l__jsonparse_array_index_int
 \int_new:N \l__jsonparse_array_count_int
@@ -699,7 +698,6 @@
 
 \cs_new_protected:Npn \__jsonparse_collect_object_array:Nn #1#2 {
   \tl_clear:N \l__jsonparse_collect_object_array_store_tl
-  \bool_set_false:N \l__jsonparse_collect_object_array_stop_bool
   \int_zero:N \l__jsonparse_collect_object_array_level_int
   \__jsonparse_collect_object_array:w #2 \q_stop
   \tl_set_eq:NN #1 \l__jsonparse_collect_object_array_store_tl
@@ -707,7 +705,7 @@
 \cs_generate_variant:Nn \__jsonparse_collect_object_array:Nn { No }
 
 \cs_new_protected:Npn \__jsonparse_collect_object_array:w #1 \q_stop {
-  \bool_if:NF \l__jsonparse_collect_object_array_stop_bool {
+  \tl_if_blank:nF {#1} {
     \cs_if_exist_use:cTF { __jsonparse_collect_object_array_ \str_head:n {#1} :w } {
       #1 \q_stop
     } {
@@ -735,13 +733,14 @@
 
 \exp_last_unbraced:Nno
   \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_right_brace_str :w }
-    \c_right_brace_str {
+    \c_right_brace_str #1 \q_stop {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_right_brace_str }
-  \int_if_zero:nT { \l__jsonparse_collect_object_array_level_int } {
-    \bool_gset_true:N \l__jsonparse_collect_object_array_stop_bool
+  \int_if_zero:nTF { \l__jsonparse_collect_object_array_level_int } {
+    \__jsonparse_collect_object_array:w \q_stop
+  } {
+    \__jsonparse_collect_object_array:w #1 \q_stop
   }
-  \__jsonparse_collect_object_array:w
 }
 
 \cs_new_protected:cpn { __jsonparse_collect_object_array_ [ :w } [ {
@@ -750,13 +749,14 @@
   \__jsonparse_collect_object_array:w
 }
 
-\cs_new_protected:cpn { __jsonparse_collect_object_array_ ] :w } ] {
+\cs_new_protected:cpn { __jsonparse_collect_object_array_ ] :w } ] #1 \q_stop {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:Nn \l__jsonparse_collect_object_array_store_tl { ] }
-  \int_if_zero:nT { \l__jsonparse_collect_object_array_level_int } {
-    \bool_gset_true:N \l__jsonparse_collect_object_array_stop_bool
+  \int_if_zero:nTF { \l__jsonparse_collect_object_array_level_int } {
+    \__jsonparse_collect_object_array:w \q_stop
+  } {
+    \__jsonparse_collect_object_array:w #1 \q_stop
   }
-  \__jsonparse_collect_object_array:w
 }
 
 \cs_new_protected:Npn \__jsonparse_collect_object_array_space:w #1#2 \q_stop {
@@ -820,7 +820,6 @@
     \bool_set_true:N \l__jsonparse_parse_object_bool
     \bool_set_false:N \l__jsonparse_parse_array_bool
     \bool_set_false:N \l__jsonparse_parse_key_bool
-    \tl_set:Nn \l__jsonparse_remainder_tl {#1}
     \tl_if_empty:NTF \l__jsonparse_key_tl {
       \tl_set_eq:NN \l__jsonparse_object_array_key_tl \l__jsonparse_child_sep_str
     } {
@@ -830,7 +829,7 @@
     \bool_if:NF \l__jsonparse_skip_structures_bool {
       \__jsonparse_collect_object_array:No \l__jsonparse_object_array_val_tl { \c_left_brace_str #1 }
     }
-    \__jsonparse_parse_remainder:
+    \__jsonparse_parse_remainder:n {#1}
 }
 
 \exp_last_unbraced:NNo \cs_new_protected:Npn \__jsonparse_parse_object_end:w \c_right_brace_str #1 \q_stop {
@@ -855,8 +854,7 @@
       (obj ~ end)
     }
   }
-  \tl_set:Nn \l__jsonparse_remainder_tl {#1}
-  \__jsonparse_parse_remainder:
+  \__jsonparse_parse_remainder:n {#1}
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_array_begin:w [ #1 \q_stop {
@@ -870,7 +868,6 @@
   \group_begin:
     \bool_set_false:N \l__jsonparse_parse_object_bool
     \bool_set_true:N \l__jsonparse_parse_array_bool
-    \tl_set:Nn \l__jsonparse_remainder_tl {#1}
     \int_zero:N \l__jsonparse_array_index_int
     \bool_if:NT \l__jsonparse_zero_based_bool {
       \int_decr:N \l__jsonparse_array_index_int
@@ -884,7 +881,7 @@
     \bool_if:NF \l__jsonparse_skip_structures_bool {
       \__jsonparse_collect_object_array:Nn \l__jsonparse_object_array_val_tl { [ #1 }
     }
-    \__jsonparse_parse_remainder:
+    \__jsonparse_parse_remainder:n {#1}
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_array_end:w ] #1 \q_stop {
@@ -906,8 +903,7 @@
       (arr ~ end)
     }
   }
-  \tl_set:Nn \l__jsonparse_remainder_tl {#1}
-  \__jsonparse_parse_remainder:
+  \__jsonparse_parse_remainder:n {#1}
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_delimiter:w , #1 \q_stop {
@@ -926,8 +922,7 @@
     \msg_error:nn { jsonparse } { parsing-error-comma }
   }
   \bool_set_false:N \l__jsonparse_parse_key_bool
-  \tl_set:Nn \l__jsonparse_remainder_tl {#1}
-  \__jsonparse_parse_remainder:
+  \__jsonparse_parse_remainder:n {#1}
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_string_key:w " #1 " #2 \q_stop {
@@ -961,6 +956,9 @@
     \tl_set:Ne \l__jsonparse_key_tl { \l__jsonparse_prefix_tl #1 }
     \bool_set_true:N \l__jsonparse_parse_key_bool
   } {
+    \tl_if_empty:NT \l__jsonparse_key_tl {
+      \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+    }
     \tl_set:Nn \l__jsonparse_val_tl {#1}
     \prop_gput:Nee \g_jsonparse_entries_prop
       { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -972,7 +970,7 @@
       }
     }
   }
-  \__jsonparse_parse_remainder:
+  \__jsonparse_parse_remainder:o { \l__jsonparse_remainder_tl }
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_other:w #1 \q_stop {
@@ -992,6 +990,9 @@
   \cs_if_exist_use:cF { __jsonparse_parse_ \str_casefold:o { \l__jsonparse_temp_tl } : } {
     \bool_if:NTF \l__jsonparse_validate_numbers_bool {
       \jsonparse_if_num:VTF \l__jsonparse_temp_tl {
+        \tl_if_empty:NT \l__jsonparse_key_tl {
+          \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+        }
         \tl_set:No \l__jsonparse_val_tl { \l__jsonparse_temp_tl }
         \prop_gput:Nee \g_jsonparse_entries_prop
           { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -1008,6 +1009,9 @@
           { \l__jsonparse_key_tl } {#1}
       }
     } {
+      \tl_if_empty:NT \l__jsonparse_key_tl {
+        \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+      }
       \tl_set:No \l__jsonparse_val_tl { \l__jsonparse_temp_tl }
       \prop_gput:Nee \g_jsonparse_entries_prop
         { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -1020,10 +1024,13 @@
       }
     }
   }
-  \__jsonparse_parse_remainder:
+  \__jsonparse_parse_remainder:o { \l__jsonparse_remainder_tl }
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_true: {
+  \tl_if_empty:NT \l__jsonparse_key_tl {
+    \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+  }
   \tl_set_eq:NN \l__jsonparse_val_tl \l__jsonparse_true_str
   \prop_gput:Nee \g_jsonparse_entries_prop
     { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -1037,6 +1044,9 @@
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_false: {
+  \tl_if_empty:NT \l__jsonparse_key_tl {
+    \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+  }
   \tl_set_eq:NN \l__jsonparse_val_tl \l__jsonparse_false_str
   \prop_gput:Nee \g_jsonparse_entries_prop
     { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -1050,6 +1060,9 @@
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_null: {
+  \tl_if_empty:NT \l__jsonparse_key_tl {
+    \tl_set_eq:NN \l__jsonparse_key_tl \l__jsonparse_child_sep_str
+  }
   \tl_set_eq:NN \l__jsonparse_val_tl \l__jsonparse_null_str
   \prop_gput:Nee \g_jsonparse_entries_prop
     { \l__jsonparse_key_tl } { \l__jsonparse_val_tl }
@@ -1062,12 +1075,10 @@
   }
 }
 
-\cs_new_protected:Npn \__jsonparse_parse_remainder: {
-  \__jsonparse_tl_trim_spaces:N \l__jsonparse_remainder_tl
-  \tl_if_empty:NF \l__jsonparse_remainder_tl {
-    \jsonparse_parse:o { \l__jsonparse_remainder_tl }
-  }
+\cs_new_protected:Npn \__jsonparse_parse_remainder:n #1 {
+  \tl_if_blank:nF {#1} { \jsonparse_parse:n {#1} }
 }
+\cs_generate_variant:Nn \__jsonparse_parse_remainder:n { o }
 
 \cs_new_protected:Npn \__jsonparse_filter:nn #1#2 {
   \str_case_e:en {

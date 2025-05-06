@@ -15,5 +15,6 @@ The following tests are performed upon Push or Pull-Request. The first column de
 | `test009` | `.tlg` | ✅ |    | Externalizing of parsed data |
 | `test010` | `.vle` | ✅ |    | Use of `\JSONParseKeys` and `\JSONParseFilter` |
 | `test011` | `.vle` | ✅ |    | Use of TeX escape sequences |
+| `test012` | `.tlg` | ✅ |    | Error handling of misplaced commas or colons in arrays and objects |
 | `test100` | `.tlg` | ✅ |    | Validation of JSON numbers |
 | `test200` | `.tlg` | ✅ |    | Checking for high and low surrogates; checking conversion of surrogate pairs |

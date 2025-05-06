@@ -1,0 +1,90 @@
+\documentclass{article} 
+\usepackage[T1]{fontenc}
+\input{regression-test} 
+\usepackage{jsonparse} 
+
+\begin{document}
+
+\START
+
+\ExplSyntaxOn
+
+\BEGINTEST { empty ~ objects ~ and ~ arrays }
+
+\JSONParse{\myJSONdataA}{
+  { }
+}
+
+\JSONParse{\myJSONdataB}{
+  { "a" : { } }
+}
+
+\JSONParse{\myJSONdataC}{
+  [ ]
+}
+
+\JSONParse{\myJSONdataD}{
+  [ [ ] ]
+}
+
+\JSONParse{\myJSONdataE}{
+  { "a" : [ ] }
+}
+
+\ENDTEST
+
+\BEGINTEST { error: ~ misplaced ~ comma }
+
+\JSONParse{\myJSONdataF}{
+  [ , ]
+}
+
+\SEPARATOR
+
+\JSONParse{\myJSONdataG}{
+  [ "a" , ]
+}
+
+\ENDTEST
+
+\BEGINTEST { error: ~ misplaced ~ colon }
+
+\JSONParse{\myJSONdataH}{
+  [ "a" : "b" ]
+}
+
+\ENDTEST
+
+\BEGINTEST { error: ~ missing ~ key ~ in ~ object }
+
+\JSONParse{\myJSONdataI}{
+  { , }
+}
+
+\SEPARATOR
+
+\JSONParse{\myJSONdataJ}{
+  { "a" : "b" , }
+}
+
+\SEPARATOR
+
+\JSONParse{\myJSONdataK}{
+  { "a" }
+}
+
+\SEPARATOR
+
+\JSONParse{\myJSONdataL}{
+  { "a" : "b" , "c" }
+}
+
+\SEPARATOR
+
+\JSONParse{\myJSONdataM}{
+  { "a" , "b" : "c" }
+}
+
+\ENDTEST
+
+\end{document}

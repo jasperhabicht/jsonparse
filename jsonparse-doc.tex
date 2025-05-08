@@ -990,12 +990,12 @@ The command \macro{\jsonparse_set_parse:Nn} creates the token variable given as 
 |\jsonparse_gset_parse:No| <token variable> {<JSON string>}
 |\jsonparse_gset_parse:Ne| <token variable> {<JSON string>}
 \end{macrodef}
-The command \macro{\jsonparse_gset_parse:Nn} works in the very same way as the command \macro{\jsonparse_set_parse:Nn}, but the property list is set globally.
+The command \macro{\jsonparse_gset_parse:Nn} is identical to \macro{\jsonparse_set_parse:Nn} but with the property list being set globally.
 
 \begin{macrodef}
 |\jsonparse_set_parse_keys:NN| <string variable> <token variable>
 \end{macrodef}
-The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the second arguments as property list and selects all top-level keys which are then stored in the string variable given as first argument as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) to select the complete JSON data is ignored. If the JSON data is an array, the indices (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) of the items are used as keys.
+The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the second arguments as property list and selects all top-level keys which are then stored in the string variable given as first argument as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) to select the complete JSON data is ignored. If the JSON data is an array, the indices of the items (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) are used as keys.
 
 \begin{macrodef}
 |\jsonparse_rescan:n| {<JSON value>}

@@ -1527,7 +1527,7 @@
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_set_parse_keys:NN \l__jsonparse_temp_prop \l__jsonparse_keys_tl
+    \jsonparse_set_parse_keys:NN \l__jsonparse_keys_tl \l__jsonparse_temp_copy_prop
     \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_set_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_set_store_in_tl

@@ -1089,7 +1089,7 @@
 }
 \cs_generate_variant:Nn \__jsonparse_parse_remainder:n { o }
 
-\cs_new_protected:Npn \__jsonparse_filter:nn #1#2 {
+\cs_new_protected:Npn \__jsonparse_set_filter:nn #1#2 {
   \str_case_e:en {
     \tl_range:nnn {#1} { 1 } {
       \tl_count:N \l__jsonparse_filter_key_str + 1
@@ -1119,17 +1119,21 @@
   }
 }
 
-\cs_new_protected:Npn \jsonparse_filter:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_set_filter:Nn #1#2 {
   \prop_clear:N \l__jsonparse_temp_prop
   \str_set:Ne \l__jsonparse_filter_key_str {#2}
   \str_if_eq:NNTF \l__jsonparse_filter_key_str \l__jsonparse_child_sep_str {
     \prop_set_eq:NN \l__jsonparse_temp_prop #1
     \prop_remove:Ne \l__jsonparse_temp_prop { \l__jsonparse_child_sep_str }
   } {
-    \prop_map_function:NN #1 \__jsonparse_filter:nn
+    \prop_map_function:NN #1 \__jsonparse_set_filter:nn
   }
   \prop_set_eq:NN #1 \l__jsonparse_temp_prop
 }
+
+% backward compatibility
+\cs_set_eq:NN \jsonparse_filter:Nn \jsonparse_set_filter:Nn
+% ===
 
 \NewDocumentCommand { \JSONParseFilter } { m m m } {
   \__jsonparse_warning_undefined_prop:N #2
@@ -1141,7 +1145,7 @@
     }
   }
   \prop_set_eq:NN #1 #2
-  \jsonparse_filter:Nn #1 {#3}
+  \jsonparse_set_filter:Nn #1 {#3}
 }
 
 % ===
@@ -1522,8 +1526,8 @@
       { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_parse_keys:NN \l__jsonparse_temp_prop \l__jsonparse_keys_tl
+    \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_parse_keys:NN \l__jsonparse_temp_prop \l__jsonparse_keys_tl
     \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_set_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_set_store_in_tl
@@ -1545,7 +1549,7 @@
   #1
 }
 
-\cs_new_protected:Npn \__jsonparse_array_count:nn #1#2 {
+\cs_new_protected:Npn \__jsonparse_set_array_count:nn #1#2 {
   \str_if_eq:eVF {
     \tl_range:nnn {#1} { 1 } { \tl_count:N \l__jsonparse_array_sep_left_str }
   } \l__jsonparse_array_sep_left_str {
@@ -1562,12 +1566,18 @@
   }
 }
 
-\cs_new_protected:Npn \jsonparse_array_count:NN #1#2 {
+\cs_new_protected:Npn \jsonparse_set_array_count:NN #1#2 {
   \int_zero:N \l__jsonparse_array_count_aux_int
   \seq_clear:N \l__jsonparse_array_count_last_seq
-  \prop_map_function:NN #1 \__jsonparse_array_count:nn
-  \int_set_eq:NN #2 \l__jsonparse_array_count_aux_int
+  \prop_map_function:NN #2 \__jsonparse_set_array_count:nn
+  \int_set_eq:NN #1 \l__jsonparse_array_count_aux_int
 }
+
+% backward compatibility
+\cs_new:Npn \jsonparse_set_array_count:NN #1#2 {
+  \jsonparse_array_count:NN #2 #1
+}
+% ===
 
 \cs_new_protected:Npn \__jsonparse_array_count_aux:nnn #1#2#3 {
   \tl_if_empty:nTF {#1} {
@@ -1588,8 +1598,8 @@
       { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_array_count:NN \l__jsonparse_temp_copy_prop \l__jsonparse_array_count_int
+    \jsonparse_eet_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_set_store_in_tl {
         \exp_last_unbraced:No \tl_new:N \l__jsonparse_set_store_in_tl
@@ -1662,8 +1672,8 @@
       { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_array_count:NN \l__jsonparse_temp_copy_prop \l__jsonparse_array_count_int
+    \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \str_set:Ne \l__jsonparse_array_use_key_str {#4}
     \int_step_function:nN \l__jsonparse_array_count_int
       \__jsonparse_array_use:n
@@ -1792,8 +1802,8 @@
       { jsonparse / map } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_array_count:NN \l__jsonparse_temp_copy_prop \l__jsonparse_array_count_int
+    \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \clist_set:Nn \l__jsonparse_array_map_keys_clist {#4}
     \cs_set_eq:NN \__jsonparse_array_map_function_cs: #5
     \clist_if_empty:NF \l__jsonparse_array_map_keys_clist {
@@ -1873,8 +1883,8 @@
       { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_filter:Nn \l__jsonparse_temp_copy_prop {#3}
-    \jsonparse_array_count:NN \l__jsonparse_temp_copy_prop \l__jsonparse_array_count_int
+    \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \bool_if:NT \l__jsonparse_zero_based_bool {
       \int_decr:N \l__jsonparse_array_count_int
     }

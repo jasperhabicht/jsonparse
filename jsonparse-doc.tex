@@ -1028,14 +1028,14 @@ The command \macro{\jsonparse_put_right_rescan:Nn} rescans the JSON value given 
 The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result globally to the end of the token variable specified in the second argument.
 
 \begin{macrodef}
-|\jsonparse_filter:Nn| <token variable> {<key>}
+|\jsonparse_set_filter:Nn| <token variable> {<key>}
 \end{macrodef}
-The command \macro{\jsonparse_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. If the second argument matches the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) exactly, the complete property list except for this key is returned.
+The command \macro{\jsonparse_set_filter:Nn} processes the token variable given as the first arguments as property list and filters it according to the key given as second argument. Filtering means that for every entry in the property list, the key of this entry is compared against the key given to the command. If the key in the property list starts with the given key, the matching part is removed from the key in the property list. If the keys do not match, the entry is completely removed from the property list. If the second argument matches the pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) exactly, the complete property list except for this key is returned.
 
 \begin{macrodef}
-|\jsonparse_array_count:NN| <token variable> <integer variable>
+|\jsonparse_set_array_count:NN| <integer variable> <token variable>
 \end{macrodef}
-The command \macro{\jsonparse_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
+The command \macro{\jsonparse_set_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
 \begin{macrodef}*
 |\jsonparse_if_num:n|?TF? {<string>} {<true code>} {<false code>}

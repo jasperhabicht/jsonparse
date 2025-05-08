@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-05-06} {1.5.2}
+\ProvidesExplPackage {jsonparse} {2025-05-10} {1.6.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -658,25 +658,7 @@
 }
 \cs_generate_variant:Nn \jsonparse_parse:n { o , e }
 
-\cs_new_protected:Npn \jsonparse_parse_to_prop:Nn #1#2 {
-  \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
-      \iow_newline:
-      Parsing ~ JSON ~ ...
-    }
-  }
-  \prop_gclear:N \g_jsonparse_entries_prop
-  \jsonparse_parse:e {#2}
-  \prop_gset_eq:NN #1 \g_jsonparse_entries_prop
-  \bool_if:NT \l__jsonparse_debug_mode_bool {
-    \msg_log:nne { jsonparse } { debug-info } {
-      JSON ~ parsing ~ done. \iow_newline:
-    }
-  }
-}
-\cs_generate_variant:Nn \jsonparse_parse_to_prop:Nn { No , Ne }
-
-\cs_new_protected:Npn \jsonparse_parse_to_prop_local:Nn #1#2 {
+\cs_new_protected:Npn \jsonparse_set_parse:Nn #1#2 {
   \bool_if:NT \l__jsonparse_debug_mode_bool {
     \msg_log:nne { jsonparse } { debug-info } {
       \iow_newline:
@@ -692,8 +674,32 @@
     }
   }
 }
-\cs_generate_variant:Nn \jsonparse_parse_to_prop_local:Nn { No , Ne }
+\cs_generate_variant:Nn \jsonparse_set_parse:Nn { No , Ne }
 
+\cs_new_protected:Npn \jsonparse_gset_parse:Nn #1#2 {
+  \bool_if:NT \l__jsonparse_debug_mode_bool {
+    \msg_log:nne { jsonparse } { debug-info } {
+      \iow_newline:
+      Parsing ~ JSON ~ ...
+    }
+  }
+  \prop_gclear:N \g_jsonparse_entries_prop
+  \jsonparse_parse:e {#2}
+  \prop_gset_eq:NN #1 \g_jsonparse_entries_prop
+  \bool_if:NT \l__jsonparse_debug_mode_bool {
+    \msg_log:nne { jsonparse } { debug-info } {
+      JSON ~ parsing ~ done. \iow_newline:
+    }
+  }
+}
+\cs_generate_variant:Nn \jsonparse_gset_parse:Nn { No , Ne }
+
+% backward compatibility
+\cs_set_eq:NN \jsonparse_parse_to_prop:Nn \jsonparse_gset_parse:Nn
+\cs_generate_variant:Nn \jsonparse_parse_to_prop:Nn { No , Ne }
+
+\cs_set_eq:NN \jsonparse_parse_to_prop_local:Nn \jsonparse_set_parse:Nn
+\cs_generate_variant:Nn \jsonparse_parse_to_prop_local:Nn { No , Ne }
 % ===
 
 \cs_new_protected:Npn \__jsonparse_collect_object_array:Nn #1#2 {
@@ -1216,7 +1222,7 @@
         % ===
         \tl_set:Nn \obeyedline { ~ }
         \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#3}
-        \jsonparse_parse_to_prop:Ne #2 { \g__jsonparse_json_tl }
+        \jsonparse_gset_parse:Ne #2 { \g__jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
@@ -1258,7 +1264,7 @@
         \__jsonparse_protect_escape_sequeces:
         \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \l__jsonparse_externalize_file_data_tl
         \tl_gset_eq:NN \g__jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
-        \jsonparse_parse_to_prop:Ne #2 { \g__jsonparse_json_tl }
+        \jsonparse_gset_parse:Ne #2 { \g__jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
@@ -1472,7 +1478,7 @@
   \prop_item:Ne #1 {#2}
 }
 
-\cs_new_protected:Npn \__jsonparse_parse_keys:nn #1#2 {
+\cs_new_protected:Npn \__jsonparse_set_parse_keys:nn #1#2 {
   \tl_if_in:nVF {#1} \l__jsonparse_child_sep_str {
     \bool_if:NTF \l__jsonparse_parse_keys_first_bool {
       \bool_set_false:N \l__jsonparse_parse_keys_first_bool
@@ -1483,22 +1489,28 @@
   }
 }
 
-\cs_new_protected:Npn \jsonparse_parse_keys:NN #1#2 {
+\cs_new_protected:Npn \jsonparse_set_parse_keys:NN #1#2 {
   \tl_set:Nn \l__jsonparse_keys_array_tl { [ }
   \bool_set_true:N \l__jsonparse_parse_keys_first_bool
-  \prop_map_function:NN #1 \__jsonparse_parse_keys:nn
+  \prop_map_function:NN #2 \__jsonparse_set_parse_keys:nn
   \tl_put_right:Nn \l__jsonparse_keys_array_tl { ] }
-  \tl_set_eq:NN #2 \l__jsonparse_keys_array_tl
+  \tl_set_eq:NN #1 \l__jsonparse_keys_array_tl
 }
+
+% backward compatibility
+\cs_new:Npn \jsonparse_parse_keys:NN #1#2 {
+  \jsonparse_set_parse_keys:NN #2 #1
+}
+% ===
 
 \cs_new_protected:Npn \__jsonparse_parse_keys_aux:nnn #1#2#3 {
   \tl_if_empty:nTF {#1} {
     #3
   } {
     \bool_if:nTF {#2} {
-      \jsonparse_parse_to_prop:No #1 {#3}
+      \jsonparse_gset_parse:No #1 {#3}
     } {
-      \jsonparse_parse_to_prop_local:No #1 {#3}
+      \jsonparse_set_parse:No #1 {#3}
     }
   }
 }

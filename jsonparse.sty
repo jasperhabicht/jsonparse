@@ -1598,7 +1598,7 @@
       { jsonparse / set } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
-    \jsonparse_eet_filter:Nn \l__jsonparse_temp_copy_prop {#3}
+    \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
     \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF \l__jsonparse_set_store_in_tl {

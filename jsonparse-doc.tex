@@ -873,85 +873,6 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 \end{macrodef}
 The key \macro{global} can be used together with the key \macro{store in} to globally set the value of the relevant token list. Detailed information about the key \macro{store in} can be \hyperlink{key:storein}{above}.
 
-\section{Deprecated commands}
-
-The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in green box right to it should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
-
-\begin{macrodeprecated}*
-|\JSONParseSetValue|
-  {<1>}{<2>}{<3>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseValue|[store in={<1>},
-  rescan=false]{<2>}{<3>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\JSONParseSetRescanValue|
-  {<1>}{<2>}{<3>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseValue|[store in={<1>},
-  rescan]{<2>}{<3>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\JSONParseSetKeys|
-  {<1>}{<2>}{<3>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseKeys|
-  [store in={<1>}]{<2>}{<3>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\JSONParseSetArrayCount|
-  {<1>}{<2>}{<3>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseArrayCount|
-  [store in={<1>}]{<2>}{<3>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\JSONParseArrayValues|
-  [<1>]{<2>}{<3>}[<4>]{<5>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseArrayUse|
-  [<1>]{<2>}{<3>}[<4>]{<5>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\JSONParseArrayValuesMap|
-  [<1>]{<2>}{<3>}[<4>]{<5>}
-  [<6>][<7>]
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\JSONParseArrayMapFunction|
-  [<1>, code before={<6>},
-    code after={<7>}]
-  {<2>}{<3>}[<4>]{\<5>}
-\end{macroreplacement}
-
-\begin{macrodeprecated}*
-|\x|{<1>}{<2>}
-\end{macrodeprecated}
-\hfill
-\begin{macroreplacement}
-|\$|{<1>}{<2>}
-\end{macroreplacement}
-
-The command \macro{\JSONParseArrayMapFunction} takes as last argument a command denoting the relevant mapping function including the preceding backslash, while the deprecated command \macro{\JSONParseArrayValuesMap} required the name of this function without preceding backslash.
-
-To ensure backward compatibility, the deprecated commands are still supported, but their use is not recommended. The commands \macro{\JSONParseSetRescanValue} and \macro{\JSONParseSetKeys} will locally set the relevant token variable.
-
 \section{L3 commands}
 
 The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
@@ -1070,6 +991,143 @@ The expandable conditional function \macro{\jsonparse_unicode_if_low_surrogate:n
 |\jsonparse_unicode_convert_surrogate_pair:ee| {<codepoint>} {<codepoint>}
 \end{macrodef}
 The expandable command \macro{\jsonparse_unicode_convert_surrogate_pair:nn} converts a surrogate pair to the relevant Unicode codepoint. The returned value is an integer. It takes as first argument the codepoint of the low surrogate and as second argument the codepoint of the high surrogate. It does not check whether the codepoints actually belong to the relevant ranges of codepoints for high and low surrogates.
+
+\section{Deprecated commands}
+
+The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in green box right to it should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
+
+To ensure backward compatibility, the deprecated commands are still supported, but their use is not recommended.
+
+\subsection{Deprecated user commands}
+
+\begin{macrodeprecated}*
+|\JSONParseSetValue|
+  {<1>}{<2>}{<3>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseValue|[store in={<1>},
+  rescan=false]{<2>}{<3>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\JSONParseSetRescanValue|
+  {<1>}{<2>}{<3>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseValue|[store in={<1>},
+  rescan]{<2>}{<3>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\JSONParseSetKeys|
+  {<1>}{<2>}{<3>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseKeys|
+  [store in={<1>}]{<2>}{<3>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\JSONParseSetArrayCount|
+  {<1>}{<2>}{<3>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseArrayCount|
+  [store in={<1>}]{<2>}{<3>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\JSONParseArrayValues|
+  [<1>]{<2>}{<3>}[<4>]{<5>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseArrayUse|
+  [<1>]{<2>}{<3>}[<4>]{<5>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\JSONParseArrayValuesMap|
+  [<1>]{<2>}{<3>}[<4>]{<5>}
+  [<6>][<7>]
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\JSONParseArrayMapFunction|
+  [<1>, code before={<6>},
+    code after={<7>}]
+  {<2>}{<3>}[<4>]{\<5>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\x|{<1>}{<2>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\$|{<1>}{<2>}
+\end{macroreplacement}
+
+The command \macro{\JSONParseArrayMapFunction} takes as last argument a command denoting the relevant mapping function including the preceding backslash, while the deprecated command \macro{\JSONParseArrayValuesMap} required the name of this function without preceding backslash.
+
+The commands \macro{\JSONParseSetRescanValue} and \macro{\JSONParseSetKeys} will locally set the relevant token variable.
+
+\subsection{Deprecated L3 commands}
+
+\begin{macrodeprecated}*
+|\jsonparse_to_prop:Nn|
+  <1> {<2>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\jsonparse_gset_parse:Nn|
+  <1> {<2>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\jsonparse_to_prop_local:Nn|
+  <1> {<2>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\jsonparse_set_parse:Nn|
+  <1> {<2>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\jsonparse_filter:Nn|
+  <1> {<2>}
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\jsonparse_set_filter:Nn|
+  <1> {<2>}
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\jsonparse_parse_keys:NN|
+  <1> <2>
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\jsonparse_set_parse_keys:NN|
+  <2> <1>
+\end{macroreplacement}
+
+\begin{macrodeprecated}*
+|\jsonparse_array_count:NN|
+  <1> <2>
+\end{macrodeprecated}
+\hfill
+\begin{macroreplacement}
+|\jsonparse_set_array_count:NN|
+  <2> <1>
+\end{macroreplacement}
+
+Note that the order of the arguments of the commands \macro{\jsonparse_set_parse_keys:NN} is reversed compared to the deprecated command \macro{\jsonparse_parse_keys:NN}. The same holds for the command \macro{\jsonparse_set_array_count:NN} compared to the deprecated command \macro{\jsonparse_array_count:NN}.
 
 % =====
 

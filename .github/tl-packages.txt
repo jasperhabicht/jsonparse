@@ -1,9 +1,6 @@
 l3build
 
 latex-bin
-latex-base
-latex-firstaid
-
 pdftex
 luatex
 xetex

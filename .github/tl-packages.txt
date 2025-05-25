@@ -12,4 +12,5 @@ latex-bin-dev
 latex-base-dev
 latex-firstaid-dev
 
+longtable
 booktabs

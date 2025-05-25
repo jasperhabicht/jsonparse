@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{booktabs}
+\usepackage{longtable, booktabs}
 % \usepackage{l3benchmark}
 
 \ExplSyntaxOn
@@ -101,12 +101,12 @@
 
 \begin{document}
 
-\begin{tabular}{ l l l }
+\begin{longtable}{ l l l }
   \toprule
-  \textbf{timestamp} & \textbf{version} & \textbf{parsing time} \\
-  \midrule
+  \textbf{timestamp} & \textbf{version} & \textbf{parsing time} 
+  \midrule \endhead
   \printtabulardata
   \bottomrule
-\end{tabular}
+\end{longtable}
 
 \end{document}

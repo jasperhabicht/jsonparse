@@ -5,9 +5,9 @@ pdftex
 luatex
 xetex
 
-latex-tools
 ec
 cm-super
+tools
 
 latex-bin-dev
 latex-base-dev

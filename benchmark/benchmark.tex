@@ -40,7 +40,6 @@
 }
 
 \NewDocumentCommand { \printtabulardata } { } {
-  \tl_analysis_log:N \g_jsonparse_benchmark_file_data_seq
   \seq_map_function:NN
     \g_jsonparse_benchmark_file_data_seq
     \__jsonparse_benchmark_get_tabular_data:n
@@ -104,7 +103,7 @@
 \begin{longtable}{ l l l }
   \toprule
   \textbf{timestamp} & \textbf{version} & \textbf{parsing time} \\
-  \midrule \endhead
+  \midrule
   \printtabulardata
   \bottomrule
 \end{longtable}

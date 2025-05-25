@@ -1,8 +1,11 @@
 l3build
 
 latex-bin
-luatex
+latex-base
+latex-firstaid
+
 pdftex
+luatex
 xetex
 
 ec
@@ -12,5 +15,4 @@ latex-bin-dev
 latex-base-dev
 latex-firstaid-dev
 
-longtable
 booktabs

@@ -5,6 +5,7 @@ pdftex
 luatex
 xetex
 
+latex-tools
 ec
 cm-super
 

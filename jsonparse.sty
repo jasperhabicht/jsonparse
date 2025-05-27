@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-05-25} {1.6.1a}
+\ProvidesExplPackage {jsonparse} {2025-05-25} {1.6.1}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -653,7 +653,7 @@
   } {
     % other
     \exp_last_unbraced:No
-      \__jsonparse_parse_other:w { \l__jsonparse_input_tl \q_stop }
+      \__jsonparse_parse_other:w { \l__jsonparse_input_tl } \q_stop
   }
 }
 \cs_generate_variant:Nn \jsonparse_parse:n { o , e }
@@ -739,7 +739,7 @@
 
 \exp_last_unbraced:Nno
   \cs_new_protected:cpn { __jsonparse_collect_object_array_ \c_right_brace_str :w }
-    { \c_right_brace_str #1 \q_stop } {
+    { \c_right_brace_str } #1 \q_stop {
   \int_decr:N \l__jsonparse_collect_object_array_level_int
   \tl_put_right:No \l__jsonparse_collect_object_array_store_tl { \c_right_brace_str }
   \int_if_zero:nTF { \l__jsonparse_collect_object_array_level_int } {
@@ -817,7 +817,7 @@
 
 \exp_last_unbraced:NNo 
   \cs_new_protected:Npn \__jsonparse_parse_object_begin:w 
-    { \c_left_brace_str #1 \q_stop } {
+    { \c_left_brace_str } #1 \q_stop {
   \__jsonparse_array_key_set:
   % object begin
   \bool_if:NT \l__jsonparse_debug_mode_bool {
@@ -843,7 +843,7 @@
 
 \exp_last_unbraced:NNo 
   \cs_new_protected:Npn \__jsonparse_parse_object_end:w 
-    { \c_right_brace_str #1 \q_stop } {
+    { \c_right_brace_str } #1 \q_stop {
     \tl_if_empty:NF \l__jsonparse_val_tl {
       \bool_if:NF \l__jsonparse_parse_key_bool {
         \msg_error:nn { jsonparse } { parsing-error-key }
@@ -947,7 +947,7 @@
   \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_colon_str } { \s__jsonparse_split \c_colon_str }
   \tl_put_left:Nn \l__jsonparse_temp_tl { #1 " }
   \exp_last_unbraced:No
-    \__jsonparse_parse_string_key_aux:w { \l__jsonparse_temp_tl \q_stop }
+    \__jsonparse_parse_string_key_aux:w { \l__jsonparse_temp_tl } \q_stop
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_string_key_aux:w #1 " #2 \s__jsonparse_split #3 \q_stop {
@@ -993,7 +993,7 @@
   \tl_replace_once:Nnn \l__jsonparse_temp_tl { ] } { \s__jsonparse_split ] }
   \tl_replace_once:Noe \l__jsonparse_temp_tl { \c_right_brace_str } { \s__jsonparse_split \c_right_brace_str }
   \exp_last_unbraced:No
-    \__jsonparse_parse_other_aux:w { \l__jsonparse_temp_tl \q_stop }
+    \__jsonparse_parse_other_aux:w { \l__jsonparse_temp_tl } \q_stop
 }
 
 \cs_new_protected:Npn \__jsonparse_parse_other_aux:w #1 \s__jsonparse_split #2 \q_stop {

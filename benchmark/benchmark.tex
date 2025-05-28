@@ -24,6 +24,7 @@
 \fp_new:N \g_jsonparse_benchmark_nostruct_time_average_fp
 \tl_new:N \g_jsonparse_benchmark_temp_tl
 
+\cs_generate_variant:Nn \tl_greplace_all:Nnn { Nno }
 \cs_generate_variant:Nn \seq_use:Nn { No }
 
 \cs_new_protected:Npn \__jsonparse_benchmark_get_version:w | #1 | #2 | #3 \q_stop {
@@ -82,13 +83,9 @@
     { \g_jsonparse_benchmark_nostruct_time_fp / 3 }
 }
 
-\cs_generate_variant:Nn \tl_greplace_all:Nnn { Nno }
-
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
-  \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
-    \tl_gset:Nn \g_jsonparse_benchmark_temp_tl {#1}
-    \tl_greplace_all:Nno \g_jsonparse_benchmark_temp_tl { ~ } { \c_space_tl }
-    \seq_gput_right:No \g_jsonparse_benchmark_file_data_seq { \g_jsonparse_benchmark_temp_tl }
+  \ior_str_map_inline:Nn \g_jsonparse_benchmark_ior {
+    \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
     \tl_if_blank:nF {#1} {
       \__jsonparse_benchmark_get_version:w #1 \q_stop
     }
@@ -108,7 +105,7 @@
 } {
   \__jsonparse_benchmark_run:
   \__jsonparse_benchmark_nostruct_run:
-  \iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
+  \iow_open:Nn \g_jsonparse_benchmark_iow { README.md }
   \iow_now:Ne \g_jsonparse_benchmark_iow {
     \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
     \iow_newline:

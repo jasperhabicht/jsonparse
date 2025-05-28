@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-05-25} {1.6.1}
+\ProvidesExplPackage {jsonparse} {2025-05-25} {1.6.1b}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1679,7 +1679,7 @@
     \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
     \jsonparse_set_array_count:NN \l__jsonparse_array_count_int \l__jsonparse_temp_copy_prop
     \str_set:Ne \l__jsonparse_array_use_key_str {#4}
-    \int_step_function:nN \l__jsonparse_array_count_int
+    \int_step_function:nN { \l__jsonparse_array_count_int }
       \__jsonparse_array_use:n
     \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
       \exp_last_unbraced:No \tl_if_exist:NF { \l__jsonparse_set_store_in_tl } {

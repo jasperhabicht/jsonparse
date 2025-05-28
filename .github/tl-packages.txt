@@ -13,4 +13,5 @@ latex-bin-dev
 latex-base-dev
 latex-firstaid-dev
 
+geometry
 booktabs

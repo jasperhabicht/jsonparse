@@ -1,6 +1,6 @@
 \documentclass{article}
-\usepackage{longtable, booktabs}
-% \usepackage{l3benchmark}
+\usepackage{geometry, longtable, booktabs}
+\geometry{margin=15mm}
 
 \ExplSyntaxOn
 
@@ -20,6 +20,9 @@
 \iow_new:N \g_jsonparse_benchmark_iow
 \fp_new:N \g_jsonparse_benchmark_time_fp
 \fp_new:N \g_jsonparse_benchmark_time_average_fp
+\fp_new:N \g_jsonparse_benchmark_nostruct_time_fp
+\fp_new:N \g_jsonparse_benchmark_nostruct_time_average_fp
+\tl_new:N \g_jsonparse_benchmark_temp_tl
 
 \cs_generate_variant:Nn \seq_use:Nn { No }
 
@@ -27,9 +30,11 @@
   \str_gset:Nn \g_jsonparse_benchmark_last_version_str {#2}
 }
 
-\cs_new:Npn \__jsonparse_benchmark_get_tabular_data:w | #1 | #2 | #3 | \q_stop {
+\cs_new:Npn \__jsonparse_benchmark_get_tabular_data:w | #1 | #2 | #3 | #4 \q_stop {
   \tl_if_head_eq_charcode:nNT {#1} D {
-    #1 & #2 & #3 \\
+    \tl_gset:Nn \g_jsonparse_benchmark_temp_tl {#4}
+    \tl_gremove_once:Nn \g_jsonparse_benchmark_temp_tl { | }
+    #1 & #2 & #3 & \tl_use:N \g_jsonparse_benchmark_temp_tl \\
   }
 }
 
@@ -61,6 +66,22 @@
     { \g_jsonparse_benchmark_time_fp / 3 }
 }
 
+\cs_new:Npn \__jsonparse_benchmark_nostruct_run: {
+  \int_step_inline:nn { 3 } {
+    \benchmark_tic:
+
+    \JSONParseFromFile[skip ~ structures]{\theJSONdata}{4KB.json}
+
+    \benchmark_toc:
+
+    \tl_set_eq:NN \theJSONdata \undefined
+    \fp_gadd:Nn \g_jsonparse_benchmark_nostruct_time_fp { \g_benchmark_time_fp }
+  }
+
+  \fp_gset:Nn \g_jsonparse_benchmark_nostruct_time_average_fp
+    { \g_jsonparse_benchmark_nostruct_time_fp / 3 }
+}
+
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
     \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
@@ -72,27 +93,30 @@
 } {
   \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
     { }
+  \seq_gput_right:Ne \g_jsonparse_benchmark_file_data_seq
+    { | timestamp | version | parsing \c_space_tl time | parsing \c_space_tl time \c_space_tl (skip \c_space_tl structures) | }
   \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
-    { | ~ timestamp ~ | ~ version ~ | ~ parsing ~ time ~ | }
-  \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
-    { |  -----------  |  ---------  |   --------------   | }
+    { | ----- | ----- | ----- | ----- | }
 }
 
 \str_if_eq:VVTF \g_jsonparse_benchmark_version_str \g_jsonparse_benchmark_last_version_str {
   \tex_end:D
 } {
   \__jsonparse_benchmark_run:
+  \__jsonparse_benchmark_nostruct_run:
   \iow_open:Ne \g_jsonparse_benchmark_iow { README.md }
   \iow_now:Ne \g_jsonparse_benchmark_iow {
     \seq_use:No \g_jsonparse_benchmark_file_data_seq { \iow_newline: }
     \iow_newline:
     | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str
-      | \fp_use:N \g_jsonparse_benchmark_time_average_fp |
+      | \fp_use:N \g_jsonparse_benchmark_time_average_fp
+      | \fp_use:N \g_jsonparse_benchmark_nostruct_time_average_fp |
   }
   \iow_close:N \g_jsonparse_benchmark_iow
   \seq_gput_right:Ne \g_jsonparse_benchmark_file_data_seq {
     | \c_sys_timestamp_str | \g_jsonparse_benchmark_version_str
-      | \fp_use:N \g_jsonparse_benchmark_time_average_fp |
+      | \fp_use:N \g_jsonparse_benchmark_time_average_fp
+      | \fp_use:N \g_jsonparse_benchmark_nostruct_time_average_fp |
   }
 }
 
@@ -100,9 +124,10 @@
 
 \begin{document}
 
-\begin{longtable}{ l l l }
+\noindent
+\begin{longtable}{ l l l l }
   \toprule
-  \textbf{timestamp} & \textbf{version} & \textbf{parsing time} \\
+  \textbf{timestamp} & \textbf{version} & \textbf{parsing time} & \textbf{parsing time (skip structres)} \\
   \midrule
   \printtabulardata
   \bottomrule

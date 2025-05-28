@@ -82,9 +82,13 @@
     { \g_jsonparse_benchmark_nostruct_time_fp / 3 }
 }
 
+\cs_generate_variant:Nn \tl_greplace_all:Nnn { Nno }
+
 \ior_open:NnTF \g_jsonparse_benchmark_ior { README.md } {
   \ior_map_inline:Nn \g_jsonparse_benchmark_ior {
-    \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq {#1}
+    \tl_gset:Nn \g_jsonparse_benchmark_temp_tl {#1}
+    \tl_greplace_all:Nno \g_jsonparse_benchmark_temp_tl { ~ } { \c_space_tl }
+    \seq_gput_right:No \g_jsonparse_benchmark_file_data_seq { \g_jsonparse_benchmark_temp_tl }
     \tl_if_blank:nF {#1} {
       \__jsonparse_benchmark_get_version:w #1 \q_stop
     }
@@ -94,9 +98,9 @@
   \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
     { }
   \seq_gput_right:Ne \g_jsonparse_benchmark_file_data_seq
-    { | timestamp | version | parsing \c_space_tl time | parsing \c_space_tl time \c_space_tl (skip \c_space_tl structures) | }
+    { | ~ timestamp ~ | ~ version ~ | ~ parsing ~ time ~ | ~ parsing ~ time ~ (skip ~ structures) ~ | }
   \seq_gput_right:Nn \g_jsonparse_benchmark_file_data_seq
-    { | ----- | ----- | ----- | ----- | }
+    { | ~ ----- ~ | ~ ----- ~ | ~ ----- ~ | ~ ----- ~ | }
 }
 
 \str_if_eq:VVTF \g_jsonparse_benchmark_version_str \g_jsonparse_benchmark_last_version_str {
@@ -124,7 +128,6 @@
 
 \begin{document}
 
-\noindent
 \begin{longtable}{ l l l l }
   \toprule
   \textbf{timestamp} & \textbf{version} & \textbf{parsing time} & \textbf{parsing time (skip structres)} \\

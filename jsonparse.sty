@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-05-25} {1.6.1b}
+\ProvidesExplPackage {jsonparse} {2025-05-30} {1.6.2}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -427,14 +427,9 @@
 
 % ===
 
-\cs_new_protected:Npn \__jsonparse_tl_trim_spaces:N #1 {
-  \tl_trim_spaces_apply:oN {#1} \__jsonparse_tl_set_trim_spaces_aux:nN #1
-}
-
 \cs_new_protected:Npn \__jsonparse_tl_set_trim_spaces:Nn #1#2 {
   \tl_trim_spaces_apply:nN {#2} \__jsonparse_tl_set_trim_spaces_aux:nN #1
 }
-\cs_generate_variant:Nn \__jsonparse_tl_set_trim_spaces:Nn { Ne }
 
 \cs_new_protected:Npn \__jsonparse_tl_set_trim_spaces_aux:nN #1#2 {
   \tl_set:Nn #2 {#1}

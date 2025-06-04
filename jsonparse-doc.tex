@@ -317,6 +317,24 @@ The \macro{jsonparse} package provides a handy way to read in JSON data from fil
 
 The package is continuously being tested, but bugs cannot be ruled out. The author is grateful for reporting any bugs via GitHub at \url{https://github.com/jasperhabicht/jsonparse/issues}. A site for asking questions about the package and for suggestions for improvement is available at \url{https://github.com/jasperhabicht/jsonparse/discussions}.
 
+\section{Frequently asked questions}
+
+\subsection{Why does a comparison of two equal strings return false?}
+
+Note that if you probably need to use \macro{\JSONParseExpandableValue} if you want to compare a value from parsed JSON data with the contents of another token list. See the explanation \hyperlink{macro:expandablevalue}{below} for more details.
+
+Also note that \macro{\JSONParseExpandableValue} returns a string with specific category codes, namely category code 12 (``other'') for all characters except spaces. Therefore, you need to test against another string. You can use \macro{\detokenize} for conversion. See section \ref{sec:general} for more information.
+
+\subsection{Why does parsing take so long?}
+
+Make sure that you use the most recent version of the package. Parsing speed is constantly being monitored and updates typically increase parsing speed.
+
+If you don't need to access whole objects or arrays from the JSON data, you can set the key \macro{skip structures} which should increase parsing speed.See the explanation \hyperlink{key:skipstructures}{below} for more details.
+
+If the JSON data contains a considerable amount of numbers, parsing speed can be increased slightly by setting \macro{validate numbers=false}. See the explanation \hyperlink{key:validatenumbers}{below} for more details.
+
+If the JSON data does not change often, you can externalise the parsed result by setting the key \macro{externalize}. See section \ref{sec:externalizing} for more information.
+
 \section{Loading the package}
 
 To install the package, copy the package file \macro{jsonparse.sty} into the working directory or into the \macro{texmf} directory. After the package has been installed, the \macro{jsonparse} package is loaded by calling \macro{\usepackage{jsonparse}} in the preamble of the document.
@@ -376,7 +394,7 @@ JSON parsing done.
 
 The \macro{debug} key can be set either as package option or using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
-\section{General remarks of the parsing procedure}
+\section{General remarks of the parsing procedure}\label{sec:general}
 
 In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape'').
 
@@ -496,7 +514,7 @@ This can, for example, be necessary when numbers stored in the JSON data in scie
 
 The key \macro{store in} can also be set using \macro{\JSONParseSet}. Calling \macro{store in={}} will reset it to its default (empty) value.
 
-\begin{macrodef}*
+\begin{macrodef}*[macro:expandablevalue]
 |\JSONParseExpandableValue|{<token variable>}{<key>}
 \end{macrodef}
 Whole objects or arrays can be output as JSON string for further use in other macros using the expandable command \macro{\JSONParseExpandableValue}. The value that is returned by this command is typically a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space''). This should be kept in mind if string comparisons should be made. A comparison against a token list with the default category codes used by TeX won't work, since letters will have category code 11 (``letter''), but it is possible to use \macro{\detokenize} to set the category codes of the token list in such a way that the comparison works.
@@ -820,7 +838,7 @@ If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the in
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, this key only takes effect when set before parsing.
 
-\begin{macrodef}
+\begin{macrodef}[key:validatenumbers]
 |validate numbers|
 |validate numbers|={<boolean>}
 \end{macrodef}
@@ -828,7 +846,7 @@ If set to \macro{false}, the key \macro{validate numbers} omits an internal vali
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
-\begin{macrodef}
+\begin{macrodef}[key:skipstructures]
 |skip structures|
 |skip structures|={<boolean>}
 \end{macrodef}

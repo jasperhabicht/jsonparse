@@ -79,6 +79,34 @@ number or to convert Unicode surrogate pairs to the relevant Unicode codepoint.
 
 ---
 
+**Frequently asked questions**
+
+*Why does a comparison of two equal strings returns false?*
+
+1) Note that if you probably need to use `\JSONParseExpandableValue` if you want
+to compare a value from parsed JSON data with the contents of another token 
+list.
+
+2) Note that `\JSONParseExpandableValue` returns a `string` with specific 
+catcodes, namely catcode 12 for all chararctes except spaces. Therefore, you 
+need to test against another `str`. You can use `\detokenize` for conversion.
+
+*Why does parsing take so long?*
+
+1) Make sure that you use the most recent version of the package. Parsing speed
+is constantly monitored and updates typically increase parsing speed.
+
+2) If you don't need to access whole objects or arrays from the JSON data, you
+can set the key `skip structures` which should increase parsing speed.
+
+3) If the JSON data contains a considerable amount of numbers, setting 
+`validate numbers=false` can slightly increase parsing speed.
+
+4) If the JSON data does not change often, you can externalise the parsed result
+by setting the key `externalize`.
+
+---
+
 This package including all files is subject to the LPPL 1.3c license. 
 Copyright 2024&ndash;2025 Jasper Habicht (mail(at)jasperhabicht.de).
 

@@ -31,12 +31,18 @@
 \renewcommand{\headrulewidth}{0pt}
 \fancyfoot[R]{\thepage}
 
+\ExplSyntaxOn
+\NewDocumentCommand{\fnstars}{m}{
+  \int_step_inline:nn { \value{#1} } { * }
+}
+\ExplSyntaxOff
+
 \linespread{1.1}\selectfont
 \addtolength{\skip\footins}{1em plus 5pt}
 \makeatletter
-\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+\renewcommand*{\thefootnote}{\fnstars{footnote}}
 \renewcommand{\@makefntext}[1]{%
-  \noindent\hbox to 0.75em{\normalfont\@thefnmark\hss}~#1%
+  \noindent\hbox to 1em{\normalfont\@thefnmark\hss}~#1%
 }
 \makeatother
 
@@ -311,7 +317,7 @@
 
 \section{Introduction}
 
-Hello guys, I am Jason, the JSON parsing horse. JSON data is my favorite thing to parse! But I found that converting JSON to TeX can be a bit tricky. Therefore, I created this package which I am happy to introduce to you.
+Hello guys, I am Jason, the JSON parsing horse. JSON data is my favorite thing to parse! But I found that converting JSON to TeX can be a bit tricky. Therefore, I created this package which I am happy to introduce to you.\footnote{Credit for the idea of Jason, the JSON parsing horse, goes to Paulo Cereda and the circumstance of his presumably insufficiently illuminated workplace (or his late working hours).}
 
 The \macro{jsonparse} package provides a handy way to read in JSON data from files or strings in LaTeX documents, parse the data and store it in a user-defined token variable. The package allows accessing the stored data via a JavaScript-flavored syntax.
 

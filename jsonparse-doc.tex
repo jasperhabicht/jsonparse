@@ -799,7 +799,7 @@ The key \macro{externalize file name} sets the schema for the file name. The def
   \c_underscore_str \l_jsonparse_current_prop_str
 \end{codeexample}
 
-The token variable \macro{\l_jsonparse_externalize_prefix_str} contains the prefix that is set using the key \macro{externalize prefix}. \macro{\c_sys_jobname_str} holds the name of the current file (the current job name), \macro{\c_underscore_str} is an underscore and the token variable \macro{\l_jsonparse_current_prop_str} contains the name of the property list where the relevant JSON data is stored into.
+The token variable \macro{\l_jsonparse_externalize_prefix_str} contains the prefix that is set using the key \macro{externalize prefix}. \macro{\c_sys_jobname_str} holds the name of the current file (the current job name), \macro{\c_underscore_str} is an underscore and the token variable \macro{\l_jsonparse_current_prop_str} contains the name of the property list where the relevant JSON data is stored into (without the leading backslash).
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}.
 
@@ -903,19 +903,19 @@ The key \macro{global} can be used together with the key \macro{store in} to glo
 The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
 
 \begin{macrodef}
-|\l_jsonparse_externalize_prefix_str|
+|\g_jsonparse_entries_prop|
 \end{macrodef}
-The token variable \macro{\l_jsonparse_externalize_prefix_str} holds the prefix for externalization file names as defined by the user via the key \macro{externalize prefix}.
+The token variable \macro{\g_jsonparse_entries_prop} holds as property list all elements of a JSON data structure that was parsed by the command \macro{\jsonparse_parse:n}.
 
 \begin{macrodef}
 |\l_jsonparse_current_prop_str|
 \end{macrodef}
-The token variable \macro{\l_jsonparse_current_prop_str} holds the name of the property list as defined by the user when calling the command \macro{\JSONParse} or \macro{\JSONParseFromFile}.
+The token variable \macro{\l_jsonparse_current_prop_str} holds the name of the property list as defined by the user when calling the command \macro{\JSONParse} or \macro{\JSONParseFromFile} (without the leading backslash).
 
 \begin{macrodef}
-|\g_jsonparse_entries_prop|
+|\l_jsonparse_externalize_prefix_str|
 \end{macrodef}
-The token variable \macro{\g_jsonparse_entries_prop} holds as property list all elements of a JSON data structure that was parsed by the command \macro{\jsonparse_parse:n}.
+The token variable \macro{\l_jsonparse_externalize_prefix_str} holds the prefix for externalization file names as defined by the user via the key \macro{externalize prefix}.
 
 \begin{macrodef}
 |\jsonparse_parse:n| {<JSON string>}

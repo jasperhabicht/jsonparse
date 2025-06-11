@@ -987,9 +987,9 @@ The command \macro{\jsonparse_set_array_count:NN} processes the token variable g
 |\jsonparse_if_num:n|?TF? {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num:V|?TF? {<string>} {<true code>} {<false code>}
 |\jsonparse_if_num_p:n| {<string>}
-|\jsonparse_if_num_p:V| <token variable>
+|\jsonparse_if_num_p:V| <string variable>
 \end{macrodef}
-The expandable conditional function \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}) The argument of \macro{\jsonparse_if_num_p:V} that also returns a boolean should be a token variable containing a string. 
+The expandable conditional function \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}). 
 
 \begin{macrodef}*
 |\jsonparse_unicode_if_high_surrogate:n|?TF? {<codepoint>}

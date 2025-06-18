@@ -1,0 +1,125 @@
+\documentclass{article}
+\usepackage{geometry, longtable, booktabs}
+\geometry{margin=15mm}
+
+\ExplSyntaxOn
+
+\cs_generate_variant:Nn \tl_item:nn { e }
+
+\tl_const:Nn \c__jsonparse_check_variant_spec_p_tl { p }
+\tl_new:N \l__jsonparse_check_variant_spec_tl
+\prop_new:N \l__jsonparse_check_variant_data_prop
+
+\cs_new:Npn \__jsonparse_cs_check_variant:Nn #1#2 {
+  \clist_map_inline:nn {#2} {
+    \prop_put:Nee \l__jsonparse_check_variant_data_prop {
+      \c_backslash_str
+      \tl_item:en { \cs_split_function:N #1 } { 1 }
+      \c_colon_str
+      ##1
+    } {
+      \cs_if_exist:cTF {
+        \tl_item:en { \cs_split_function:N #1 } { 1 }
+        \c_colon_str
+        ##1
+      } { yes } { no }
+    }
+  }
+}
+
+\cs_new:Npn \__jsonparse_prg_check_conditional_variant:Nnn #1#2#3 {
+  \clist_map_inline:nn {#2} {
+    \clist_map_inline:nn {#3} {
+      \tl_set:Nn \l__jsonparse_check_variant_spec_tl {####1}
+      \prop_put:Nee \l__jsonparse_check_variant_data_prop {
+        \c_backslash_str
+        \tl_item:en { \cs_split_function:N #1 } { 1 }
+        \tl_if_eq:NNTF \l__jsonparse_check_variant_spec_tl
+          \c__jsonparse_check_variant_spec_p_tl {
+          \c_underscore_str
+          ####1
+          \c_colon_str
+          ##1
+        } {
+          \c_colon_str
+          ##1####1
+        }
+      } {
+        \cs_if_exist:cTF {
+          \tl_item:en { \cs_split_function:N #1 } { 1 }
+          \tl_if_eq:NNTF \l__jsonparse_check_variant_spec_tl
+            \c__jsonparse_check_variant_spec_p_tl {
+            \c_underscore_str
+            ####1
+            \c_colon_str
+            ##1
+          } {
+            \c_colon_str
+            ##1####1
+          }
+        } { yes } { no }
+      }
+    }
+  }
+}
+
+\cs_new:Npn \__jsonparse_check_variant_get_tabular_data:nn #1#2 {
+  \ttfamily #1 & #2 \\
+}
+
+\NewDocumentCommand { \printtabulardata } { } {
+  \prop_map_function:NN 
+    \l__jsonparse_check_variant_data_prop
+    \__jsonparse_check_variant_get_tabular_data:nn
+}
+
+\__jsonparse_cs_check_variant:Nn \file_input:n { e }
+\__jsonparse_cs_check_variant:Nn \tl_gset:Nn { Ne , ce }
+\__jsonparse_cs_check_variant:Nn \tl_gset_rescan:Nnn { Nno , Nne }
+\__jsonparse_cs_check_variant:Nn \tl_remove_once:Nn { NV }
+\__jsonparse_cs_check_variant:Nn \tl_replace_all:Nnn { Non , Noe }
+\__jsonparse_cs_check_variant:Nn \tl_replace_once:Nnn { Noe }
+\__jsonparse_cs_check_variant:Nn \tl_rescan:nn { no , ne }
+\__jsonparse_cs_check_variant:Nn \tl_set:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \tl_to_str:n { o }
+\__jsonparse_cs_check_variant:Nn \str_case_e:nn { en }
+\__jsonparse_cs_check_variant:Nn \str_casefold:n { o }
+\__jsonparse_cs_check_variant:Nn \str_head_ignore_spaces:n { o }
+\__jsonparse_cs_check_variant:Nn \str_set:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \int_step_function:nnN { nnc , nVN }
+\__jsonparse_cs_check_variant:Nn \clist_const:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \seq_put_right:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \prop_gput:Nnn { Nee }
+\__jsonparse_cs_check_variant:Nn \prop_item:Nn { Ne , ce }
+\__jsonparse_cs_check_variant:Nn \prop_put:Nnn { Nen , Nee }
+\__jsonparse_cs_check_variant:Nn \keys_set_known:nnnN { nonN }
+\__jsonparse_cs_check_variant:Nn \iow_now:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \iow_open:Nn { Ne }
+\__jsonparse_cs_check_variant:Nn \codepoint_generate:nn { en }
+\__jsonparse_cs_check_variant:Nn \msg_error:nnn { nno }
+\__jsonparse_cs_check_variant:Nn \msg_error:nnnn { nnoo }
+\__jsonparse_cs_check_variant:Nn \msg_info:nnn { nne }
+\__jsonparse_cs_check_variant:Nn \msg_log:nnn { nne }
+\__jsonparse_cs_check_variant:Nn \msg_warning:nnn { nne }
+
+\__jsonparse_prg_check_conditional_variant:Nnn \file_if_exist:n { e } { T , TF }
+\__jsonparse_prg_check_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { oN } { T , TF }
+\__jsonparse_prg_check_conditional_variant:Nnn \tl_if_in:nn { nV } { F }
+\__jsonparse_prg_check_conditional_variant:Nnn \seq_if_in:Nn { Ne } { F }
+\__jsonparse_prg_check_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T , F , TF }
+\__jsonparse_prg_check_conditional_variant:Nnn \str_if_eq:nn { Vn } { p }
+\__jsonparse_prg_check_conditional_variant:Nnn \str_if_in:nn { ee } { T }
+
+\ExplSyntaxOff
+
+\begin{document}
+
+\begin{longtable}{ l l }
+  \toprule
+  \textbf{control sequence} & \textbf{exists?} \\
+  \midrule
+  \printtabulardata
+  \bottomrule
+\end{longtable}
+
+\end{document}

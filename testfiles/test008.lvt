@@ -10,7 +10,7 @@
 \JSONParseSet{separator={array left={<<}, array right={>>}}}
 
 \JSONParse{\myJSONdataV}{ { "a" : [ 1, 2, 3 ] } }
-\JSONParseSetValue{\myJSONvalueV}{\myJSONdataV}{a<<0>>}
+\JSONParseValue[store in={\myJSONvalueV}]{\myJSONdataV}{a<<0>>}
 
 \ExplSyntaxOn
 
@@ -27,7 +27,7 @@
 \JSONParseSet{separator={child={++}}}
 
 \JSONParse{\myJSONdataW}{ { "a" : { "b" : 1 } } }
-\JSONParseSetValue{\myJSONvalueW}{\myJSONdataW}{a++b}
+\JSONParseValue[store in={\myJSONvalueW}]{\myJSONdataW}{a++b}
 
 \ExplSyntaxOn
 

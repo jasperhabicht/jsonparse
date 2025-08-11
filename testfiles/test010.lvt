@@ -29,7 +29,7 @@
   \hbox_set:Nn \l_jsonparse_test_box { \JSONParseKeys{\JSONdataD}{data} }
   \box_show:N \l_jsonparse_test_box
 
-  \JSONParseSetKeys{\JSONdataKeys}{\JSONdataD}{data[0]}
+  \JSONParseKeys[store ~ in={\JSONdataKeys}]{\JSONdataD}{data[0]}
 
   \str_if_eq:enTF {
       \JSONParseExpandableValue{\JSONdataKeys}{[0]}

@@ -25,7 +25,7 @@
 \ExplSyntaxOn
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONa}{\myJSONdata}{a}
+  \JSONParseValue[store ~ in={\myJSONa}]{\myJSONdata}{a}
   \TIMO 
 
   \str_if_eq:enTF {
@@ -35,7 +35,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONb}{\myJSONdata}{b}
+  \JSONParseValue[store ~ in={\myJSONb}]{\myJSONdata}{b}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -45,7 +45,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONc}{\myJSONdata}{c}
+  \JSONParseValue[store ~ in={\myJSONc}]{\myJSONdata}{c}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -55,7 +55,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONd}{\myJSONdata}{d}
+  \JSONParseValue[store ~ in={\myJSONd}]{\myJSONdata}{d}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -65,7 +65,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONe}{\myJSONdata}{e}
+  \JSONParseValue[store ~ in={\myJSONe}]{\myJSONdata}{e}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -75,7 +75,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONf}{\myJSONdata}{f}
+  \JSONParseValue[store ~ in={\myJSONf}]{\myJSONdata}{f}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -85,7 +85,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONg}{\myJSONdata}{g}
+  \JSONParseValue[store ~ in={\myJSONg}]{\myJSONdata}{g}
   \TIMO 
 
   \str_if_eq:eeTF {
@@ -95,7 +95,7 @@
   } { \TRUE } { \FALSE }
 
   \OMIT
-  \JSONParseSetRescanValue{\myJSONh}{\myJSONdata}{h}
+  \JSONParseValue[store ~ in={\myJSONh}]{\myJSONdata}{h}
   \TIMO 
 
   \str_if_eq:eeTF {

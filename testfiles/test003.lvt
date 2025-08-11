@@ -28,7 +28,7 @@
 
 \ExplSyntaxOn
 
-  \JSONParseSetArrayCount{\myJSONdataCount}{\JSONdataC}{data}
+  \JSONParseArrayCount[store ~ in={\myJSONdataCount}}{\JSONdataC}{data}
 
   \int_compare:nNnTF { \myJSONdataCount } = { 4 } {
     \TRUE

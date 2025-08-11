@@ -19,9 +19,9 @@
 
 \JSONParse{\myJSONdataX}{ { "a" : "ab\bcd\fef" , "b" : "ab\ncd\ref" , "c" : "ab\tcd" } }
 
-\JSONParseValue[store ~ in={\myJSONvalueA}]{\myJSONdataX}{a}
-\JSONParseValue[store ~ in={\myJSONvalueB}]{\myJSONdataX}{b}
-\JSONParseValue[store ~ in={\myJSONvalueC}]{\myJSONdataX}{c}
+\JSONParseValue[store in={\myJSONvalueA}]{\myJSONdataX}{a}
+\JSONParseValue[store in={\myJSONvalueB}]{\myJSONdataX}{b}
+\JSONParseValue[store in={\myJSONvalueC}]{\myJSONdataX}{c}
 
 \ExplSyntaxOn
 

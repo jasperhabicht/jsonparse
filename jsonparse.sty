@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2025-06-20} {1.6.3}
+\ProvidesExplPackage {jsonparse} {2025-08-11} {1.6.5}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1452,19 +1452,21 @@
   \group_begin:
     \keys_set_known:nnnN { jsonparse / typeset } {#1}
       { jsonparse / typeset } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / set }\l__jsonparse_unused_keys_clist
-    \__jsonparse_warning_unused_keys:
-    \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
-      \exp_last_unbraced:No \tl_if_exist:NF { \l__jsonparse_set_store_in_tl } {
-        \exp_last_unbraced:No \tl_new:N { \l__jsonparse_set_store_in_tl }
+    \group_begin:
+      \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
+        { jsonparse / set }\l__jsonparse_unused_keys_clist
+      \__jsonparse_warning_unused_keys:
+      \tl_if_empty:NF \l__jsonparse_set_store_in_tl {
+        \exp_last_unbraced:No \tl_if_exist:NF { \l__jsonparse_set_store_in_tl } {
+          \exp_last_unbraced:No \tl_new:N { \l__jsonparse_set_store_in_tl }
+        }
       }
-    }
-    \exp_args:NNoee
+      \exp_args:NNoee
+    \group_end:
+    \__jsonparse_parse_value_aux:nnnnn { \l__jsonparse_set_store_in_tl }
+      { \bool_if_p:N \l__jsonparse_set_global_bool } { \bool_if_p:N \l__jsonparse_rescan_bool }
+      {#2} {#3}
   \group_end:
-  \__jsonparse_parse_value_aux:nnnnn { \l__jsonparse_set_store_in_tl }
-    { \bool_if_p:N \l__jsonparse_set_global_bool } { \bool_if_p:N \l__jsonparse_rescan_bool }
-    {#2} {#3}
 }
 
 % backward compatibility

@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.6.3}
-\def\jsonparsefiledate{20 June 2025}
+\def\jsonparsefileversion{1.6.5}
+\def\jsonparsefiledate{11 August 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -306,7 +306,8 @@
 %\changes{v1.5.1}{2025/05/05}{Bug fixes.}
 %\changes{v1.5.2}{2025/05/06}{Bug fixes.}
 \changes{v1.6.0}{2025/05/10}{Renaming of L3 functions. Bug fixes.}
-%\changes{v1.6.1}{2025/06/03}{Bug fixes. FAQ in Doc.}
+%\changes{v1.6.1}{2025/06/03}{Bug fixes. FAQ in documentation.}
+%\changes{v1.6.5}{2025/08/11}{Bug fixes.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -887,7 +888,7 @@ replace/|linefeed|={<token list>}
 replace/|carriage return|={<token list>}
 replace/|horizontal tab|={<token list>}
 \end{macrodef}
-These keys can be used to set the replacement for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement is a space in each case. These replacements take place only during typesetting.
+These keys can be used to set the replacement for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement is a space in each case. These replacements take place only during typesetting. They only take effect if \macro{rescan} is active.
 
 \warning Note that commands such as \macro{\par} needs to be masked (for example by using a copy created via \macro{\let}) in order to be used as replacement.
 

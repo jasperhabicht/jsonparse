@@ -1170,7 +1170,9 @@
 
 \socket_new_plug:nnn { jsonparse / preparse } { default } {
   \tl_set:Nn \obeyedline { ~ }
-  \tl_gset_rescan:Nne \g_jsonparse_json_tl { \cctab_select:N \c_jsonparse_json_escape_cctab } {#1}
+  \tl_gset_rescan:Nne \g_jsonparse_json_tl {
+    \cctab_select:N \c_jsonparse_json_cctab
+  } {#1}
 }
 
 \socket_assign_plug:nn { jsonparse / preparse } { default }
@@ -1178,7 +1180,8 @@
 \socket_new:nn { jsonparse / preparse-file } { 1 }
 
 \socket_new_plug:nnn { jsonparse / preparse-file } { default } {
-  \file_get:nnN {#1} { \cctab_select:N \c_jsonparse_json_cctab } \g_jsonparse_json_tl
+  \file_get:nnN {#1} { \cctab_select:N \c_jsonparse_json_cctab }
+    \g_jsonparse_json_tl
 }
 
 \socket_assign_plug:nn { jsonparse / preparse-file } { default }

@@ -905,6 +905,16 @@ The key \macro{global} can be used together with the key \macro{store in} to glo
 The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
 
 \begin{macrodef}
+|\c_jsonparse_json_cctab|
+\end{macrodef}
+The token variable \macro{\c_jsonparse_json_cctab} holds the category code table that is used for rescanning JSON input.
+
+\begin{macrodef}
+|\g_jsonparse_json_tl|
+\end{macrodef}
+The token variable \macro{\g_jsonparse_json_tl} holds the rescanned JSON input before it is parsed by the command \macro{\jsonparse_parse:n}.
+
+\begin{macrodef}
 |\g_jsonparse_entries_prop|
 \end{macrodef}
 The token variable \macro{\g_jsonparse_entries_prop} holds as property list all elements of a JSON data structure that was parsed by the command \macro{\jsonparse_parse:n}.

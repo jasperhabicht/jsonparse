@@ -401,6 +401,8 @@
 \bool_new:N \l__jsonparse_externalize_load_bool
 \iow_new:N \g__jsonparse_externalize_iow
 
+\hook_new:n { jsonparse / preparse }
+
 % ===
 
 \cctab_const:Nn \c_jsonparse_json_cctab {
@@ -1212,6 +1214,7 @@
         % ===
         \tl_set:Nn \obeyedline { ~ }
         \tl_gset_rescan:Nne \g_jsonparse_json_tl { \cctab_select:N \c_jsonparse_json_cctab } {#3}
+        \hook_use:n { jsonparse / preparse }
         \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
@@ -1254,6 +1257,7 @@
         \__jsonparse_protect_escape_sequeces:
         \file_get:nnN {#3} { \cctab_select:N \c_jsonparse_json_cctab } \l__jsonparse_externalize_file_data_tl
         \tl_gset_eq:NN \g_jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
+        \hook_use:n { jsonparse / preparse }
         \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {

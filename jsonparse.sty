@@ -39,80 +39,66 @@
 }
 
 \msg_new:nnn { jsonparse } { parsing-error-generic } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Parsing ~ error ~ at ~ key ~ `#1` ~ with ~ value ~ `#2`.
 }
 
 \msg_new:nnn { jsonparse } { parsing-error-comma } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Misplaced ~ comma.
 }
 
 \msg_new:nnn { jsonparse } { parsing-error-colon } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Misplaced ~ colon ~ at ~ key ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { parsing-error-key } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ parse ~ JSON. \iow_newline:
   Missing ~ key ~ in ~ object.
 }
 
 \msg_new:nnn { jsonparse } { nested-non-expandable } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Non-expandable ~ commands ~ such ~ as ~ \token_to_str:N \JSONParseValue \c_space_tl
   not ~ allowed ~ in ~ stored ~ inline ~ function. \iow_newline:
   Use ~ \token_to_str:N \JSONParseExpandableValue \c_space_tl instead.
 }
 
 \msg_new:nnn { jsonparse } { file-not-found } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Could ~ not ~ find ~ file ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { file-exists } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   File ~ #1 ~ already ~ existing.
 }
 
 \msg_new:nnn { jsonparse } { escape-char-unknown } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Escape ~ character ~ #1 ~ unknown.
 }
 
 \msg_new:nnn { jsonparse } { prop-undefined } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Property ~ list ~ undefined: ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { cs-undefined } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Control ~ sequence ~ undefined: ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { not-array-item } {
-  \msg_error_text:n { jsonparse } \iow_newline:
   Key ~ does ~ not ~ represent ~ an ~ array ~ item: ~ #1
 }
 
 \msg_new:nnn { jsonparse } { key-unknown } {
-  \msg_warning_text:n { jsonparse } \iow_newline:
   Ignoring ~ key: ~ #1. \iow_newline:
   The ~ key ~ is ~ either ~ unknown ~ or ~
   not ~ supported ~ by ~ this ~ function.
 }
 
 \msg_new:nnn { jsonparse } { saving-external } {
-  \msg_info_text:n { jsonparse } \iow_newline:
   Saving ~ to ~ external ~ file: ~ #1.
 }
 
 \msg_new:nnn { jsonparse } { loading-external } {
-  \msg_info_text:n { jsonparse } \iow_newline:
   Loading ~ from ~ external ~ file: ~ #1.
 }
 

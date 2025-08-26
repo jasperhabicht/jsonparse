@@ -409,6 +409,8 @@ In general, the package will read and store the JSON source and data as string, 
 
 During parsing, the package identifies JSON objects, arrays, strings, numbers, boolean values and null values from the JSON data. It stores all these values together with the relevant keys in a property list. Once the parsing process is done, every value can be retrieved from the property list by calling the relevant key. The package ignores whitespace in the JSON data. In general, the package accepts any valid JSON data. If a key is defined multiple times, the latter definition will silently overwrite the former.
 
+The package provides the hook \macro{jsonparse/preparse} using which code can be injected after the input string has been rescanned and immediately before the parsing starts. It can be used to manipulate the token list \macro{\g_jsonparse_json_tl} which holds the rescanned input string.
+
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
 JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.

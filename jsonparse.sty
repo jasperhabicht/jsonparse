@@ -357,7 +357,7 @@
 \scan_new:N \s__jsonparse_stop
 \scan_new:N \s__jsonparse_split
 
-\tl_new:N \g__jsonparse_json_tl
+\tl_new:N \g_jsonparse_json_tl
 \tl_new:N \l__jsonparse_input_tl
 \tl_new:N \l__jsonparse_temp_tl
 \tl_new:N \l__jsonparse_temp_copy_tl
@@ -403,7 +403,7 @@
 
 % ===
 
-\cctab_const:Nn \c__jsonparse_json_escape_cctab {
+\cctab_const:Nn \c_jsonparse_json_cctab {
   \cctab_select:N \c_str_cctab
   \char_set_catcode_space:n { 9 }
   \char_set_catcode_escape:n { 92 }
@@ -1203,7 +1203,7 @@
       } {
         \prop_new_linked:N #2
       }
-      \tl_gclear:N \g__jsonparse_json_tl
+      \tl_gclear:N \g_jsonparse_json_tl
       \group_begin:
         \__jsonparse_protect_escape_sequeces:
         \__jsonparse_nested_construct_cs:Noo \$ { \c_left_brace_str } { \c_right_brace_str }
@@ -1211,8 +1211,8 @@
         \__jsonparse_nested_construct_cs:Noo \x { \c_left_brace_str } { \c_right_brace_str }
         % ===
         \tl_set:Nn \obeyedline { ~ }
-        \tl_gset_rescan:Nne \g__jsonparse_json_tl { \cctab_select:N \c__jsonparse_json_escape_cctab } {#3}
-        \jsonparse_gset_parse:Ne #2 { \g__jsonparse_json_tl }
+        \tl_gset_rescan:Nne \g_jsonparse_json_tl { \cctab_select:N \c_jsonparse_json_cctab } {#3}
+        \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
@@ -1249,12 +1249,12 @@
       } {
         \prop_new_linked:N #2
       }
-      \tl_gclear:N \g__jsonparse_json_tl
+      \tl_gclear:N \g_jsonparse_json_tl
       \group_begin:
         \__jsonparse_protect_escape_sequeces:
-        \file_get:nnN {#3} { \cctab_select:N \c__jsonparse_json_escape_cctab } \l__jsonparse_externalize_file_data_tl
-        \tl_gset_eq:NN \g__jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
-        \jsonparse_gset_parse:Ne #2 { \g__jsonparse_json_tl }
+        \file_get:nnN {#3} { \cctab_select:N \c_jsonparse_json_cctab } \l__jsonparse_externalize_file_data_tl
+        \tl_gset_eq:NN \g_jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
+        \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
         \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }

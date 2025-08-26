@@ -308,7 +308,7 @@
 \changes{v1.6.0}{2025/05/10}{Renaming of L3 functions. Bug fixes.}
 %\changes{v1.6.1}{2025/06/03}{Bug fixes. FAQ in documentation.}
 %\changes{v1.6.5}{2025/08/11}{Bug fixes.}
-\changes{v1.6.6}{2025/08/27}{Various improvements. Added hook for preparsing.}
+\changes{v1.6.6}{2025/08/27}{Various improvements. Added sockets for preparsing.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -408,8 +408,6 @@ The \macro{debug} key can be set either as package option or using \macro{\JSONP
 In general, the package will read and store the JSON source and data as string, which means that all characters have category code 12 (``other''), except for spaces and (horizontal) tabs which have category code 10 (``space''). The \macro{\endlinechar} value is set to $-1$ which means that linefeeds and carriage returns are ignored by TeX. These settings are in line with the JSON specification of handling whitespace. Furthermore, if PDFLaTeX is used, the upper-half of the 8-bit range is set to ``active''. Additionally, JSON defines a small set of escape sequences and in order to be able to process these, the category code of the backslash is set to 0 (``escape'').
 
 During parsing, the package identifies JSON objects, arrays, strings, numbers, boolean values and null values from the JSON data. It stores all these values together with the relevant keys in a property list. Once the parsing process is done, every value can be retrieved from the property list by calling the relevant key. The package ignores whitespace in the JSON data. In general, the package accepts any valid JSON data. If a key is defined multiple times, the latter definition will silently overwrite the former.
-
-The package provides the hook \macro{jsonparse/preparse} using which code can be injected after the input string has been rescanned and immediately before the parsing starts. It can be used to manipulate the token list \macro{\g_jsonparse_json_tl} which holds the rescanned input string.
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
@@ -902,6 +900,42 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 |global|={<boolean>}
 \end{macrodef}
 The key \macro{global} can be used together with the key \macro{store in} to globally set the value of the relevant token list. Detailed information about the key \macro{store in} can be \hyperlink{key:storein}{above}.
+
+\section{Preparsing via sockets}
+
+The package provides two sockets \macro{jsonparse/preparse} and \macro{jsonparse/preparse-file} using which the code for the procedure for rescanning the JSON input can be changed. The code provided by the sockets should populate the token list \macro{\g_jsonparse_json_tl} with data that is eventually parsed into the property list for further use.
+
+Two default plugs are provided and assigned per default for the two sockets. Both sockets require exactly one argument which can be referred to by \macro{#1} in the definition of the plugs. For the socket \macro{jsonparse/preparse} which is used in the command \macro{\JSONParse}, this represents the provided JSON input. For the socket \macro{jsonparse/preparse-file} which is used in the command \macro{\JSONParseFromFile}, this represents the file name. The two default plugs are defined as follows:
+
+\begin{codeexample}
+\socket_new_plug:nnn { jsonparse / preparse } { default } {
+  \tl_set:Nn \obeyedline { ~ }
+  \tl_gset_rescan:Nne \g_jsonparse_json_tl {
+    \cctab_select:N \c_jsonparse_json_cctab
+  } {#1}
+}
+\end{codeexample}
+
+\begin{codeexample}
+\socket_new_plug:nnn { jsonparse / preparse-file } { default } {
+  \file_get:nnN {#1} { \cctab_select:N \c_jsonparse_json_cctab }
+    \g_jsonparse_json_tl
+}
+\end{codeexample}
+
+It is, for example, possible to make use of this mechanism by defining a new socket to parse JSONL files which consist of a number of JSON objects separated by a line break:
+
+\begin{codeexample}
+\socket_new_plug:nnn { jsonparse / preparse } { jsonl } {
+  \tl_set:Nn \obeyedline { , }
+  \tl_gset_rescan:Nne \g_jsonparse_json_tl {
+    \cctab_select:N \c_jsonparse_json_escape_cctab
+  } { [ #1 ] }
+}
+\socket_assign_plug:nn { jsonparse / preparse } { jsonl }
+\end{codeexample}
+
+\warning Changing the rescanning procedure via the provided sockets requires indepth knowledge about how the parsing procedure works. It also requires knowledge about how TeX deals with category codes and control sequences.
 
 \section{L3 commands}
 

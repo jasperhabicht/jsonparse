@@ -7,8 +7,7 @@ TEST 1: empty objects and arrays
 ============================================================
 TEST 2: error: misplaced comma
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Misplaced comma.
 Type <return> to continue.
  ...                                              
@@ -18,8 +17,7 @@ LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Misplaced comma.
 Type <return> to continue.
  ...                                              
@@ -32,8 +30,7 @@ If that doesn't work, type X <return> to quit.
 ============================================================
 TEST 3: error: misplaced colon
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Misplaced colon at key [0].
 Type <return> to continue.
  ...                                              
@@ -46,8 +43,7 @@ If that doesn't work, type X <return> to quit.
 ============================================================
 TEST 4: error: missing key in object
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Missing key in object.
 Type <return> to continue.
  ...                                              
@@ -57,8 +53,7 @@ LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Missing key in object.
 Type <return> to continue.
  ...                                              
@@ -68,8 +63,7 @@ LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Missing key in object.
 Type <return> to continue.
  ...                                              
@@ -79,8 +73,7 @@ LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Missing key in object.
 Type <return> to continue.
  ...                                              
@@ -90,8 +83,7 @@ LaTeX does not know anything more about this error, sorry.
 Try typing <return> to proceed.
 If that doesn't work, type X <return> to quit.
 ============================================================
-! Package jsonparse Error: Package jsonparse Error
-(jsonparse)                Could not parse JSON.
+! Package jsonparse Error: Could not parse JSON.
 (jsonparse)                Missing key in object.
 Type <return> to continue.
  ...                                              

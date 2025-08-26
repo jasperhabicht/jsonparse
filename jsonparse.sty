@@ -401,8 +401,6 @@
 \bool_new:N \l__jsonparse_externalize_load_bool
 \iow_new:N \g__jsonparse_externalize_iow
 
-\hook_new:n { jsonparse / preparse }
-
 % ===
 
 \cctab_const:Nn \c_jsonparse_json_cctab {
@@ -1168,6 +1166,25 @@
 
 % ===
 
+\socket_new:nn { jsonparse / preparse } { 1 }
+
+\socket_new_plug:nnn { jsonparse / preparse } { default } {
+  \tl_set:Nn \obeyedline { ~ }
+  \tl_gset_rescan:Nne \g_jsonparse_json_tl { \cctab_select:N \c_jsonparse_json_escape_cctab } {#1}
+}
+
+\socket_assign_plug:nn { jsonparse / preparse } { default }
+
+\socket_new:nn { jsonparse / preparse ~ file } { 1 }
+
+\socket_new_plug:nnn { jsonparse / preparse ~ file } { default } {
+  \file_get:nnN {#3} { \cctab_select:N \c_jsonparse_json_cctab } \g_jsonparse_json_tl
+}
+
+\socket_assign_plug:nn { jsonparse / preparse ~ file } { default }
+
+% == 
+
 \cs_new_protected:Npn \__jsonparse_nested_construct_cs:Nnn #1#2#3 {
   \cs_set:Npn #1 #2 ##1 #3 #2 ##2 #3 {
     \prop_item:ce {##1} {##2}
@@ -1175,7 +1192,7 @@
 }
 \cs_generate_variant:Nn \__jsonparse_nested_construct_cs:Nnn { Noo }
 
-\cs_new_protected:Npn \__jsonparse_protect_escape_sequeces: {
+\cs_new_protected:Npn \__jsonparse_protect_escape_sequences: {
   \clist_map_inline:nn { " , / , \c_backslash_str , b , f , n , r , t , u } {
     \cs_set:cpn {##1} { \exp_not:c {##1} }
   }
@@ -1207,14 +1224,12 @@
       }
       \tl_gclear:N \g_jsonparse_json_tl
       \group_begin:
-        \__jsonparse_protect_escape_sequeces:
+        \__jsonparse_protect_escape_sequences:
         \__jsonparse_nested_construct_cs:Noo \$ { \c_left_brace_str } { \c_right_brace_str }
         % backward compatibility
         \__jsonparse_nested_construct_cs:Noo \x { \c_left_brace_str } { \c_right_brace_str }
         % ===
-        \tl_set:Nn \obeyedline { ~ }
-        \tl_gset_rescan:Nne \g_jsonparse_json_tl { \cctab_select:N \c_jsonparse_json_cctab } {#3}
-        \hook_use:n { jsonparse / preparse }
+        \socket_use:nn { jsonparse / preparse } {#3}
         \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {
@@ -1254,10 +1269,8 @@
       }
       \tl_gclear:N \g_jsonparse_json_tl
       \group_begin:
-        \__jsonparse_protect_escape_sequeces:
-        \file_get:nnN {#3} { \cctab_select:N \c_jsonparse_json_cctab } \l__jsonparse_externalize_file_data_tl
-        \tl_gset_eq:NN \g_jsonparse_json_tl \l__jsonparse_externalize_file_data_tl
-        \hook_use:n { jsonparse / preparse }
+        \__jsonparse_protect_escape_sequences:
+        \socket_use:nn { jsonparse / preparse ~ file } {#3}
         \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
       \group_end:
       \bool_if:NT \l__jsonparse_externalize_bool {

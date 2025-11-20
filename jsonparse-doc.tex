@@ -412,7 +412,7 @@ During parsing, the package identifies JSON objects, arrays, strings, numbers, b
 
 \section{Escaping and special treatment of the input}\label{sec:escaping}
 
-JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore redefines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is first defined as \macro{\exp_not:N \"} and only when typeset, \macro{\"} is expanded to \macro{"}, which ensures that strings are parsed properly.
+JSON strings cannot contain the two characters \macro{"} and \macro{\}. These two characters need to be escaped with a preceding backslash (\macro{\}). This package therefore (re)defines locally the TeX control symbols \macro{\"}, \macro{\/}, \macro{\\}, \macro{\b}, \macro{\f}, \macro{\n}, \macro{\r}, \macro{\t} and \macro{\u}. These control symbols are prevented from expanding during parsing. For example, \macro{\"} is defined as \macro{\exp_not:N \"} and only expanded to \macro{"} when typeset, which ensures that strings are parsed properly.
 
 Similarly, the control symbol \macro{\/} expands eventually to \macro{/} and \macro{\\} to \macro{\c_backslash_str} (i.\,e.\ a backslash with category code 12).
 

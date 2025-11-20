@@ -452,7 +452,7 @@ Using the control sequence \macro{\$}, it is possible to nest JSON strings into 
 |escape|={low line}
 |escape|={tilde}
 \end{macrodef}
-The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into the relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}. With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected.
+The key \macro{escape} can be used to convert characters that don't require escaping in JSON but in TeX into the relevant TeX escape sequences. Apart from the backslash and curly braces that need to be escaped anyways, these are the number sign, the dollar sign, the percent sign, the ampersand, the circumflex accent, the low line and the tilde. The characters can be selected individually or separated by a comma (for example \macro{escape={dollar sign, circumflex accent, low line}}). With \macro{escape={all}}, all escaping sequences are selected, with \macro{escape={none}}, none is selected.
 
 The naming of the relevant characters follows their Unicode names. However, \macro{hash} exists as alias for \macro{number sign}, \macro{dollar} as alias for \macro{dollar sign}, \macro{percent} for \macro{percent sign}, \macro{circumflex} for \macro{circumflex accent} and \macro{underscore} for \macro{low line}.
 

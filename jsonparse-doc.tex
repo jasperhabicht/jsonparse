@@ -331,7 +331,7 @@ The package is continuously being tested, but bugs cannot be ruled out. The auth
 
 \subsection{Why does a comparison of two equal strings return false?}
 
-Note that if you probably need to use \macro{\JSONParseExpandableValue} if you want to compare a value from parsed JSON data with the contents of another token list. See the explanation \hyperlink{macro:expandablevalue}{below} for more details.
+Note that you probably need to use \macro{\JSONParseExpandableValue} if you want to compare a value from parsed JSON data with the contents of another token list. See the explanation \hyperlink{macro:expandablevalue}{below} for more details.
 
 Also note that \macro{\JSONParseExpandableValue} returns a string with specific category codes, namely category code 12 (``other'') for all characters except spaces. Therefore, you need to test against another string. You can use \macro{\detokenize} for conversion. See section \ref{sec:general} for more information.
 

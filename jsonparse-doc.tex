@@ -364,7 +364,7 @@ Let us assume that the following JSON data is parsed:
   "boolean true" : true ,
   "boolean false" : false ,
   "null" : null ,
-  "number" : "number" : -1.1e-1 ,
+  "number" : -1.1e-1 ,
   "array" : [ "a" , "b" , "c" ]
 }
 \end{codeexample}
@@ -396,8 +396,8 @@ Parsing JSON ...
 (arr end)
 (key) .:
   (obj) { "string" : "a" , "boolean true" : true , "boolean false" :
-  false , "null" : null , "number" : "number" : -1.1e-1 , "array" :
-  [ "a" , "b" , "c" ] }
+  false , "null" : null , "number" : -1.1e-1 , "array" : [ "a" , 
+  "b" , "c" ] }
 (obj end)
 JSON parsing done.
 \end{codeexample}

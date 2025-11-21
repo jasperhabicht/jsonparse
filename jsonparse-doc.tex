@@ -892,7 +892,7 @@ replace/|horizontal tab|={<token list>}
 \end{macrodef}
 These keys can be used to set the replacement for the JSON escape sequences \macro{\b} (backspace), \macro{\f} (formfeed), \macro{\n} (linefeed), \macro{\r} (carriage return) and \macro{\t} (horizontal tab). The default replacement is a space in each case. These replacements take place only during typesetting. They only take effect if \macro{rescan} is active.
 
-\warning Note that commands such as \macro{\par} needs to be masked (for example by using a copy created via \macro{\let}) in order to be used as replacement.
+\warning Note that commands such as \macro{\par} need to be masked (for example by using a copy created via \macro{\let}) in order to be used as replacement.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParseValue}, \macro{\JSONParseArrayUse} and \macro{\JSONParseArrayMapFunction}.
 
@@ -1085,7 +1085,7 @@ The expandable command \macro{\jsonparse_unicode_convert_surrogate_pair:nn} conv
 
 \section{Deprecated commands}
 
-The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in green box right to it should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
+The following commands displayed in red boxes on the left have been deprecated and the relevant replacement displayed in the green box right to it should be used. To simplify the representation of the code and clarify how arguments are supposed to be used, numbers are used to identify the arguments.
 
 To ensure backward compatibility, the deprecated commands are still supported, but their use is not recommended.
 
@@ -1164,7 +1164,7 @@ To ensure backward compatibility, the deprecated commands are still supported, b
 
 The command \macro{\JSONParseArrayMapFunction} takes as last argument a command denoting the relevant mapping function including the preceding backslash, while the deprecated command \macro{\JSONParseArrayValuesMap} required the name of this function without preceding backslash.
 
-The commands \macro{\JSONParseSetRescanValue} and \macro{\JSONParseSetKeys} will locally set the relevant token variable.
+The commands \macro{\JSONParseSetRescanValue} and \macro{\JSONParseSetKeys} set the relevant token variable locally.
 
 \subsection{Deprecated L3 commands}
 

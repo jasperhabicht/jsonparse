@@ -508,7 +508,7 @@ When a key is associated with an object or array (and the key \macro{skip struct
 \end{macrodef}
 The command \macro{\JSONParseValue} accepts the key \macro{store in} that can be used to store the return value in another token variable. If the token variable given as option to the \macro{store in} key has not yet been defined, it will be created by this command.
 
-The token list returned by this command is a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space'').
+Per default, the token list returned by this command is a string variable where all characters have category code 12 (``other''), except for spaces and (horizontal) tabs that have category code 10 (``space'').
 
 The key \macro{store in} can be used together with the key \macro{rescan} to rescan the return value before storing it in the token variable. This means that the value stored in the token list will have the category codes TeX uses per default. Option settings such as the \macro{escape} option are taken into consideration during the rescan process.
 

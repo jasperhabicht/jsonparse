@@ -940,7 +940,7 @@ It is, for example, possible to make use of this mechanism by defining a new soc
 
 \section{L3 commands}
 
-The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the and variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
+The following token variables and commands are provided for defining user functions by package authors. For the conditional functions described below, apart from the variant that provides a true and a false branch, the two variants that only provide an argument for the true or for the false branch respectively are defined as well which is indicated by the letters {\itshape\macro{TF}} printed in italics. Commands marked with a star (\expandablestar) are fully expandable.
 
 \begin{macrodef}
 |\c_jsonparse_json_cctab|
@@ -1007,7 +1007,7 @@ The command \macro{\jsonparse_gset_parse:Nn} is identical to \macro{\jsonparse_s
 \begin{macrodef}
 |\jsonparse_set_parse_keys:NN| <string variable> <token variable>
 \end{macrodef}
-The command \macro{\jsonparse_parse_keys:NN} processes the token variable given as the second arguments as property list and selects all top-level keys which are then stored in the string variable given as first argument as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) to select the complete JSON data is ignored. If the JSON data is an array, the indices of the items (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) are used as keys.
+The command \macro{\jsonparse_set_parse_keys:NN} processes the token variable given as the second arguments as property list and selects all top-level keys which are then stored in the string variable given as first argument as JSON array. The pseudo key \macro{.} (or the string defined using the key \macro{separator/child}) to select the complete JSON data is ignored. If the JSON data is an array, the indices of the items (wrapped into the separators defined by \macro{separator/array left} and \macro{separator/array right}) are used as keys.
 
 \begin{macrodef}
 |\jsonparse_rescan:n| {<JSON value>}
@@ -1019,25 +1019,25 @@ The command \macro{\jsonparse_rescan:n} rescans the JSON value given in the argu
 |\jsonparse_set_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_set_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
-The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result in the token variable specified in the second argument.
+The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result locally in the token variable specified in the first argument.
 
 \begin{macrodef}
 |\jsonparse_gset_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_gset_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
-The command \macro{\jsonparse_gset_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the second argument.
+The command \macro{\jsonparse_gset_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the first argument.
 
 \begin{macrodef}
 |\jsonparse_put_right_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_put_right_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
-The command \macro{\jsonparse_put_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result to the end of the token variable specified in the second argument.
+The command \macro{\jsonparse_put_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result locally to the end of the token variable specified in the first argument.
 
 \begin{macrodef}
 |\jsonparse_gput_right_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_gput_right_rescan:Ne| <token variable> {<JSON value>}
 \end{macrodef}
-The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result globally to the end of the token variable specified in the second argument.
+The command \macro{\jsonparse_gput_right_rescan:Nn} rescans the JSON value given in the second argument and adds the result globally to the end of the token variable specified in the first argument.
 
 \begin{macrodef}
 |\jsonparse_set_filter:Nn| <token variable> {<key>}
@@ -1047,7 +1047,7 @@ The command \macro{\jsonparse_set_filter:Nn} processes the token variable given 
 \begin{macrodef}
 |\jsonparse_set_array_count:NN| <integer variable> <token variable>
 \end{macrodef}
-The command \macro{\jsonparse_set_array_count:NN} processes the token variable given as the first arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
+The command \macro{\jsonparse_set_array_count:NN} processes the token variable given as the second arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable given as first argument. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
 \begin{macrodef}*
 |\jsonparse_if_num:n|?TF? {<string>} {<true code>} {<false code>}

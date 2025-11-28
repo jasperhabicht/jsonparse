@@ -523,7 +523,7 @@
   \tl_if_blank:nTF {#1} {
     \prg_return_false:
   } {
-    \__jsonparse_parse_num_fraction:w #1 \q_stop
+    \__jsonparse_parse_num_decimal:w #1 \q_stop
   }
 }
 
@@ -547,8 +547,8 @@
   }
 }
 
-\cs_new:Npn \__jsonparse_parse_num_fraction:w #1#2 \q_stop {
-  \cs_if_exist_use:cTF { __jsonparse_parse_num_fraction_ #1 :w } {
+\cs_new:Npn \__jsonparse_parse_num_decimal:w #1#2 \q_stop {
+  \cs_if_exist_use:cTF { __jsonparse_parse_num_decimal_ #1 :w } {
     #2 \q_stop
   } {
     \prg_return_false:
@@ -556,20 +556,20 @@
 }
 
 \clist_map_inline:Nn \c__jsonparse_num_digits_clist {
-  \cs_new:cpn { __jsonparse_parse_num_fraction_ #1 :w } ##1 \q_stop {
+  \cs_new:cpn { __jsonparse_parse_num_decimal_ #1 :w } ##1 \q_stop {
     \tl_if_blank:nTF {##1} {
       \prg_return_true:
     } {
-      \__jsonparse_parse_num_fraction_digit:w ##1 \q_stop
+      \__jsonparse_parse_num_decimal_digit:w ##1 \q_stop
     }
   }
 }
 
-\cs_new:Npn \__jsonparse_parse_num_fraction_digit:w #1#2 \q_stop {
+\cs_new:Npn \__jsonparse_parse_num_decimal_digit:w #1#2 \q_stop {
   \clist_if_in:NnTF \c__jsonparse_num_exponent_clist {#1} {
     \__jsonparse_parse_num_exponent:w #2 \q_stop
   } {
-    \cs_if_exist_use:cTF { __jsonparse_parse_num_fraction_ #1 :w } {
+    \cs_if_exist_use:cTF { __jsonparse_parse_num_decimal_ #1 :w } {
       #2 \q_stop
     } {
       \prg_return_false:

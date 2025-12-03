@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.6.8}
-\def\jsonparsefiledate{24 November 2025}
+\def\jsonparsefileversion{1.6.9}
+\def\jsonparsefiledate{3 December 2025}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -311,6 +311,7 @@
 \changes{v1.6.6}{2025/08/27}{Various improvements. Added sockets for preparsing.}
 %\changes{v1.6.7}{2025/10/07}{Enhanced backward compatibility.}
 %\changes{v1.6.8}{2025/11/24}{Corrections and clarifications in documentation.}
+\changes{v1.6.9}{2025/12/03}{Added option to locally assign plug to socket.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -925,7 +926,7 @@ Two default plugs are provided and assigned per default for the two sockets. Bot
 }
 \end{codeexample}
 
-It is, for example, possible to make use of this mechanism by defining a new socket to parse JSONL files which consist of a number of JSON objects separated by a line break:
+It is, for example, possible to make use of this mechanism by defining a new plug to parse JSONL files which consist of a number of JSON objects separated by a line break (the two lines with regular expression replacements ensure that no unwanted leading or trailing commas appear in the array):
 
 \begin{codeexample}
 \socket_new_plug:nnn { jsonparse / preparse } { jsonl } {
@@ -933,9 +934,19 @@ It is, for example, possible to make use of this mechanism by defining a new soc
   \tl_gset_rescan:Nne \g_jsonparse_json_tl {
     \cctab_select:N \c_jsonparse_json_escape_cctab
   } { [ #1 ] }
+  \regex_replace_once:nnN { \A\[, } { [ }
+    \g_jsonparse_json_tl
+  \regex_replace_once:nnN { ,\]\Z } { ] }
+    \g_jsonparse_json_tl
 }
-\socket_assign_plug:nn { jsonparse / preparse } { jsonl }
 \end{codeexample}
+
+\begin{macrodef}
+|preparse|={<string>}
+\end{macrodef}
+The commands \macro{\JSONParse} and \macro{\JSONParseFromFile} accept the key \macro{preparse} as option. The key takes as argument the name of the plug that will be assigned to the \macro{jsonparse/preparse} or \macro{jsonparse/preparse-file} socket and then used to parse the relevant JSON string or file.
+
+To assign the plug for all following calls of \macro{\JSONParse} or \macro{\JSONParseFromFile}, assign the plug use the command \macro{\AssignSocketPlug{jsonparse/preparse}{jsonl}} or the command \macro{\AssignSocketPlug{jsonparse/preparse-file}{jsonl}}.
 
 \warning Changing the rescanning procedure via the provided sockets requires indepth knowledge about how the parsing procedure works. It also requires knowledge about how TeX deals with category codes and control sequences.
 

@@ -1165,6 +1165,11 @@
       {#2}
   } {
     \iow_open:Ne \g__jsonparse_externalize_iow {#2}
+    \iow_now:Ne \g__jsonparse_externalize_iow {
+      \iow_char:N \% ~
+      file ~ generated ~ by ~ the ~ `jsonparse` ~ package
+      \iow_newline:
+    }
     \prop_map_inline:Nn #1 {
       \iow_now:Nn \g__jsonparse_externalize_iow {
         \JSONParsePut {#1} {##1} {##2}

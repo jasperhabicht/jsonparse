@@ -31,9 +31,11 @@
     \FALSE
   }
 
-  \str_set:Nn \l_jsonparse_test_b_str {
-    \JSONParsePut ~ {\myJSONdataE ~ }{a}{1} 
-    \JSONParsePut ~ {\myJSONdataE ~ }{.}{{ ~ "a" ~ : ~ 1 ~ }} 
+  \str_set:Ne \l_jsonparse_test_b_str {
+    \c_percent_str ~ file ~ created ~ by ~ the ~ `jsonparse` ~ package
+
+    \exp_not:N \JSONParsePut ~ { \exp_not:N \myJSONdataE ~ }{a}{1} 
+    \exp_not:N \JSONParsePut ~ { \exp_not:N \myJSONdataE ~ }{.}{{ ~ "a" ~ : ~ 1 ~ }} 
   }
 
   \tl_if_eq:NNTF \l_jsonparse_test_a_str \l_jsonparse_test_b_str {

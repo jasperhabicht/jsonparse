@@ -32,7 +32,8 @@
   }
 
   \str_set:Ne \l_jsonparse_test_b_str {
-    \c_percent_str ~ file ~ created ~ by ~ the ~ `jsonparse` ~ package
+    \c_percent_str \c_space_tl
+    file ~ created ~ by ~ the ~ `jsonparse` ~ package
 
     \exp_not:n {
       \JSONParsePut ~ { \myJSONdataE ~ }{a}{1}

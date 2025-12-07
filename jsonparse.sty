@@ -1169,6 +1169,14 @@
       \iow_char:N \% ~
       file ~ generated ~ by ~ the ~ `jsonparse` ~ package
       \iow_newline:
+      \iow_char:N \% ~
+      \str_range:Nnn \c_sys_timestamp_str { 3 } { 6 } -
+      \str_range:Nnn \c_sys_timestamp_str { 7 } { 8 } -
+      \str_range:Nnn \c_sys_timestamp_str { 9 } { 10 } ~
+      \str_range:Nnn \c_sys_timestamp_str { 11 } { 12 } :
+      \str_range:Nnn \c_sys_timestamp_str { 13 } { 14 } :
+      \str_range:Nnn \c_sys_timestamp_str { 15 } { 16 }
+      \iow_newline:
     }
     \prop_map_inline:Nn #1 {
       \iow_now:Nn \g__jsonparse_externalize_iow {

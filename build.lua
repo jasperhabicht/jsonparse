@@ -6,3 +6,5 @@ checkconfigs = {"build", "build-luatex"}
 
 checkengines = {"pdftex"}
 excludetests = {"test002"}
+
+epoch        = "0"

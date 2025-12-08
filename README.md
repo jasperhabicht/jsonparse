@@ -1,4 +1,5 @@
 ![Version 1.6.9](https://img.shields.io/badge/version-1.6.9-blue)
+![Regression Test](https://github.com/jasperhabicht/jsonparse/actions/workflows/l3build-check.yaml/badge.svg)
 
 ![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/ddfddc70-bf5f-4121-ba45-4b9128875d85)
 

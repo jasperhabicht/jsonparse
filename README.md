@@ -1,5 +1,4 @@
-![Version 1.6.9](https://img.shields.io/badge/CTAN_version-1.6.9-blue)
-![Regression Tests](https://img.shields.io/github/actions/workflow/status/jasperhabicht/jsonparse/l3build-check.yaml)
+![Version 1.6.9](https://img.shields.io/badge/version-1.6.9-blue)
 
 ![Jason, the JSON parsing horse](https://github.com/jasperhabicht/jsonparse/assets/6378801/ddfddc70-bf5f-4121-ba45-4b9128875d85)
 

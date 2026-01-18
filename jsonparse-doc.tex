@@ -1,5 +1,5 @@
 % File: jsonparse-doc.tex
-% Copyright 2024-2025 Jasper Habicht (mail(at)jasperhabicht.de).
+% Copyright 2024-2026 Jasper Habicht (mail(at)jasperhabicht.de).
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License version 1.3c,
@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.6.10}
-\def\jsonparsefiledate{10 December 2025}
+\def\jsonparsefileversion{1.6.11}
+\def\jsonparsefiledate{18 January 2026}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -313,6 +313,7 @@
 %\changes{v1.6.8}{2025/11/24}{Corrections and clarifications in documentation.}
 \changes{v1.6.9}{2025/12/03}{Added option to locally assign plug to socket.}
 %\changes{v1.6.10}{2025/12/10}{Added timestamp to externalized files.}
+\changes{v1.6.11}{2026/01/18}{Added option to locally set zero-based indexing for mapping functions.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -850,6 +851,8 @@ These keys can be set using \macro{\JSONParseSet}. They can also be set locally 
 If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the index of array items starts with zero. If set to false, the indexing starts with one instead. Per default, the package uses zero-based indexing to match JavaScript notation. This setting affects indexing already during parsing.
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, this key only takes effect when set before parsing.
+
+If this key is set locally as option to the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, it is necessary to also set it locally as option to the commands \macro{\JSONParseArrayUse}, \macro{\JSONParseArrayMapFunction} and \macro{\JSONParseArrayMapInline} to let the relevant mapping function start from the correct value of the internal counter.
 
 \begin{macrodef}[key:validatenumbers]
 |validate numbers|

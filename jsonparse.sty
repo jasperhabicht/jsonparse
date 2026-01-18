@@ -262,7 +262,9 @@
 }
 
 \keys_define:nn { jsonparse / array } {
-  zero-based                  .meta:nn    =  { jsonparse / parse } { zero-based = #1 }
+  zero-based                  .meta:nn    =  { jsonparse / parse } { zero-based = #1 } ,
+  zero-based                  .default:n  = { true } ,
+  zero-based                  .initial:n  = { true }
 }
 
 \keys_define:nn { jsonparse / map } {

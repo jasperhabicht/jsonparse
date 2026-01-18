@@ -639,6 +639,8 @@ The command \macro{\JSONParseArrayUse} accepts as option set in the optional arg
 \end{tikzpicture}
 \end{codeexamplecolumns}
 
+The command \macro{\JSONParseArrayUse} also accepts as option set in the optional argument the key \macro{zero-based} to set the initial value of the mapping counter to the correct value if the key \macro{zero-based} is not set globally.
+
 \begin{macrodef}[macro:arraymapfunction]
 |\JSONParseArrayMapFunction|[<options>]{<token variable>}{<key>}[<subkey>]
   {<command>}
@@ -703,6 +705,8 @@ Typesetting the above example in a tabular way can be achieved as follows:
   {\myJSONitem}
 \end{codeexamplecolumns}
 
+The command \macro{\JSONParseArrayMapFunction} accepts as option set in the optional argument the key \macro{zero-based} to set the initial value of the mapping counter to the correct value if the key \macro{zero-based} is not set globally.
+
 Finally, the first optional argument of the command can be used to pass options to the command, such as \macro{escape} or \macro{rescan}, that are then applied locally.
 
 \begin{macrodef}
@@ -749,6 +753,8 @@ Making use of the commands \macro{\JSONParseKeys} and \macro{\JSONParseValue} to
 Note that the underscores in the names of the keys can be printed without changing to math mode in the above example by switching off rescanning via \macro{rescan=false}. This is possible because all JSON data is stored as string where all characters (except for spaces and tabs) have category code 12 (``other'').
 
 The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{store in} which takes a token variable into which the result of the mapped inline function should be stored. Refer to the relevant explanations to command \macro{\JSONParseArrayUse} \hyperlink{macro:arrayuse}{above} for more information.
+
+The command \macro{\JSONParseArrayMapInline} accepts as option set in the optional argument the key \macro{zero-based} to set the initial value of the mapping counter to the correct value if the key \macro{zero-based} is not set globally.
 
 \warning In order for the result to be stored in a token variable, the inline function needs to be fully expandable. For example, it is not possible to use the command \macro{\JSONParseValue} in the code of the inline function while using the command \macro{\JSONParseExpandableValue} is allowed. Note that the command \macro{\JSONParseArrayMapInline} itself is not expandable which means that nested use of this command prevents storing the result in a token variable.
 
@@ -852,7 +858,7 @@ If the key \macro{zero-based} is set (or explicitly set to \macro{true}), the in
 
 This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, this key only takes effect when set before parsing.
 
-If this key is set locally as option to the commands \macro{\JSONParse} or \macro{\JSONParseFromFile}, it is necessary to also set it locally as option to the commands \macro{\JSONParseArrayUse}, \macro{\JSONParseArrayMapFunction} and \macro{\JSONParseArrayMapInline} to let the relevant mapping function start from the correct value of the internal counter.
+If this key is set locally as option to the command \macro{\JSONParse} or \macro{\JSONParseFromFile}, it is necessary to also set it locally as option to the array-handling commands \macro{\JSONParseArrayUse}, \macro{\JSONParseArrayMapFunction} and \macro{\JSONParseArrayMapInline} to let the relevant mapping function start from the correct value of the internal counter.
 
 \begin{macrodef}[key:validatenumbers]
 |validate numbers|

@@ -174,6 +174,9 @@
   separator / array ~ left    .initial:n  = { [ } ,
   separator / array ~ right   .str_set:N  = \l__jsonparse_array_sep_right_str ,
   separator / array ~ right   .initial:n  = { ] } ,
+  zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
+  zero-based                  .default:n  = { true } ,
+  zero-based                  .initial:n  = { true } ,
   validate ~ numbers          .bool_set:N = \l__jsonparse_validate_numbers_bool ,
   validate ~ numbers          .default:n  = { true } ,
   validate ~ numbers          .initial:n  = { true } ,
@@ -194,12 +197,6 @@
       \socket_assign_plug:nn { jsonparse / preparse } {#1}
     }
   }
-}
-
-\keys_define:nn { jsonparse / array } {
-  zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
-  zero-based                  .default:n  = { true } ,
-  zero-based                  .initial:n  = { true }
 }
 
 \keys_define:nn { jsonparse / typeset } {
@@ -264,6 +261,10 @@
   rescan                      .groups:n   = { output }
 }
 
+\keys_define:nn { jsonparse / array } {
+  zero-based                  .meta:nn    =  { jsonparse / parse } { zero-based = #1 }
+}
+
 \keys_define:nn { jsonparse / map } {
   code ~ before               .tl_set:N   = \l__jsonparse_array_map_code_before_tl ,
   code ~ after                .tl_set:N   = \l__jsonparse_array_map_code_after_tl
@@ -289,12 +290,12 @@
     { jsonparse / global } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / parse } { \l__jsonparse_unused_keys_clist }
     { jsonparse / parse } \l__jsonparse_unused_keys_clist
-  \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
-    { jsonparse / array } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / typeset } { \l__jsonparse_unused_keys_clist }
     { jsonparse / typeset } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
     { jsonparse / set } \l__jsonparse_unused_keys_clist
+  \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
+    { jsonparse / array } \l__jsonparse_unused_keys_clist
   \keys_set_known:nonN { jsonparse / map } { \l__jsonparse_unused_keys_clist }
     { jsonparse / map } \l__jsonparse_unused_keys_clist
   \__jsonparse_warning_unused_keys:
@@ -1251,8 +1252,6 @@
       { jsonparse / global } \l__jsonparse_unused_keys_clist
     \keys_set_known:nonN { jsonparse / parse } { \l__jsonparse_unused_keys_clist }
       { jsonparse / parse } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / array } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \bool_set_false:N \l__jsonparse_externalize_load_bool
     \bool_if:NT \l__jsonparse_externalize_bool {
@@ -1303,8 +1302,6 @@
       { jsonparse / global } \l__jsonparse_unused_keys_clist
     \keys_set_known:nonN { jsonparse / parse } { \l__jsonparse_unused_keys_clist }
       { jsonparse / parse } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / array } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \bool_set_false:N \l__jsonparse_externalize_load_bool
     \bool_if:NT \l__jsonparse_externalize_bool {
@@ -1725,12 +1722,12 @@
   \__jsonparse_warning_undefined_prop:N #2
   \seq_gclear:N \g__jsonparse_array_use_temp_seq
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / array } {#1}
-      { jsonparse / array } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / typeset } { \l__jsonparse_unused_keys_clist }
+    \keys_set_known:nnnN { jsonparse / typeset } {#1}
       { jsonparse / typeset } \l__jsonparse_unused_keys_clist
     \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
       { jsonparse / set } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
+      { jsonparse / array } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1857,12 +1854,12 @@
       {#5}
   }
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / array } {#1}
-      { jsonparse / array } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / typeset } { \l__jsonparse_unused_keys_clist }
+    \keys_set_known:nnnN { jsonparse / typeset } {#1}
       { jsonparse / typeset } \l__jsonparse_unused_keys_clist
     \keys_set_known:nonN { jsonparse / map } { \l__jsonparse_unused_keys_clist }
       { jsonparse / map } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
+      { jsonparse / array } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2
     \jsonparse_set_filter:Nn \l__jsonparse_temp_copy_prop {#3}
@@ -1942,9 +1939,9 @@
     __jsonparse_array_map_inline_ \int_to_roman:n { \g__jsonparse_array_map_inline_int } _code:n
   } ##1 {#4}
   \group_begin:
-    \keys_set_known:nnnN { jsonparse / array } {#1}
-      { jsonparse / array } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / set } { \l__jsonparse_unused_keys_clist }
+    \keys_set_known:nnnN { jsonparse / set } {#1}
+      { jsonparse / set } \l__jsonparse_unused_keys_clist
+    \keys_set_known:nonN { jsonparse / array } { \l__jsonparse_unused_keys_clist }
       { jsonparse / array } \l__jsonparse_unused_keys_clist
     \__jsonparse_warning_unused_keys:
     \prop_set_eq:NN \l__jsonparse_temp_copy_prop #2

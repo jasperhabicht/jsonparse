@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2026-01-18} {1.6.11}
+\ProvidesExplPackage {jsonparse} {2026-01-18} {1.6.12}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1293,49 +1293,50 @@
 }
 
 \NewDocumentCommand { \JSONParseFromFile } { O{} m m } {
-  \file_if_exist:nF {#3} {
+  \file_if_exist:nTF {#3} {
+    \group_begin:
+      \str_set:Ne \l_jsonparse_current_prop_str { \cs_to_str:N #2 }
+      \bool_set_true:N \l__jsonparse_parse_from_file_bool
+      \keys_set_known:nnnN { jsonparse / global } {#1}
+        { jsonparse / global } \l__jsonparse_unused_keys_clist
+      \keys_set_known:nonN { jsonparse / parse } { \l__jsonparse_unused_keys_clist }
+        { jsonparse / parse } \l__jsonparse_unused_keys_clist
+      \__jsonparse_warning_unused_keys:
+      \bool_set_false:N \l__jsonparse_externalize_load_bool
+      \bool_if:NT \l__jsonparse_externalize_bool {
+        \file_if_exist:eT { \l__jsonparse_externalize_file_name_tl .jsonparse } {
+          \bool_set_true:N \l__jsonparse_externalize_load_bool
+        }
+      }
+      \bool_if:NTF \l__jsonparse_externalize_load_bool {
+        \msg_info:nne { jsonparse } { loading-external }
+          { \l__jsonparse_externalize_file_name_tl .jsonparse }
+        \file_input:e { \l__jsonparse_externalize_file_name_tl .jsonparse }
+      } {
+        \bool_if:NTF \l__jsonparse_compat_bool {
+          \prop_new:N #2
+        } {
+          \prop_new_linked:N #2
+        }
+        \tl_gclear:N \g_jsonparse_json_tl
+        \group_begin:
+          \__jsonparse_protect_escape_sequences:
+          \bool_if:NTF \l__jsonparse_compat_bool {
+            \__jsonparse_socket_preparse_file_code:n {#3}
+          } {
+            \socket_use:nn { jsonparse / preparse-file } {#3}
+          }
+          \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
+        \group_end:
+        \bool_if:NT \l__jsonparse_externalize_bool {
+          \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
+        }
+      }
+    \group_end:
+  } {
     \msg_error:nnn { jsonparse } { file-not-found }
       {#3}
   }
-  \group_begin:
-    \str_set:Ne \l_jsonparse_current_prop_str { \cs_to_str:N #2 }
-    \bool_set_true:N \l__jsonparse_parse_from_file_bool
-    \keys_set_known:nnnN { jsonparse / global } {#1}
-      { jsonparse / global } \l__jsonparse_unused_keys_clist
-    \keys_set_known:nonN { jsonparse / parse } { \l__jsonparse_unused_keys_clist }
-      { jsonparse / parse } \l__jsonparse_unused_keys_clist
-    \__jsonparse_warning_unused_keys:
-    \bool_set_false:N \l__jsonparse_externalize_load_bool
-    \bool_if:NT \l__jsonparse_externalize_bool {
-      \file_if_exist:eT { \l__jsonparse_externalize_file_name_tl .jsonparse } {
-        \bool_set_true:N \l__jsonparse_externalize_load_bool
-      }
-    }
-    \bool_if:NTF \l__jsonparse_externalize_load_bool {
-      \msg_info:nne { jsonparse } { loading-external }
-        { \l__jsonparse_externalize_file_name_tl .jsonparse }
-      \file_input:e { \l__jsonparse_externalize_file_name_tl .jsonparse }
-    } {
-      \bool_if:NTF \l__jsonparse_compat_bool {
-        \prop_new:N #2
-      } {
-        \prop_new_linked:N #2
-      }
-      \tl_gclear:N \g_jsonparse_json_tl
-      \group_begin:
-        \__jsonparse_protect_escape_sequences:
-        \bool_if:NTF \l__jsonparse_compat_bool {
-          \__jsonparse_socket_preparse_file_code:n {#3}
-        } {
-          \socket_use:nn { jsonparse / preparse-file } {#3}
-        }
-        \jsonparse_gset_parse:Ne #2 { \g_jsonparse_json_tl }
-      \group_end:
-      \bool_if:NT \l__jsonparse_externalize_bool {
-        \__jsonparse_externalize:Nn #2 { \l__jsonparse_externalize_file_name_tl .jsonparse }
-      }
-    }
-  \group_end:
 }
 
 \prg_new_conditional:Npnn \jsonparse_unicode_if_high_surrogate:n #1 { p , T , F , TF } {

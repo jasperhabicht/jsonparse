@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2026-01-20} {1.6.12}
+\ProvidesExplPackage {jsonparse} {2026-01-22} {1.7.0}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -1211,7 +1211,7 @@
     \g_jsonparse_json_tl
 }
 
-\bool_if:NTF \l__jsonparse_compat_bool { 
+\bool_if:NTF \l__jsonparse_compat_bool {
   \msg_warning:nn { jsonparse } { sockets-disabled }
 } {
   \socket_new:nn { jsonparse / preparse } { 1 }
@@ -1231,7 +1231,7 @@
   \socket_assign_plug:nn { jsonparse / preparse-file } { default }
 }
 
-% == 
+% ==
 
 \cs_new_protected:Npn \__jsonparse_nested_construct_cs:Nnn #1#2#3 {
   \cs_set:Npn #1 #2 ##1 #3 #2 ##2 #3 {
@@ -1455,7 +1455,7 @@
   \group_end:
   \tl_set:Nn #1 \l__jsonparse_temp_copy_tl
 }
-\cs_generate_variant:Nn \jsonparse_set_rescan:Nn { Ne }
+\cs_generate_variant:Nn \jsonparse_set_rescan:Nn { Ne , cn , ce }
 
 \cs_new_protected:Npn \jsonparse_gset_rescan:Nn #1#2 {
   \group_begin:
@@ -1463,7 +1463,7 @@
     \tl_gset_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
   \group_end:
 }
-\cs_generate_variant:Nn \jsonparse_gset_rescan:Nn { Ne }
+\cs_generate_variant:Nn \jsonparse_gset_rescan:Nn { Ne , cn , ce }
 
 \cs_new_protected:Npn \jsonparse_put_right_rescan:Nn #1#2 {
   \group_begin:
@@ -1770,15 +1770,13 @@
     #1
   }
   \bool_if:NTF \l__jsonparse_rescan_bool {
-    \tl_gset:cn { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } {
-      \jsonparse_rescan:e {
-        \prop_item:Ne \l__jsonparse_temp_copy_prop {
-          \l__jsonparse_array_sep_left_str
-          \JSONParseArrayIndex
-          \l__jsonparse_array_sep_right_str
-          \l__jsonparse_child_sep_str
-          #1
-        }
+    \jsonparse_gset_rescan:ce { JSONParseArrayValue \l__jsonparse_array_keys_index_roman_tl } {
+      \prop_item:Ne \l__jsonparse_temp_copy_prop {
+        \l__jsonparse_array_sep_left_str
+        \JSONParseArrayIndex
+        \l__jsonparse_array_sep_right_str
+        \l__jsonparse_child_sep_str
+        #1
       }
     }
   } {
@@ -1809,13 +1807,11 @@
       \l__jsonparse_array_sep_right_str
     }
     \bool_if:NTF \l__jsonparse_rescan_bool {
-      \tl_gset:Nn \JSONParseArrayValue {
-        \jsonparse_rescan:e {
-          \prop_item:Ne \l__jsonparse_temp_copy_prop {
-            \l__jsonparse_array_sep_left_str
-            \JSONParseArrayIndex
-            \l__jsonparse_array_sep_right_str
-          }
+      \jsonparse_gset_rescan:Ne \JSONParseArrayValue {
+        \prop_item:Ne \l__jsonparse_temp_copy_prop {
+          \l__jsonparse_array_sep_left_str
+          \JSONParseArrayIndex
+          \l__jsonparse_array_sep_right_str
         }
       }
     } {

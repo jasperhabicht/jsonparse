@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.6.12}
-\def\jsonparsefiledate{20 January 2026}
+\def\jsonparsefileversion{1.7.0}
+\def\jsonparsefiledate{22 January 2026}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -315,6 +315,7 @@
 %\changes{v1.6.10}{2025/12/10}{Added timestamp to externalized files.}
 \changes{v1.6.11}{2026/01/18}{Added option to locally set zero-based indexing for mapping functions.}
 %\changes{v1.6.12}{2026/01/20}{Fix in error handling.}
+\changes{v1.7.0}{2026/01/22}{Improved expandability in mapping functions.}
 
 \begin{document}
 \vspace*{-1cm}
@@ -401,7 +402,7 @@ Parsing JSON ...
 (arr end)
 (key) .:
   (obj) { "string" : "a" , "boolean true" : true , "boolean false" :
-  false , "null" : null , "number" : -1.1e-1 , "array" : [ "a" , 
+  false , "null" : null , "number" : -1.1e-1 , "array" : [ "a" ,
   "b" , "c" ] }
 (obj end)
 JSON parsing done.
@@ -1019,7 +1020,7 @@ The command \macro{\jsonparse_parse:n} takes as argument a JSON string and popul
 |\jsonparse_set_parse:Ne| <token variable> {<JSON string>}
 \end{macrodef}
 The command \macro{\jsonparse_set_parse:Nn} creates the token variable given as the first arguments as property list and, after having called \macro{\jsonparse_parse:n} using the second argument, locally sets this newly created property list equal to \macro{\g_jsonparse_entries_prop}. If escaping is activated, this command will pre-process the input according to the selected escaping mode before forwarding it to \macro{\jsonparse_parse:n}. See more on escaping above in section \ref{sec:escaping}.
-  
+
 \begin{macrodef}
 |\jsonparse_gset_parse:Nn| <token variable> {<JSON string>}
 |\jsonparse_gset_parse:No| <token variable> {<JSON string>}
@@ -1041,12 +1042,16 @@ The command \macro{\jsonparse_rescan:n} rescans the JSON value given in the argu
 \begin{macrodef}
 |\jsonparse_set_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_set_rescan:Ne| <token variable> {<JSON value>}
+|\jsonparse_set_rescan:cn| {<token variable name>} {<JSON value>}
+|\jsonparse_set_rescan:ce| {<token variable name>} {<JSON value>}
 \end{macrodef}
 The command \macro{\jsonparse_set_rescan:Nn} rescans the JSON value given in the second argument and stores the result locally in the token variable specified in the first argument.
 
 \begin{macrodef}
 |\jsonparse_gset_rescan:Nn| <token variable> {<JSON value>}
 |\jsonparse_gset_rescan:Ne| <token variable> {<JSON value>}
+|\jsonparse_gset_rescan:cn| {<token variable name>} {<JSON value>}
+|\jsonparse_gset_rescan:ce| {<token variable name>} {<JSON value>}
 \end{macrodef}
 The command \macro{\jsonparse_gset_rescan:Nn} rescans the JSON value given in the second argument and stores the result globally in the token variable specified in the first argument.
 
@@ -1070,7 +1075,7 @@ The command \macro{\jsonparse_set_filter:Nn} processes the token variable given 
 \begin{macrodef}
 |\jsonparse_set_array_count:NN| <integer variable> <token variable>
 \end{macrodef}
-The command \macro{\jsonparse_set_array_count:NN} processes the token variable given as the second arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable given as first argument. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error. 
+The command \macro{\jsonparse_set_array_count:NN} processes the token variable given as the second arguments as property list and, assuming that it is an array, counts its items and stores the result in the integer variable given as first argument. If the token variable does not expand to a key that represents an array item, that is if the key does not start with the character defined by \macro{separator/array left}, the command will return an error.
 
 The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 
@@ -1080,7 +1085,7 @@ The command \macro{\JSONParseArrayCount} serves as a wrapper of this command.
 |\jsonparse_if_num_p:n| {<string>}
 |\jsonparse_if_num_p:V| <string variable>
 \end{macrodef}
-The expandable conditional function \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}). 
+The expandable conditional function \macro{\jsonparse_if_num:nTF} checks whether a string is a valid JSON number according the relevant specification. It executes the true code if the string is a valid JSON number and the false code if not. The variants that only provide an argument for the true or false case work accordingly. The command \macro{\jsonparse_if_num_p:n} returns a boolean true or false (i.\,e.\ \macro{\c_true_bool} or \macro{\c_false_bool}).
 
 \begin{macrodef}*
 |\jsonparse_unicode_if_high_surrogate:n|?TF? {<codepoint>}

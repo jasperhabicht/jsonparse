@@ -403,7 +403,6 @@
 
 \int_new:N \l__jsonparse_array_index_int
 \int_new:N \l__jsonparse_array_count_int
-\int_new:N \l__jsonparse_array_count_aux_int
 \seq_new:N \l__jsonparse_array_count_last_seq
 
 \str_new:N \l__jsonparse_filter_key_str
@@ -1618,7 +1617,7 @@
   \seq_if_in:NeF \l__jsonparse_array_count_last_seq {
     \__jsonparse_get_array_index:w #1 \q_stop
   } {
-    \int_incr:N \l__jsonparse_array_count_aux_int
+    \int_incr:N \l__jsonparse_array_count_int
     \seq_put_right:Ne \l__jsonparse_array_count_last_seq {
       \__jsonparse_get_array_index:w #1 \q_stop
     }
@@ -1626,10 +1625,13 @@
 }
 
 \cs_new_protected:Npn \jsonparse_set_array_count:NN #1#2 {
-  \int_zero:N \l__jsonparse_array_count_aux_int
-  \seq_clear:N \l__jsonparse_array_count_last_seq
-  \prop_map_function:NN #2 \__jsonparse_set_array_count:nn
-  \int_set_eq:NN #1 \l__jsonparse_array_count_aux_int
+  \group_begin:
+    \int_zero:N \l__jsonparse_array_count_int
+    \seq_clear:N \l__jsonparse_array_count_last_seq
+    \prop_map_function:NN #2 \__jsonparse_set_array_count:nn
+    \exp_args:NNNV
+  \group_end:
+  \int_set:Nn #1 \l__jsonparse_array_count_int
 }
 
 % backward compatibility

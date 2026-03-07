@@ -83,12 +83,12 @@ number or to convert Unicode surrogate pairs to the relevant Unicode codepoint.
 
 *Why does a comparison of two equal strings return false?*
 
-1) Note that if you probably need to use `\JSONParseExpandableValue` if you want
+1) Note that you probably need to use `\JSONParseExpandableValue` if you want
 to compare a value from parsed JSON data with the contents of another token 
 list.
 
 2) Also note that `\JSONParseExpandableValue` returns a string with specific 
-category codes, namely category code 12 (``other'') for all characters except 
+category codes, namely category code 12 ("other") for all characters except 
 spaces. Therefore, you need to test against another string. You can use 
 `\detokenize` for conversion.
 

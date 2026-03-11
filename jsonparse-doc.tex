@@ -865,12 +865,21 @@ This key can be set using \macro{\JSONParseSet}. It can also be set locally as o
 If this key is set locally as option to the command \macro{\JSONParse} or \macro{\JSONParseFromFile}, it is necessary to also set it locally as option to the array-handling commands \macro{\JSONParseArrayUse}, \macro{\JSONParseArrayMapFunction} and \macro{\JSONParseArrayMapInline} to let the relevant mapping function start from the correct value of the internal counter.
 
 \begin{macrodef}
-|store index|
-|store index|={<boolean>}
+|provide index|
+|provide index|={<boolean>}
 \end{macrodef}
-If the key \macro{store index} is set (or explicitly set to \macro{true}), the indices of array items are stored in the parsed JSON data and can be accessed using the key as set with \macro{keyword/index} which is \macro{_} per default.
+If the key \macro{store index} is set (or explicitly set to \macro{true}), the indices of array items are stored in the parsed JSON data and can be accessed using the key as set with \macro{index key} which is \macro{_} per default.
 
 For example, assuming the same JSON data parsed into the token variable \macro{\myJSONdata} as in the examples above, calling \macro{\JSONParseValue{\myJSONdata}{array[0]._}} would result in `0'.
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, these keys only take effect when set before parsing.
+
+\begin{macrodef}
+|index key|={<string>}
+\end{macrodef}
+With the key \macro{index key}, the string that is used as key for the index of a value in an array can be changed if the key \macro{provide index} is used. The default string used as key is \macro{_}. 
+
+This key can be set using \macro{\JSONParseSet}. It can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, these keys only take effect when set before parsing.
 
 \begin{macrodef}[key:validatenumbers]
 |validate numbers|
@@ -902,11 +911,8 @@ Some keys that change the typesetting behavior are explained in other parts of t
 keyword/|true|={<string>}
 keyword/|false|={<string>}
 keyword/|null|={<string>}
-keyword/|index|={<string>}
 \end{macrodef}
 With the keys \macro{keyword/true}, \macro{keyword/false} and \macro{keyword/null}, the string that is typeset for true, false and null values can be changed. The default strings that are typeset are \macro{true}, \macro{false} and \macro{null} respectively. Only strings should be used as replacement. These replacements take place already during parsing.
-
-With the key \macro{keyword/index}, the string that is used as key for the index of a value in an array can be changed if the key \macro{store index} is used. The default string used as key is \macro{_}.
 
 These keys can be set using \macro{\JSONParseSet}. They can also be set locally as option to the commands \macro{\JSONParse} and \macro{\JSONParseFromFile}. When set using \macro{\JSONParseSet}, these keys only take effect when set before parsing.
 

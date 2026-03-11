@@ -120,9 +120,9 @@
 \str_new:N \l__jsonparse_true_str
 \str_new:N \l__jsonparse_false_str
 \str_new:N \l__jsonparse_null_str
-\str_new:N \l__jsonparse_index_str
+\str_new:N \l__jsonparse_index__key_str
 \bool_new:N \l__jsonparse_zero_based_bool
-\bool_new:N \l__jsonparse_store_index_bool
+\bool_new:N \l__jsonparse_provide_index_bool
 \bool_new:N \l__jsonparse_validate_numbers_bool
 \bool_new:N \l__jsonparse_skip_structures_bool
 \bool_new:N \l__jsonparse_rescan_bool
@@ -179,9 +179,11 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  store ~ index               .bool_set:N = \l__jsonparse_store_index_bool ,
-  store ~ index               .default:n  = { true } ,
-  store ~ index               .initial:n  = { false } ,
+  provide ~ index             .bool_set:N = \l__jsonparse_provide_index_bool ,
+  provide ~ index             .default:n  = { true } ,
+  provide ~ index             .initial:n  = { false } ,
+  index ~ key                 .str_set:N  = \l__jsonparse_index_key_str ,
+  index ~ key                 .initial:n  = { _ } ,
   validate ~ numbers          .bool_set:N = \l__jsonparse_validate_numbers_bool ,
   validate ~ numbers          .default:n  = { true } ,
   validate ~ numbers          .initial:n  = { true } ,
@@ -195,8 +197,6 @@
   keyword / false             .initial:n  = { false } ,
   keyword / null              .str_set:N  = \l__jsonparse_null_str ,
   keyword / null              .initial:n  = { null } ,
-  keyword / index             .str_set:N  = \l__jsonparse_index_str ,
-  keyword / index             .initial:n  = { _ } ,
   preparse                    .code:n     = {
     \bool_if:NTF \l__jsonparse_parse_from_file_bool {
       \socket_assign_plug:nn { jsonparse / preparse-file } {#1}
@@ -820,9 +820,9 @@
     \tl_set:Ne \l__jsonparse_key_tl {
       \l__jsonparse_prefix_tl \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str
     }
-    \bool_if:NT \l__jsonparse_store_index_bool {
+    \bool_if:NT \l__jsonparse_provide_index_bool {
       \prop_gput:NeV \g_jsonparse_entries_prop
-        { \l__jsonparse_key_tl . \l__jsonparse_index_str } \l__jsonparse_array_index_int
+        { \l__jsonparse_key_tl . \l__jsonparse_index_key_str } \l__jsonparse_array_index_int
     }
   }
 }

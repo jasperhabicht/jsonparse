@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2026-03-11} {1.8.0}
+\ProvidesExplPackage {jsonparse} {2026-01-28} {1.7.1}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -120,9 +120,7 @@
 \str_new:N \l__jsonparse_true_str
 \str_new:N \l__jsonparse_false_str
 \str_new:N \l__jsonparse_null_str
-\str_new:N \l__jsonparse_index__key_str
 \bool_new:N \l__jsonparse_zero_based_bool
-\bool_new:N \l__jsonparse_provide_index_bool
 \bool_new:N \l__jsonparse_validate_numbers_bool
 \bool_new:N \l__jsonparse_skip_structures_bool
 \bool_new:N \l__jsonparse_rescan_bool
@@ -179,11 +177,6 @@
   zero-based                  .bool_set:N = \l__jsonparse_zero_based_bool ,
   zero-based                  .default:n  = { true } ,
   zero-based                  .initial:n  = { true } ,
-  provide ~ index             .bool_set:N = \l__jsonparse_provide_index_bool ,
-  provide ~ index             .default:n  = { true } ,
-  provide ~ index             .initial:n  = { false } ,
-  index ~ key                 .str_set:N  = \l__jsonparse_index_key_str ,
-  index ~ key                 .initial:n  = { _ } ,
   validate ~ numbers          .bool_set:N = \l__jsonparse_validate_numbers_bool ,
   validate ~ numbers          .default:n  = { true } ,
   validate ~ numbers          .initial:n  = { true } ,
@@ -819,10 +812,6 @@
     \int_incr:N \l__jsonparse_array_index_int
     \tl_set:Ne \l__jsonparse_key_tl {
       \l__jsonparse_prefix_tl \int_use:N \l__jsonparse_array_index_int \l__jsonparse_array_sep_right_str
-    }
-    \bool_if:NT \l__jsonparse_provide_index_bool {
-      \prop_gput:NeV \g_jsonparse_entries_prop
-        { \l__jsonparse_key_tl . \l__jsonparse_index_key_str } \l__jsonparse_array_index_int
     }
   }
 }

@@ -868,7 +868,7 @@ If this key is set locally as option to the command \macro{\JSONParse} or \macro
 |provide index|
 |provide index|={<boolean>}
 \end{macrodef}
-If the key \macro{store index} is set (or explicitly set to \macro{true}), the indices of array items are stored in the parsed JSON data and can be accessed using the key as set with \macro{index key} which is \macro{_} per default.
+If the key \macro{provide index} is set (or explicitly set to \macro{true}), the indices of array items are stored in the parsed JSON data and can be accessed using the key as set with \macro{index key} which is \macro{_} per default.
 
 For example, assuming the same JSON data parsed into the token variable \macro{\myJSONdata} as in the examples above, calling \macro{\JSONParseValue{\myJSONdata}{array[0]._}} would result in `0'.
 

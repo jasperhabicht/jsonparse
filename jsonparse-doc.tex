@@ -11,8 +11,8 @@
 % This work has the LPPL maintenance status `maintained'.
 %
 \documentclass[a4paper]{article}
-\def\jsonparsefileversion{1.7.2}
-\def\jsonparsefiledate{15 April 2026}
+\def\jsonparsefileversion{1.7.3}
+\def\jsonparsefiledate{10 June 2026}
 
 \usepackage[T1]{fontenc}
 \usepackage{Alegreya}
@@ -235,7 +235,7 @@
   colback=black!10,
   fontupper=\small\ttfamily,
   #1
-}{\vphantom{/g}\lstinline^#2^}
+}{\MathCollectFalse\vphantom{/g}\lstinline^#2^}
 
 \NewTotalTCBox{\titlemacro}{ s O{} m }{
   verbatim,
@@ -319,6 +319,7 @@
 \changes{v1.7.0}{2026/01/22}{Improved expandability in mapping functions.}
 %\changes{v1.7.1}{2026/01/28}{Minor improvement in array count function.}
 %\changes{v1.7.2}{2026/04/15}{Corrections in documentation.}
+%\changes{v1.7.3}{2026/06/10}{Improvement in object and array collection function.}
 
 \begin{document}
 \vspace*{-1cm}

@@ -10,7 +10,7 @@
 %
 % This work has the LPPL maintenance status `maintained'.
 %
-\ProvidesExplPackage {jsonparse} {2026-06-10} {1.7.3}
+\ProvidesExplPackage {jsonparse} {2026-09-15} {1.7.4}
   {A handy way to parse, store and access JSON data from files or strings in LaTeX documents}
 
 \msg_new:nnn { jsonparse } { old-kernel } {
@@ -331,25 +331,25 @@
 \cs_generate_variant:Nn \tl_gset:Nn { Ne , ce }
 \cs_generate_variant:Nn \tl_gset_rescan:Nnn { Nno , Nne }
 \cs_generate_variant:Nn \tl_remove_once:Nn { NV }
-\cs_generate_variant:Nn \tl_replace_all:Nnn { Non , Noe }
+\cs_generate_variant:Nn \tl_replace_all:Nnn { No , Noe }
 \cs_generate_variant:Nn \tl_replace_once:Nnn { Noe }
 \cs_generate_variant:Nn \tl_rescan:nn { no , ne }
 \cs_generate_variant:Nn \tl_set:Nn { Ne }
 \cs_generate_variant:Nn \tl_to_str:n { o }
-\cs_generate_variant:Nn \str_case_e:nn { en }
+\cs_generate_variant:Nn \str_case_e:nn { e }
 \cs_generate_variant:Nn \str_casefold:n { o }
 \cs_generate_variant:Nn \str_head_ignore_spaces:n { o }
 \cs_generate_variant:Nn \str_set:Nn { Ne }
-\cs_generate_variant:Nn \int_step_function:nnN { nnc , nVN }
+\cs_generate_variant:Nn \int_step_function:nnN { nnc , nV }
 \cs_generate_variant:Nn \clist_const:Nn { Ne }
 \cs_generate_variant:Nn \seq_put_right:Nn { Ne }
 \cs_generate_variant:Nn \prop_gput:Nnn { Nee }
 \cs_generate_variant:Nn \prop_item:Nn { Ne , ce }
-\cs_generate_variant:Nn \prop_put:Nnn { Nen , Nee }
-\cs_generate_variant:Nn \keys_set_known:nnnN { nonN }
+\cs_generate_variant:Nn \prop_put:Nnn { Ne , Nee }
+\cs_generate_variant:Nn \keys_set_known:nnnN { no }
 \cs_generate_variant:Nn \iow_now:Nn { Ne }
 \cs_generate_variant:Nn \iow_open:Nn { Ne }
-\cs_generate_variant:Nn \codepoint_generate:nn { en }
+\cs_generate_variant:Nn \codepoint_generate:nn { e }
 \cs_generate_variant:Nn \msg_error:nnn { nno }
 \cs_generate_variant:Nn \msg_error:nnnn { nnoo }
 \cs_generate_variant:Nn \msg_info:nnn { nne }
@@ -357,11 +357,11 @@
 \cs_generate_variant:Nn \msg_warning:nnn { nne }
 
 \prg_generate_conditional_variant:Nnn \file_if_exist:n { e } { T , TF }
-\prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { oN } { T , TF }
+\prg_generate_conditional_variant:Nnn \tl_if_head_eq_charcode:nN { o } { T , TF }
 \prg_generate_conditional_variant:Nnn \tl_if_in:nn { nV } { F }
 \prg_generate_conditional_variant:Nnn \seq_if_in:Nn { Ne } { F }
-\prg_generate_conditional_variant:Nnn \str_if_eq:nn { en , eV } { T , F , TF }
-\prg_generate_conditional_variant:Nnn \str_if_eq:nn { Vn } { p }
+\prg_generate_conditional_variant:Nnn \str_if_eq:nn { e , eV } { T , F , TF }
+\prg_generate_conditional_variant:Nnn \str_if_eq:nn { V } { p }
 \prg_generate_conditional_variant:Nnn \str_if_in:nn { ee } { T }
 
 % ===
@@ -1456,7 +1456,7 @@
   \group_end:
   \tl_set:Nn #1 \l__jsonparse_temp_copy_tl
 }
-\cs_generate_variant:Nn \jsonparse_set_rescan:Nn { Ne , cn , ce }
+\cs_generate_variant:Nn \jsonparse_set_rescan:Nn { Ne , c , ce }
 
 \cs_new_protected:Npn \jsonparse_gset_rescan:Nn #1#2 {
   \group_begin:
@@ -1464,7 +1464,7 @@
     \tl_gset_rescan:Nno #1 { } { \l__jsonparse_temp_tl }
   \group_end:
 }
-\cs_generate_variant:Nn \jsonparse_gset_rescan:Nn { Ne , cn , ce }
+\cs_generate_variant:Nn \jsonparse_gset_rescan:Nn { Ne , c , ce }
 
 \cs_new_protected:Npn \jsonparse_put_right_rescan:Nn #1#2 {
   \group_begin:
